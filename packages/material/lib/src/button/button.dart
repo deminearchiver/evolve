@@ -513,8 +513,7 @@ class _ButtonWithIconAndLabelChild extends StatelessWidget {
   }
 }
 
-class _ButtonDefaultsBase extends ButtonStyle
-    implements _ButtonDefaultsContext {
+class _ButtonDefaultsBase extends ButtonStyle implements _DefaultsContext {
   const _ButtonDefaultsBase({required this.context})
     : super(
         animationDuration: kThemeChangeDuration,
@@ -529,31 +528,27 @@ class _ButtonDefaultsBase extends ButtonStyle
   final BuildContext context;
 }
 
-abstract interface class _ButtonDefaultsContext implements ButtonStyle {
+abstract interface class _DefaultsContext implements ButtonStyle {
   BuildContext get context;
 }
 
-mixin _ButtonDefaultsColorTheme on ButtonStyle
-    implements _ButtonDefaultsContext {
+mixin _DefaultsColorTheme on ButtonStyle implements _DefaultsContext {
   late final ColorThemeData _color = ColorTheme.of(context);
 }
-mixin _ButtonDefaultsElevationTheme on ButtonStyle
-    implements _ButtonDefaultsContext {
+mixin _DefaultsElevationTheme on ButtonStyle implements _DefaultsContext {
   late final ElevationThemeData _elevation = ElevationTheme.of(context);
 }
 
-mixin _ButtonDefaultsStateTheme on ButtonStyle
-    implements _ButtonDefaultsContext {
+mixin _DefaultsStateTheme on ButtonStyle implements _DefaultsContext {
   late final StateThemeData _state = StateTheme.of(context);
 }
 
-mixin _ButtonDefaultsTypescaleTheme on ButtonStyle
-    implements _ButtonDefaultsContext {
+mixin _DefaultsTypescaleTheme on ButtonStyle implements _DefaultsContext {
   late final TextTheme _typescale = Theme.of(context).textTheme;
 }
 
 mixin _ButtonCommonDefaults on ButtonStyle
-    implements _ButtonDefaultsColorTheme, _ButtonDefaultsTypescaleTheme {
+    implements _DefaultsColorTheme, _DefaultsTypescaleTheme {
   @override
   WidgetStateProperty<TextStyle?>? get textStyle =>
       WidgetStatePropertyAll(_typescale.labelLarge);
@@ -588,7 +583,7 @@ mixin _ButtonCommonDefaults on ButtonStyle
 }
 
 mixin _ContainedButtonElevationDefaults on ButtonStyle
-    implements _ButtonDefaultsColorTheme, _ButtonDefaultsElevationTheme {
+    implements _DefaultsColorTheme, _DefaultsElevationTheme {
   @override
   WidgetStateProperty<Color?>? get shadowColor =>
       WidgetStatePropertyAll(_color.shadow);
@@ -613,7 +608,7 @@ mixin _ContainedButtonElevationDefaults on ButtonStyle
 }
 
 mixin _LoweredContainedButtonElevationDefaults on ButtonStyle
-    implements _ButtonDefaultsColorTheme, _ButtonDefaultsElevationTheme {
+    implements _DefaultsColorTheme, _DefaultsElevationTheme {
   @override
   WidgetStateProperty<Color?>? get shadowColor =>
       WidgetStatePropertyAll(_color.shadow);
@@ -638,7 +633,7 @@ mixin _LoweredContainedButtonElevationDefaults on ButtonStyle
 }
 
 mixin _UncontainedButtonElevationDefaults on ButtonStyle
-    implements _ButtonDefaultsColorTheme, _ButtonDefaultsElevationTheme {
+    implements _DefaultsColorTheme, _DefaultsElevationTheme {
   @override
   WidgetStateProperty<Color?>? get shadowColor =>
       const WidgetStatePropertyAll(Colors.transparent);
@@ -651,10 +646,10 @@ mixin _UncontainedButtonElevationDefaults on ButtonStyle
 class _ElevatedButtonDefaults extends _ButtonDefaultsBase
     with
         // Interfaces
-        _ButtonDefaultsColorTheme,
-        _ButtonDefaultsElevationTheme,
-        _ButtonDefaultsStateTheme,
-        _ButtonDefaultsTypescaleTheme,
+        _DefaultsColorTheme,
+        _DefaultsElevationTheme,
+        _DefaultsStateTheme,
+        _DefaultsTypescaleTheme,
         // Implementations
         _ButtonCommonDefaults,
         _ContainedButtonElevationDefaults {
@@ -695,10 +690,10 @@ class _ElevatedButtonDefaults extends _ButtonDefaultsBase
 class _FilledButtonDefaults extends _ButtonDefaultsBase
     with
         // Interfaces
-        _ButtonDefaultsColorTheme,
-        _ButtonDefaultsElevationTheme,
-        _ButtonDefaultsStateTheme,
-        _ButtonDefaultsTypescaleTheme,
+        _DefaultsColorTheme,
+        _DefaultsElevationTheme,
+        _DefaultsStateTheme,
+        _DefaultsTypescaleTheme,
         // Implementations
         _ButtonCommonDefaults,
         _LoweredContainedButtonElevationDefaults {
@@ -741,10 +736,10 @@ class _FilledButtonDefaults extends _ButtonDefaultsBase
 class _FilledTonalButtonDefaults extends _ButtonDefaultsBase
     with
         // Interfaces
-        _ButtonDefaultsColorTheme,
-        _ButtonDefaultsElevationTheme,
-        _ButtonDefaultsStateTheme,
-        _ButtonDefaultsTypescaleTheme,
+        _DefaultsColorTheme,
+        _DefaultsElevationTheme,
+        _DefaultsStateTheme,
+        _DefaultsTypescaleTheme,
         // Implementations
         _ButtonCommonDefaults,
         _LoweredContainedButtonElevationDefaults {
@@ -787,10 +782,10 @@ class _FilledTonalButtonDefaults extends _ButtonDefaultsBase
 class _OutlinedButtonDefaults extends _ButtonDefaultsBase
     with
         // Interfaces
-        _ButtonDefaultsColorTheme,
-        _ButtonDefaultsElevationTheme,
-        _ButtonDefaultsStateTheme,
-        _ButtonDefaultsTypescaleTheme,
+        _DefaultsColorTheme,
+        _DefaultsElevationTheme,
+        _DefaultsStateTheme,
+        _DefaultsTypescaleTheme,
         // Implementations
         _ButtonCommonDefaults,
         _UncontainedButtonElevationDefaults {
@@ -838,10 +833,10 @@ class _OutlinedButtonDefaults extends _ButtonDefaultsBase
 class _TextButtonDefaults extends _ButtonDefaultsBase
     with
         // Interfaces
-        _ButtonDefaultsColorTheme,
-        _ButtonDefaultsElevationTheme,
-        _ButtonDefaultsStateTheme,
-        _ButtonDefaultsTypescaleTheme,
+        _DefaultsColorTheme,
+        _DefaultsElevationTheme,
+        _DefaultsStateTheme,
+        _DefaultsTypescaleTheme,
         // Implementations
         _ButtonCommonDefaults,
         _UncontainedButtonElevationDefaults {

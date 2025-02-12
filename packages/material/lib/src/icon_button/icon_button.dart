@@ -1,20 +1,304 @@
 import 'package:material/material.dart';
 
-part 'filled_icon_button.dart';
+enum IconButtonVariant { standard, filled, filledTonal, outlined }
 
 class IconButton extends StatelessWidget {
-  const IconButton({super.key});
+  const IconButton({
+    super.key,
+    required this.variant,
+    this.selected,
+    required this.onPressed,
+    this.onLongPress,
+    this.onHover,
+    this.onFocusChange,
+    this.style,
+    this.focusNode,
+    this.autofocus = false,
+    this.clipBehavior,
+    this.statesController,
+    this.isSemanticButton = true,
+    this.tooltip,
+    required this.icon,
+  });
+
+  final IconButtonVariant variant;
+  final bool? selected;
+
+  /// Called when the button is tapped or otherwise activated.
+  ///
+  /// If this callback and [onLongPress] are null, then the button will be disabled.
+  ///
+  /// See also:
+  ///
+  ///  * [enabled], which is true if the button is enabled.
+  final VoidCallback? onPressed;
+
+  /// Called when the button is long-pressed.
+  ///
+  /// If this callback and [onPressed] are null, then the button will be disabled.
+  ///
+  /// See also:
+  ///
+  ///  * [enabled], which is true if the button is enabled.
+  final VoidCallback? onLongPress;
+
+  /// Called when a pointer enters or exits the button response area.
+  ///
+  /// The value passed to the callback is true if a pointer has entered this
+  /// part of the material and false if a pointer has exited this part of the
+  /// material.
+  final ValueChanged<bool>? onHover;
+
+  /// Handler called when the focus changes.
+  ///
+  /// Called with true if this widget's node gains focus, and false if it loses
+  /// focus.
+  final ValueChanged<bool>? onFocusChange;
+
+  /// Customizes this button's appearance.
+  ///
+  /// Non-null properties of this style override the corresponding
+  /// properties in [themeStyleOf] and [defaultStyleOf]. [WidgetStateProperty]s
+  /// that resolve to non-null values will similarly override the corresponding
+  /// [WidgetStateProperty]s in [themeStyleOf] and [defaultStyleOf].
+  ///
+  /// Null by default.
+  final ButtonStyle? style;
+
+  /// {@macro flutter.material.Material.clipBehavior}
+  ///
+  /// Defaults to [Clip.none] unless [ButtonStyle.backgroundBuilder] or
+  /// [ButtonStyle.foregroundBuilder] is specified. In those
+  /// cases the default is [Clip.antiAlias].
+  final Clip? clipBehavior;
+
+  /// {@macro flutter.widgets.Focus.focusNode}
+  final FocusNode? focusNode;
+
+  /// {@macro flutter.widgets.Focus.autofocus}
+  final bool autofocus;
+
+  /// {@macro flutter.material.inkwell.statesController}
+  final WidgetStatesController? statesController;
+
+  /// Determine whether this subtree represents a button.
+  ///
+  /// If this is null, the screen reader will not announce "button" when this
+  /// is focused. This is useful for [MenuItemButton] and [SubmenuButton] when we
+  /// traverse the menu system.
+  ///
+  /// Defaults to true.
+  final bool? isSemanticButton;
+
+  /// Text that describes the action that will occur when the button is pressed or
+  /// hovered over.
+  ///
+  /// This text is displayed when the user long-presses or hovers over the button
+  /// in a tooltip. This string is also used for accessibility.
+  ///
+  /// If null, the button will not display a tooltip.
+  final String? tooltip;
+
+  /// Typically the button's label.
+  ///
+  /// {@macro flutter.widgets.ProxyWidget.child}
+  final Widget? icon;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return _IconButton(
+      variant: variant,
+      selected: selected,
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+      onHover: onHover,
+      onFocusChange: onFocusChange,
+      style: style,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      clipBehavior: clipBehavior,
+      statesController: statesController,
+      isSemanticButton: isSemanticButton,
+      tooltip: tooltip,
+      child: icon,
+    );
   }
 }
 
-// class _IconButton extends ButtonStyleButton {
-//   @override
-//   ButtonStyle defaultStyleOf(BuildContext context) {}
+class _IconButton extends ButtonStyleButton {
+  const _IconButton({
+    super.key,
+    required this.variant,
+    required this.selected,
+    required super.onPressed,
+    super.onLongPress,
+    super.onHover,
+    super.onFocusChange,
+    super.style,
+    super.focusNode,
+    super.autofocus = false,
+    super.clipBehavior,
+    super.statesController,
+    super.isSemanticButton,
+    super.tooltip,
+    required super.child,
+  });
 
-//   @override
-//   ButtonStyle? themeStyleOf(BuildContext context) => null;
-// }
+  final IconButtonVariant variant;
+  final bool? selected;
+
+  @override
+  ButtonStyle defaultStyleOf(BuildContext context) {
+    return switch (variant) {
+      IconButtonVariant.standard => _FilledIconButtonDefaults(
+        context: context,
+        selected: selected,
+      ),
+      IconButtonVariant.filled => _FilledIconButtonDefaults(
+        context: context,
+        selected: selected,
+      ),
+      IconButtonVariant.filledTonal => _FilledIconButtonDefaults(
+        context: context,
+        selected: selected,
+      ),
+      IconButtonVariant.outlined => _FilledIconButtonDefaults(
+        context: context,
+        selected: selected,
+      ),
+    };
+  }
+
+  @override
+  ButtonStyle? themeStyleOf(BuildContext context) => null;
+}
+
+class _IconButtonDefaultsBase extends ButtonStyle implements _DefaultsContext {
+  const _IconButtonDefaultsBase({required this.context, required this.selected})
+    : super(
+        animationDuration: kThemeChangeDuration,
+        enableFeedback: true,
+        alignment: Alignment.center,
+        tapTargetSize: MaterialTapTargetSize.padded,
+        visualDensity: VisualDensity.standard,
+      );
+
+  @override
+  final BuildContext context;
+
+  final bool? selected;
+}
+
+abstract interface class _DefaultsContext {
+  BuildContext get context;
+}
+
+mixin _DefaultsColorTheme implements _DefaultsContext {
+  late final ColorThemeData _color = ColorTheme.of(context);
+}
+mixin _DefaultsElevationTheme implements _DefaultsContext {
+  late final ElevationThemeData _elevation = ElevationTheme.of(context);
+}
+
+mixin _DefaultsStateTheme implements _DefaultsContext {
+  late final StateThemeData _state = StateTheme.of(context);
+}
+
+mixin _DefaultsTypescaleTheme implements _DefaultsContext {
+  late final TextTheme _typescale = Theme.of(context).textTheme;
+}
+
+mixin _IconButtonCommonDefaults on ButtonStyle
+    implements
+        _DefaultsColorTheme,
+        _DefaultsElevationTheme,
+        _DefaultsTypescaleTheme {
+  @override
+  WidgetStateProperty<Color?>? get shadowColor =>
+      const WidgetStatePropertyAll(Colors.transparent);
+
+  @override
+  WidgetStateProperty<double?>? get elevation =>
+      WidgetStatePropertyAll(_elevation.level0);
+
+  @override
+  WidgetStateProperty<TextStyle?>? get textStyle =>
+      WidgetStatePropertyAll(_typescale.labelLarge);
+
+  @override
+  WidgetStateProperty<double?>? get iconSize =>
+      const WidgetStatePropertyAll(24.0);
+
+  @override
+  WidgetStateProperty<OutlinedBorder?>? get shape =>
+      const WidgetStatePropertyAll(StadiumBorder());
+
+  @override
+  WidgetStateProperty<Size?>? get minimumSize =>
+      const WidgetStatePropertyAll(Size(40.0, 40.0));
+
+  @override
+  WidgetStateProperty<Size?>? get maximumSize =>
+      const WidgetStatePropertyAll(Size(40.0, 40.0));
+
+  @override
+  WidgetStateProperty<EdgeInsetsGeometry?>? get padding =>
+      const WidgetStatePropertyAll(EdgeInsets.all(8.0));
+
+  @override
+  WidgetStateProperty<MouseCursor?>? get mouseCursor =>
+      WidgetStateMouseCursor.clickable;
+
+  @override
+  WidgetStateProperty<Color?>? get surfaceTintColor =>
+      const WidgetStatePropertyAll(Colors.transparent);
+
+  @override
+  InteractiveInkFeatureFactory? get splashFactory =>
+      Theme.of(context).splashFactory;
+}
+
+class _FilledIconButtonDefaults extends _IconButtonDefaultsBase
+    with
+        // Interfaces
+        _DefaultsColorTheme,
+        _DefaultsElevationTheme,
+        _DefaultsStateTheme,
+        _DefaultsTypescaleTheme,
+        // Implementations
+        _IconButtonCommonDefaults {
+  _FilledIconButtonDefaults({required super.context, required super.selected});
+
+  @override
+  WidgetStateProperty<Color?>? get backgroundColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return _color.onSurface.withValues(alpha: 0.12);
+        }
+        return _color.primary;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
+    _color.onPrimary,
+    opacity: _state.stateLayerOpacity,
+  );
+
+  @override
+  WidgetStateProperty<Color?>? get foregroundColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return _color.onSurface.withValues(alpha: 0.38);
+        }
+        return _color.onPrimary;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get iconColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return _color.onSurface.withValues(alpha: 0.38);
+        }
+        return _color.onPrimary;
+      });
+}
