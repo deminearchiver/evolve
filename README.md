@@ -1,4 +1,10 @@
-# Flutter packages
+
+# Evolve
+
+Collection of Flutter packages trying to reimagine the Flutter experience.
+
+> [!WARNING]
+> Evolve requires the `main` (`master`) channel of Flutter to be used
 
 ## Packages
 
