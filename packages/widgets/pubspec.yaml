@@ -2,6 +2,7 @@ name: widgets
 description: "A new Flutter package project."
 version: 0.0.1
 homepage: https://github.com/deminearchiver/evolve
+publish_to: none
 resolution: workspace
 
 environment:

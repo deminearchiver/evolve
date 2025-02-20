@@ -2,6 +2,7 @@ name: material
 description: "A new Flutter package project."
 version: 0.0.1
 homepage: https://github.com/deminearchiver/flutter_packages
+publish_to: none
 resolution: workspace
 
 environment:
