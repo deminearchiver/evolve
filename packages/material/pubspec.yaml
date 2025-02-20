@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   widgets:
+    path: ../widgets
   material_color_utilities: ^0.11.1
   material_symbols_icons: ^4.2805.1
 
