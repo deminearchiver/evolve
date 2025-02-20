@@ -5,7 +5,7 @@ enum IconButtonVariant { standard, filled, filledTonal, outlined }
 class IconButton extends StatelessWidget {
   const IconButton({
     super.key,
-    required this.variant,
+    this.variant = IconButtonVariant.standard,
     this.selected,
     required this.onPressed,
     this.onLongPress,
@@ -20,6 +20,54 @@ class IconButton extends StatelessWidget {
     this.tooltip,
     required this.icon,
   });
+  const IconButton.filled({
+    super.key,
+    this.selected,
+    required this.onPressed,
+    this.onLongPress,
+    this.onHover,
+    this.onFocusChange,
+    this.style,
+    this.focusNode,
+    this.autofocus = false,
+    this.clipBehavior,
+    this.statesController,
+    this.isSemanticButton = true,
+    this.tooltip,
+    required this.icon,
+  }) : variant = IconButtonVariant.filled;
+  const IconButton.filledTonal({
+    super.key,
+    this.selected,
+    required this.onPressed,
+    this.onLongPress,
+    this.onHover,
+    this.onFocusChange,
+    this.style,
+    this.focusNode,
+    this.autofocus = false,
+    this.clipBehavior,
+    this.statesController,
+    this.isSemanticButton = true,
+    this.tooltip,
+    required this.icon,
+  }) : variant = IconButtonVariant.filledTonal;
+  const IconButton.outlined({
+    super.key,
+    this.selected,
+    required this.onPressed,
+    this.onLongPress,
+    this.onHover,
+    this.onFocusChange,
+    this.style,
+    this.focusNode,
+    this.autofocus = false,
+    this.clipBehavior,
+    this.statesController,
+    this.isSemanticButton = true,
+    this.tooltip,
+    required this.icon,
+  }) : variant = IconButtonVariant.outlined;
 
   final IconButtonVariant variant;
   final bool? selected;
@@ -102,7 +150,18 @@ class IconButton extends StatelessWidget {
   /// Typically the button's label.
   ///
   /// {@macro flutter.widgets.ProxyWidget.child}
-  final Widget? icon;
+  final Widget icon;
+
+  Widget _buildIcon() {
+    final double? fill = switch (variant) {
+      IconButtonVariant.filled => 1.0,
+      _ => null,
+    };
+    return IconTheme.merge(
+      data: IconThemeData(fill: fill, opticalSize: 24),
+      child: icon,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +179,7 @@ class IconButton extends StatelessWidget {
       statesController: statesController,
       isSemanticButton: isSemanticButton,
       tooltip: tooltip,
-      child: icon,
+      child: _buildIcon(),
     );
   }
 }
@@ -150,7 +209,7 @@ class _IconButton extends ButtonStyleButton {
   @override
   ButtonStyle defaultStyleOf(BuildContext context) {
     return switch (variant) {
-      IconButtonVariant.standard => _FilledIconButtonDefaults(
+      IconButtonVariant.standard => _StandardIconButtonDefaults(
         context: context,
         selected: selected,
       ),
@@ -158,11 +217,11 @@ class _IconButton extends ButtonStyleButton {
         context: context,
         selected: selected,
       ),
-      IconButtonVariant.filledTonal => _FilledIconButtonDefaults(
+      IconButtonVariant.filledTonal => _FilledTonalIconButtonDefaults(
         context: context,
         selected: selected,
       ),
-      IconButtonVariant.outlined => _FilledIconButtonDefaults(
+      IconButtonVariant.outlined => _OutlinedIconButtonDefaults(
         context: context,
         selected: selected,
       ),
@@ -239,7 +298,7 @@ mixin _IconButtonCommonDefaults on ButtonStyle
 
   @override
   WidgetStateProperty<Size?>? get maximumSize =>
-      const WidgetStatePropertyAll(Size(40.0, 40.0));
+      const WidgetStatePropertyAll(Size.infinite);
 
   @override
   WidgetStateProperty<EdgeInsetsGeometry?>? get padding =>
@@ -258,6 +317,51 @@ mixin _IconButtonCommonDefaults on ButtonStyle
       Theme.of(context).splashFactory;
 }
 
+class _StandardIconButtonDefaults extends _IconButtonDefaultsBase
+    with
+        // Interfaces
+        _DefaultsColorTheme,
+        _DefaultsElevationTheme,
+        _DefaultsStateTheme,
+        _DefaultsTypescaleTheme,
+        // Implementations
+        _IconButtonCommonDefaults {
+  _StandardIconButtonDefaults({
+    required super.context,
+    required super.selected,
+  });
+
+  bool get isSelected => selected ?? false;
+
+  @override
+  WidgetStateProperty<Color?>? get backgroundColor =>
+      const WidgetStatePropertyAll(Colors.transparent);
+
+  @override
+  WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
+    isSelected ? _color.primary : _color.onSurfaceVariant,
+    opacity: _state.stateLayerOpacity,
+  );
+
+  @override
+  WidgetStateProperty<Color?>? get foregroundColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return _color.onSurface.withValues(alpha: 0.38);
+        }
+        return isSelected ? _color.primary : _color.onSurfaceVariant;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get iconColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return _color.onSurface.withValues(alpha: 0.38);
+        }
+        return isSelected ? _color.primary : _color.onSurfaceVariant;
+      });
+}
+
 class _FilledIconButtonDefaults extends _IconButtonDefaultsBase
     with
         // Interfaces
@@ -269,18 +373,20 @@ class _FilledIconButtonDefaults extends _IconButtonDefaultsBase
         _IconButtonCommonDefaults {
   _FilledIconButtonDefaults({required super.context, required super.selected});
 
+  bool get isSelected => selected ?? true;
+
   @override
   WidgetStateProperty<Color?>? get backgroundColor =>
       WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
           return _color.onSurface.withValues(alpha: 0.12);
         }
-        return _color.primary;
+        return isSelected ? _color.primary : _color.surfaceContainerHighest;
       });
 
   @override
   WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
-    _color.onPrimary,
+    isSelected ? _color.onPrimary : _color.primary,
     opacity: _state.stateLayerOpacity,
   );
 
@@ -290,7 +396,7 @@ class _FilledIconButtonDefaults extends _IconButtonDefaultsBase
         if (states.contains(WidgetState.disabled)) {
           return _color.onSurface.withValues(alpha: 0.38);
         }
-        return _color.onPrimary;
+        return isSelected ? _color.onPrimary : _color.primary;
       });
 
   @override
@@ -299,6 +405,147 @@ class _FilledIconButtonDefaults extends _IconButtonDefaultsBase
         if (states.contains(WidgetState.disabled)) {
           return _color.onSurface.withValues(alpha: 0.38);
         }
-        return _color.onPrimary;
+        return isSelected ? _color.onPrimary : _color.primary;
       });
+}
+
+class _FilledTonalIconButtonDefaults extends _IconButtonDefaultsBase
+    with
+        // Interfaces
+        _DefaultsColorTheme,
+        _DefaultsElevationTheme,
+        _DefaultsStateTheme,
+        _DefaultsTypescaleTheme,
+        // Implementations
+        _IconButtonCommonDefaults {
+  _FilledTonalIconButtonDefaults({
+    required super.context,
+    required super.selected,
+  });
+
+  bool get isSelected => selected ?? true;
+
+  @override
+  WidgetStateProperty<Color?>? get backgroundColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return _color.onSurface.withValues(alpha: 0.12);
+        }
+        return isSelected
+            ? _color.secondaryContainer
+            : _color.surfaceContainerHighest;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
+    isSelected ? _color.onSecondaryContainer : _color.onSurfaceVariant,
+    opacity: _state.stateLayerOpacity,
+  );
+
+  @override
+  WidgetStateProperty<Color?>? get foregroundColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return _color.onSurface.withValues(alpha: 0.38);
+        }
+        return isSelected
+            ? _color.onSecondaryContainer
+            : _color.onSurfaceVariant;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get iconColor => WidgetStateProperty.resolveWith(
+    (states) {
+      if (states.contains(WidgetState.disabled)) {
+        return _color.onSurface.withValues(alpha: 0.38);
+      }
+      return isSelected ? _color.onSecondaryContainer : _color.onSurfaceVariant;
+    },
+  );
+}
+
+class _OutlinedIconButtonDefaults extends _IconButtonDefaultsBase
+    with
+        // Interfaces
+        _DefaultsColorTheme,
+        _DefaultsElevationTheme,
+        _DefaultsStateTheme,
+        _DefaultsTypescaleTheme,
+        // Implementations
+        _IconButtonCommonDefaults {
+  _OutlinedIconButtonDefaults({
+    required super.context,
+    required super.selected,
+  });
+
+  bool get isSelected => selected ?? false;
+
+  @override
+  WidgetStateProperty<Color?>? get backgroundColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (isSelected) {
+          if (states.contains(WidgetState.disabled)) {
+            return _color.onSurface.withValues(alpha: 0.12);
+          }
+          return _color.inverseSurface;
+        }
+        return Colors.transparent;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get overlayColor =>
+      WidgetStateProperty.resolveWith((states) {
+        final opacity = _state.stateLayerOpacity;
+
+        Color color;
+        if (isSelected) {
+          color = _color.inverseOnSurface;
+        } else if (states.contains(WidgetState.pressed)) {
+          color = _color.onSurface;
+        } else {
+          color = _color.onSurfaceVariant;
+        }
+
+        if (states.contains(WidgetState.disabled)) return color.withAlpha(0);
+        final alpha = opacity.resolve(states);
+        if (alpha == 0.0) return color.withAlpha(0);
+        return color.withValues(alpha: alpha);
+      });
+
+  @override
+  WidgetStateProperty<BorderSide?>? get side =>
+      WidgetStateProperty.resolveWith((states) {
+        if (isSelected) return null;
+        if (states.contains(WidgetState.disabled)) {
+          return BorderSide(color: _color.onSurface.withValues(alpha: 0.12));
+        }
+        return BorderSide(color: _color.outline);
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get foregroundColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return _color.onSurface.withValues(alpha: 0.38);
+        }
+        return isSelected
+            ? _color.onSecondaryContainer
+            : _color.onSurfaceVariant;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get iconColor => WidgetStateProperty.resolveWith(
+    (states) {
+      if (states.contains(WidgetState.disabled)) {
+        return _color.onSurface.withValues(alpha: 0.38);
+      }
+      if (isSelected) {
+        return _color.inverseOnSurface;
+      }
+      if (states.contains(WidgetState.pressed)) {
+        return _color.onSurface;
+      }
+      return isSelected ? _color.onSecondaryContainer : _color.onSurfaceVariant;
+    },
+  );
 }

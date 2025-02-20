@@ -317,7 +317,8 @@ class _Button extends ButtonStyleButton {
     final ButtonStyle? style = switch (variant) {
       ButtonVariant.elevated => ElevatedButtonTheme.maybeOf(context)?.style,
       ButtonVariant.filled => FilledButtonTheme.maybeOf(context)?.style,
-      ButtonVariant.filledTonal => FilledButtonTheme.maybeOf(context)?.style,
+      ButtonVariant.filledTonal =>
+        FilledTonalButtonTheme.maybeOf(context)?.style,
       ButtonVariant.outlined => OutlinedButtonTheme.maybeOf(context)?.style,
       ButtonVariant.text => TextButtonTheme.maybeOf(context)?.style,
     };

@@ -1,9 +1,10 @@
 import 'package:example/material-theme-builder/app.dart';
+import 'package:example/now_in_android/app.dart';
 import 'package:flutter/material.dart';
 import 'package:material/material.dart';
 
 void main() {
-  runApp(const MaterialThemeBuilderApp());
+  runApp(const NowInAndroidApp());
 }
 
 class MainApp extends StatelessWidget {

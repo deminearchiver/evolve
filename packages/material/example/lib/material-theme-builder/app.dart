@@ -1,8 +1,11 @@
 import 'dart:collection';
 
+import 'package:example/gen/assets.gen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:material/material.dart';
 import 'package:simple_icons/simple_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:widgets/widgets.dart';
 
 class MaterialThemeBuilderApp extends StatefulWidget {
   const MaterialThemeBuilderApp({super.key});
@@ -15,24 +18,100 @@ class MaterialThemeBuilderApp extends StatefulWidget {
 class _MaterialThemeBuilderAppState extends State<MaterialThemeBuilderApp> {
   @override
   Widget build(BuildContext context) {
+    debugPrint("${MediaQuery.sizeOf(context)}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
       theme: ThemeData(
-        brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color(0xFF00FF00),
+          dynamicSchemeVariant: DynamicSchemeVariant.tonalSpot,
+          brightness: Brightness.light,
+        ),
+        platform: TargetPlatform.android,
         visualDensity: VisualDensity.standard,
         splashFactory: InkSparkle.splashFactory,
         textTheme: GoogleFonts.robotoTextTheme(),
         materialTapTargetSize: MaterialTapTargetSize.padded,
       ),
       darkTheme: ThemeData(
-        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color(0xFF00FF00),
+          dynamicSchemeVariant: DynamicSchemeVariant.tonalSpot,
+          brightness: Brightness.dark,
+        ),
+        platform: TargetPlatform.android,
         visualDensity: VisualDensity.standard,
         splashFactory: InkSparkle.splashFactory,
         textTheme: GoogleFonts.robotoTextTheme(),
         materialTapTargetSize: MaterialTapTargetSize.padded,
       ),
-      home: const Test2(),
+      home: StateTheme(data: StateThemeData.web(), child: const Test2()),
+    );
+  }
+}
+
+const double _kStrokeThickness = 12.5;
+const Size _kTotalSize = Size(720, 1528);
+const Radius _kRadius = Radius.circular(121.25);
+const BorderRadius _kBorderRadius = BorderRadius.all(_kRadius);
+
+class Pixel9Pro extends StatefulWidget {
+  const Pixel9Pro({super.key, this.child});
+
+  final Widget? child;
+
+  @override
+  State<Pixel9Pro> createState() => _Pixel9ProState();
+}
+
+class _Pixel9ProState extends State<Pixel9Pro> {
+  @override
+  Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final colorTheme = ColorTheme.of(context);
+    return SizedBox.fromSize(
+      size: _kTotalSize,
+      child: Align.center(
+        child: SizedBox(
+          width: _kTotalSize.width - _kStrokeThickness * 2,
+          height: _kTotalSize.height - _kStrokeThickness * 2,
+          child: Material(
+            animationDuration: Duration.zero,
+            type: MaterialType.card,
+            // clipBehavior: Clip.antiAlias,
+            color: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                _kRadius - const Radius.circular(_kStrokeThickness),
+              ),
+              side: BorderSide(
+                width: _kStrokeThickness,
+                color: colorTheme.outline,
+                strokeAlign: BorderSide.strokeAlignOutside,
+              ),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(
+                _kRadius - const Radius.circular(_kStrokeThickness),
+              ),
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: 448.0,
+                  height: 997.3,
+                  child: MediaQuery(
+                    data: media.copyWith(
+                      padding: EdgeInsets.fromLTRB(0.0, 53.0, 0.0, 24.0),
+                    ),
+                    child: widget.child ?? const SizedBox.shrink(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -45,6 +124,8 @@ class Test2 extends StatefulWidget {
 }
 
 class _Test2State extends State<Test2> {
+  bool _selected = false;
+
   @override
   Widget build(BuildContext context) {
     final colorTheme = ColorTheme.of(context);
@@ -56,19 +137,6 @@ class _Test2State extends State<Test2> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
-                width: 412,
-                child: Material(
-                  animationDuration: Duration.zero,
-                  type: MaterialType.card,
-                  clipBehavior: Clip.antiAlias,
-                  color: colorTheme.surface,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(28)),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 24),
               Expanded(
                 child: Material(
                   animationDuration: Duration.zero,
@@ -78,6 +146,203 @@ class _Test2State extends State<Test2> {
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(28)),
                   ),
+                  child: CustomScrollView(
+                    scrollBehavior: ScrollConfiguration.of(context).copyWith(
+                      dragDevices: {
+                        PointerDeviceKind.touch,
+                        PointerDeviceKind.mouse,
+                      },
+                    ),
+                    slivers: [
+                      SliverFillViewport(
+                        delegate: SliverChildListDelegate([
+                          Assets.images.googlePixel9ProPorcelainRear.svg(),
+                          Assets.images.googlePixel9ProObsidianRear.svg(),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Pixel9Pro(
+                              child: Scaffold(
+                                body: SafeArea(
+                                  child: CustomScrollView(
+                                    slivers: [
+                                      SliverAppBar(title: Text("Maps")),
+                                      SliverList.list(
+                                        children: [
+                                          Button.filled(
+                                            onPressed: () {},
+                                            label: Text("Hello world!"),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                bottomNavigationBar: NavigationBar(
+                                  indicatorColor: colorTheme.primary,
+                                  selectedIndex: 0,
+                                  destinations: [
+                                    NavigationDestination(
+                                      icon: Icon(
+                                        Symbols.upcoming,
+                                        fill: 0,
+                                        color: colorTheme.onSurfaceVariant,
+                                      ),
+                                      selectedIcon: Icon(
+                                        Symbols.upcoming,
+                                        fill: 1,
+                                        color: colorTheme.onPrimary,
+                                      ),
+                                      label: "For you",
+                                    ),
+                                    NavigationDestination(
+                                      icon: Icon(
+                                        Symbols.menu_book,
+                                        fill: 0,
+                                        color: colorTheme.onSurfaceVariant,
+                                      ),
+                                      selectedIcon: Icon(
+                                        Symbols.menu_book,
+                                        fill: 1,
+                                        color: colorTheme.onPrimary,
+                                      ),
+                                      label: "Episodes",
+                                    ),
+                                    NavigationDestination(
+                                      icon: Icon(
+                                        Symbols.bookmarks,
+                                        fill: 0,
+                                        color: colorTheme.onSurfaceVariant,
+                                      ),
+                                      selectedIcon: Icon(
+                                        Symbols.bookmarks,
+                                        fill: 1,
+                                        color: colorTheme.onPrimary,
+                                      ),
+                                      label: "Saved",
+                                    ),
+                                    NavigationDestination(
+                                      icon: Icon(
+                                        Symbols.tag,
+                                        fill: 0,
+                                        color: colorTheme.onSurfaceVariant,
+                                      ),
+                                      selectedIcon: Icon(
+                                        Symbols.tag,
+                                        fill: 1,
+                                        color: colorTheme.onPrimary,
+                                      ),
+                                      label: "Interests",
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 24),
+              SizedBox(
+                // width: 400, // Modal
+                width: 412, // Supporting pane
+                child: Material(
+                  animationDuration: Duration.zero,
+                  type: MaterialType.card,
+                  clipBehavior: Clip.antiAlias,
+                  color: colorTheme.surface,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(28)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: CustomScrollView(
+                          scrollBehavior: ScrollConfiguration.of(
+                            context,
+                          ).copyWith(
+                            dragDevices: {
+                              PointerDeviceKind.touch,
+                              PointerDeviceKind.mouse,
+                            },
+                          ),
+                          slivers: [
+                            SliverAppBar(
+                              leading: Align.center(
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Symbols.arrow_back),
+                                ),
+                              ),
+                              leadingWidth: (16 - 4) + 48 + (12 - 4),
+                              titleSpacing: 0,
+                              toolbarHeight: 72,
+                              title: Text("Choose theme colors"),
+                              actions: [
+                                const SizedBox(width: 8), // 12 - 4
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Symbols.close),
+                                ),
+                                const SizedBox(width: 20), // 24 - 4
+                              ],
+                            ),
+                            SliverList.list(
+                              children: [
+                                // ListTile(
+                                //   leading: const Icon(Symbols.format_size),
+                                //   title: Text("Display, headlines & titles"),
+                                //   subtitle: Text(
+                                //     "As the largest text on the screen, these styles are reserved for short",
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 72,
+                        child: Material(
+                          color: colorTheme.surface,
+                          shape: Border(
+                            top: BorderSide(color: colorTheme.outlineVariant),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              24,
+                              16 - 4,
+                              24,
+                              24 - 4,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              spacing: 8,
+                              children: [
+                                Button.outlined(
+                                  onPressed: () {},
+                                  label: const Text("Back"),
+                                ),
+                                Button.filledTonal(
+                                  onPressed: () {},
+                                  style: ButtonStyle(
+                                    iconAlignment: IconAlignment.end,
+                                  ),
+                                  icon: const Icon(Symbols.arrow_forward),
+                                  // label: const Text("Export theme"),
+                                  label: const Text("Pick your fonts"),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -85,6 +350,48 @@ class _Test2State extends State<Test2> {
         ),
       ),
     );
+  }
+}
+
+class _SideSheetActions extends SliverPersistentHeaderDelegate {
+  const _SideSheetActions();
+
+  @override
+  double get minExtent => 72.0;
+
+  @override
+  double get maxExtent => 72.0;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final colorTheme = ColorTheme.of(context);
+    return SizedBox(
+      width: double.infinity,
+      height: 72,
+      child: Material(
+        color: colorTheme.surface,
+        shape: Border(top: BorderSide(color: colorTheme.outlineVariant)),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16 - 4, 24, 24 - 4),
+          child: Row(
+            spacing: 8,
+            children: [
+              Button.filled(onPressed: () {}, label: const Text("Save")),
+              Button.outlined(onPressed: () {}, label: const Text("Cancel")),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return false;
   }
 }
 
@@ -235,10 +542,6 @@ class _GoogleFontsDialogState extends State<GoogleFontsDialog> {
                           onTap: () {},
                           leading: const Icon(Symbols.search),
                           title: Text(font),
-                          trailing: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Symbols.open_in_new),
-                          ),
                         );
                       },
                     ),

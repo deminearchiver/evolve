@@ -10,16 +10,33 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  widgets:
   material:
-    path: ../
   simple_icons: ^10.1.3
   http: ^1.3.0
   google_fonts: ^6.2.1
+  flutter_svg: ^2.0.17
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_gen_runner: ^5.9.0
+  build_runner: ^2.4.15
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/now_in_android/
+
+flutter_gen:
+  output: lib/gen/
+  parse_metadata: true
+
+  # Optional
+  integrations:
+    image: true
+    flutter_svg: true
+    rive: true
+    lottie: true

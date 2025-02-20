@@ -1,19 +1,16 @@
-name: material
+name: widgets
 description: "A new Flutter package project."
 version: 0.0.1
-homepage: https://github.com/deminearchiver/flutter_packages
+homepage: https://github.com/deminearchiver/evolve
 resolution: workspace
 
 environment:
-  sdk: ^3.8.0-70.0.dev
+  sdk: ^3.8.0-76.0.dev
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  widgets:
-  material_color_utilities: ^0.11.1
-  material_symbols_icons: ^4.2805.1
 
 dev_dependencies:
   flutter_test:

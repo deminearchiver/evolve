@@ -3,5 +3,6 @@ publish_to: none
 environment:
   sdk: ^3.8.0-70.0.dev
 workspace:
+  - packages/widgets
   - packages/material
   - packages/material/example

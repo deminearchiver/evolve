@@ -1,3 +1,5 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/master"
+  "dart.flutterSdkPath": ".fvm/versions/master",
+  "svg.preview.background": "transparent",
+  "java.configuration.updateBuildConfiguration": "disabled"
 }

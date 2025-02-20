@@ -1,5 +1,9 @@
 export 'package:flutter/material.dart'
     hide
+        // Widgets
+        Align,
+        Center,
+        // Common buttons
         ElevatedButtonTheme,
         ElevatedButtonThemeData,
         FilledButtonTheme,
@@ -7,7 +11,15 @@ export 'package:flutter/material.dart'
         OutlinedButtonTheme,
         OutlinedButtonThemeData,
         TextButtonTheme,
-        TextButtonThemeData;
+        TextButtonThemeData,
+        // Icon button
+        IconButton,
+        IconButtonTheme,
+        IconButtonThemeData,
+        // Switch
+        Switch;
+export 'package:widgets/widgets.dart';
+
 export 'package:material_symbols_icons/material_symbols_icons.dart';
 
 // Material Design 3 foundations
@@ -24,6 +36,10 @@ export 'src/motion_theme.dart';
 
 export 'src/button/button.dart';
 export 'src/button/button_theme.dart';
+export 'src/icon_button/icon_button.dart';
+export 'src/icon_button/icon_button_theme.dart';
+export 'src/switch/switch.dart';
+// export 'src/switch/switch_theme.dart';
 
 // Utility
 
