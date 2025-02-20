@@ -5,7 +5,7 @@ homepage: https://github.com/deminearchiver/evolve
 resolution: workspace
 
 environment:
-  sdk: ^3.8.0-76.0.dev
+  sdk: ^3.8.0-116.0.dev
   flutter: ">=1.17.0"
 
 dependencies:

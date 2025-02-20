@@ -1,7 +1,7 @@
 name: _
 publish_to: none
 environment:
-  sdk: ^3.8.0-70.0.dev
+  sdk: ^3.8.0-116.0.dev
 workspace:
   - packages/widgets
   - packages/material
