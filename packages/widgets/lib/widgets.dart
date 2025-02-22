@@ -1,3 +1,5 @@
+// export 'package:flutter/widgets.dart' hide Align, Center, Flex, Flexible;
+
 // Overrides
 export 'src/align.dart';
 export 'src/flex.dart';

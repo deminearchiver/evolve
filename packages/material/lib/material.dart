@@ -3,6 +3,8 @@ export 'package:flutter/material.dart'
         // Widgets
         Align,
         Center,
+        Flex,
+        Flexible,
         // Common buttons
         ElevatedButtonTheme,
         ElevatedButtonThemeData,
