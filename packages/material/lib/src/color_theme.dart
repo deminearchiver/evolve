@@ -90,21 +90,9 @@ abstract class ColorThemeData with Diagnosticable {
     );
   }
 
-  factory ColorThemeData.fromSeed({
-    required Color seedColor,
-    required Brightness brightness,
-    DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
-    double contrastLevel = 0.0,
-  }) {
-    final scheme = _buildDynamicScheme(
-      brightness,
-      seedColor,
-      variant,
-      contrastLevel,
-    );
+  factory ColorThemeData.fromDynamicScheme(DynamicScheme scheme) {
     return ColorThemeData(
-      brightness: brightness,
-
+      brightness: scheme.isDark ? Brightness.dark : Brightness.light,
       primary: Color(MaterialDynamicColors.primary.getArgb(scheme)),
       onPrimary: Color(MaterialDynamicColors.onPrimary.getArgb(scheme)),
       primaryContainer: Color(
@@ -213,6 +201,21 @@ abstract class ColorThemeData with Diagnosticable {
         MaterialDynamicColors.outlineVariant.getArgb(scheme),
       ),
     );
+  }
+
+  factory ColorThemeData.fromSeed({
+    required Color seedColor,
+    required Brightness brightness,
+    DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
+    double contrastLevel = 0.0,
+  }) {
+    final scheme = _buildDynamicScheme(
+      brightness,
+      seedColor,
+      variant,
+      contrastLevel,
+    );
+    return ColorThemeData.fromDynamicScheme(scheme);
   }
 
   static Future<ColorThemeData> fromImage({
