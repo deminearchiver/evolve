@@ -23,7 +23,9 @@ export 'package:flutter/material.dart'
         IconButtonTheme,
         IconButtonThemeData,
         // Switch
-        Switch;
+        Switch,
+        // Tooltip
+        Tooltip;
 export 'package:widgets/widgets.dart';
 
 export 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -46,6 +48,8 @@ export 'src/icon_button/icon_button.dart';
 export 'src/icon_button/icon_button_theme.dart';
 export 'src/switch/switch.dart';
 // export 'src/switch/switch_theme.dart';
+
+export 'src/tooltip/tooltip.dart';
 
 // Utility
 
