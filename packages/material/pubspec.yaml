@@ -16,6 +16,7 @@ dependencies:
     path: ../widgets
   material_color_utilities: ^0.11.1
   material_symbols_icons: ^4.2805.1
+  follow_the_leader: ^0.0.4+8
 
 dev_dependencies:
   flutter_test:
