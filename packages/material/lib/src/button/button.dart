@@ -484,7 +484,7 @@ class _ButtonWithIconAndLabelChild extends StatelessWidget {
       data: const IconThemeData(size: 18, opticalSize: 18, fill: 1),
       child: icon,
     );
-    return Row(
+    return Flex.horizontal(
       mainAxisSize: MainAxisSize.min,
       spacing: 8.0,
       children: switch (iconAlignment) {

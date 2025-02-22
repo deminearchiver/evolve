@@ -134,10 +134,10 @@ class _Test2State extends State<Test2> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
-          child: Row(
+          child: Flex.horizontal(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
+              Flexible.expanded(
                 child: Material(
                   animationDuration: Duration.zero,
                   type: MaterialType.card,
@@ -256,10 +256,10 @@ class _Test2State extends State<Test2> {
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(28)),
                   ),
-                  child: Column(
+                  child: Flex.vertical(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Expanded(
+                      Flexible.expanded(
                         child: CustomScrollView(
                           scrollBehavior: ScrollConfiguration.of(
                             context,
@@ -319,7 +319,7 @@ class _Test2State extends State<Test2> {
                               24,
                               24 - 4,
                             ),
-                            child: Row(
+                            child: Flex.horizontal(
                               mainAxisAlignment: MainAxisAlignment.end,
                               spacing: 8,
                               children: [
@@ -377,7 +377,7 @@ class _SideSheetActions extends SliverPersistentHeaderDelegate {
         shape: Border(top: BorderSide(color: colorTheme.outlineVariant)),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 16 - 4, 24, 24 - 4),
-          child: Row(
+          child: Flex.horizontal(
             spacing: 8,
             children: [
               Button.filled(onPressed: () {}, label: const Text("Save")),
@@ -414,7 +414,7 @@ class _Test1State extends State<Test1> {
             SliverAppBar.large(title: Text("Pick your fonts")),
             SliverList.list(
               children: [
-                Row(
+                Flex.horizontal(
                   children: [
                     Button.filled(
                       onPressed:
@@ -500,7 +500,7 @@ class _GoogleFontsDialogState extends State<GoogleFontsDialog> {
 
       child: ConstrainedBox(
         constraints: BoxConstraints(minWidth: 360, maxWidth: 720),
-        child: Column(
+        child: Flex.vertical(
           mainAxisSize: MainAxisSize.min,
           children: [
             Flexible(
@@ -555,7 +555,7 @@ class _GoogleFontsDialogState extends State<GoogleFontsDialog> {
                 color: colorTheme.surfaceContainerHigh,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
+                  child: Flex.horizontal(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Button.text(onPressed: () {}, label: Text("Cancel")),

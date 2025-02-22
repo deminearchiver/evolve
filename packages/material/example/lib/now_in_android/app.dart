@@ -327,7 +327,7 @@ class _Test1State extends State<Test1> {
           //   //   onPressed: () {},
           //   //   label: const Text("Now in Android"),
           //   // ),
-          //   child: Row(
+          //   child: Flex.horizontal(
           //     children: [
           //       Switch(value: false, onChanged: (value) {}),
           //       Switch(value: true, onChanged: (value) {}),
@@ -435,9 +435,9 @@ class _Test1State extends State<Test1> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Row(
+                            child: Flex.horizontal(
                               children: [
-                                Expanded(
+                                Flexible.expanded(
                                   child: Text(
                                     "Switch text",
                                     style: theme.textTheme.labelLarge!.copyWith(
@@ -459,10 +459,10 @@ class _Test1State extends State<Test1> {
                     ButtonVariant.outlined,
                     ButtonVariant.text,
                   ].map<Widget>(
-                    (variant) => Column(
+                    (variant) => Flex.vertical(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Row(
+                        Flex.horizontal(
                           mainAxisAlignment: MainAxisAlignment.center,
                           spacing: 8,
                           children: [
@@ -479,7 +479,7 @@ class _Test1State extends State<Test1> {
                             ),
                           ],
                         ),
-                        Row(
+                        Flex.horizontal(
                           mainAxisAlignment: MainAxisAlignment.center,
                           spacing: 8,
                           children: [
@@ -630,7 +630,7 @@ class NowInAndroidSearchView extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 14, 0, 18),
-                child: Row(
+                child: Flex.horizontal(
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(
@@ -644,7 +644,7 @@ class NowInAndroidSearchView extends StatelessWidget {
                         icon: const Icon(Symbols.arrow_back),
                       ),
                     ),
-                    Expanded(
+                    Flexible.expanded(
                       child: SearchBar(
                         controller: TextEditingController(
                           text: "jetpack compose",
@@ -820,7 +820,7 @@ class _SearchViewRoute<T> extends PageRoute<T> {
                     Offset.zero,
                     _curvedAnimation.value,
                   )!,
-              child: Row(
+              child: Flex.horizontal(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Opacity(
@@ -842,7 +842,7 @@ class _SearchViewRoute<T> extends PageRoute<T> {
                       ),
                     ),
                   ),
-                  Expanded(
+                  Flexible.expanded(
                     child: SizedBox(
                       height:
                           lerpDouble(
@@ -871,7 +871,7 @@ class _SearchViewRoute<T> extends PageRoute<T> {
                               const StadiumBorder(),
                               _curvedAnimation.value,
                             )!,
-                        child: Row(
+                        child: Flex.horizontal(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
@@ -891,7 +891,7 @@ class _SearchViewRoute<T> extends PageRoute<T> {
                                     )!,
                               ),
                             ),
-                            Expanded(
+                            Flexible.expanded(
                               child: Text(
                                 "jetpack compose",
                                 overflow: TextOverflow.ellipsis,
