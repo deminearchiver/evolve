@@ -571,63 +571,69 @@ abstract class ColorThemeData with Diagnosticable {
     };
   }
 
-  factory ColorThemeData.fromColorScheme({required ColorScheme colorScheme}) {
-    return ColorThemeData(
-      brightness: colorScheme.brightness,
-      primary: colorScheme.primary,
-      onPrimary: colorScheme.onPrimary,
-      primaryContainer: colorScheme.primaryContainer,
-      onPrimaryContainer: colorScheme.onPrimaryContainer,
-      primaryFixed: colorScheme.primaryFixed,
-      onPrimaryFixed: colorScheme.onPrimaryFixed,
-      primaryFixedDim: colorScheme.primaryFixedDim,
-      onPrimaryFixedVariant: colorScheme.onPrimaryFixedVariant,
-      inversePrimary: colorScheme.inversePrimary,
-      secondary: colorScheme.secondary,
-      onSecondary: colorScheme.onSecondary,
-      secondaryContainer: colorScheme.secondaryContainer,
-      onSecondaryContainer: colorScheme.onSecondaryContainer,
-      secondaryFixed: colorScheme.secondaryFixed,
-      secondaryFixedDim: colorScheme.secondaryFixedDim,
-      onSecondaryFixed: colorScheme.onSecondaryFixed,
-      onSecondaryFixedVariant: colorScheme.onSecondaryFixedVariant,
-      tertiary: colorScheme.tertiary,
-      onTertiary: colorScheme.onTertiary,
-      tertiaryContainer: colorScheme.tertiaryContainer,
-      onTertiaryContainer: colorScheme.onTertiaryContainer,
-      tertiaryFixed: colorScheme.tertiaryFixed,
-      tertiaryFixedDim: colorScheme.tertiaryFixedDim,
-      onTertiaryFixed: colorScheme.onTertiaryFixed,
-      onTertiaryFixedVariant: colorScheme.onTertiaryFixedVariant,
-      error: colorScheme.error,
-      onError: colorScheme.onError,
-      errorContainer: colorScheme.errorContainer,
-      onErrorContainer: colorScheme.onErrorContainer,
-      surface: colorScheme.surface,
-      onSurface: colorScheme.onSurface,
-      // ignore: deprecated_member_use
-      surfaceVariant: colorScheme.surfaceVariant,
-      onSurfaceVariant: colorScheme.onSurfaceVariant,
-      surfaceContainerHighest: colorScheme.surfaceContainerHighest,
-      surfaceContainerHigh: colorScheme.surfaceContainerHigh,
-      surfaceContainer: colorScheme.surfaceContainer,
-      surfaceContainerLow: colorScheme.surfaceContainerLow,
-      surfaceContainerLowest: colorScheme.surfaceContainerLowest,
-      inverseSurface: colorScheme.inverseSurface,
-      inverseOnSurface: colorScheme.onInverseSurface,
-      surfaceTint: colorScheme.surfaceTint,
-      // ignore: deprecated_member_use
-      background: colorScheme.background,
-      // ignore: deprecated_member_use
-      onBackground: colorScheme.onBackground,
-      surfaceBright: colorScheme.surfaceBright,
-      surfaceDim: colorScheme.surfaceDim,
-      scrim: colorScheme.scrim,
-      shadow: colorScheme.shadow,
-      outline: colorScheme.outline,
-      outlineVariant: colorScheme.outlineVariant,
-    );
-  }
+  const factory ColorThemeData.fromColorScheme({
+    required ColorScheme colorScheme,
+  }) = _ColorThemeDataFromColorScheme;
+
+  // In case we want to revert back to manually settings values
+  // factory ColorThemeData.fromColorScheme({required ColorScheme colorScheme}) {
+  //   return ColorThemeData(
+  //     brightness: colorScheme.brightness,
+  //     primary: colorScheme.primary,
+  //     onPrimary: colorScheme.onPrimary,
+  //     primaryContainer: colorScheme.primaryContainer,
+  //     onPrimaryContainer: colorScheme.onPrimaryContainer,
+  //     primaryFixed: colorScheme.primaryFixed,
+  //     onPrimaryFixed: colorScheme.onPrimaryFixed,
+  //     primaryFixedDim: colorScheme.primaryFixedDim,
+  //     onPrimaryFixedVariant: colorScheme.onPrimaryFixedVariant,
+  //     inversePrimary: colorScheme.inversePrimary,
+  //     secondary: colorScheme.secondary,
+  //     onSecondary: colorScheme.onSecondary,
+  //     secondaryContainer: colorScheme.secondaryContainer,
+  //     onSecondaryContainer: colorScheme.onSecondaryContainer,
+  //     secondaryFixed: colorScheme.secondaryFixed,
+  //     secondaryFixedDim: colorScheme.secondaryFixedDim,
+  //     onSecondaryFixed: colorScheme.onSecondaryFixed,
+  //     onSecondaryFixedVariant: colorScheme.onSecondaryFixedVariant,
+  //     tertiary: colorScheme.tertiary,
+  //     onTertiary: colorScheme.onTertiary,
+  //     tertiaryContainer: colorScheme.tertiaryContainer,
+  //     onTertiaryContainer: colorScheme.onTertiaryContainer,
+  //     tertiaryFixed: colorScheme.tertiaryFixed,
+  //     tertiaryFixedDim: colorScheme.tertiaryFixedDim,
+  //     onTertiaryFixed: colorScheme.onTertiaryFixed,
+  //     onTertiaryFixedVariant: colorScheme.onTertiaryFixedVariant,
+  //     error: colorScheme.error,
+  //     onError: colorScheme.onError,
+  //     errorContainer: colorScheme.errorContainer,
+  //     onErrorContainer: colorScheme.onErrorContainer,
+  //     surface: colorScheme.surface,
+  //     onSurface: colorScheme.onSurface,
+  //     // ignore: deprecated_member_use
+  //     surfaceVariant: colorScheme.surfaceVariant,
+  //     onSurfaceVariant: colorScheme.onSurfaceVariant,
+  //     surfaceContainerHighest: colorScheme.surfaceContainerHighest,
+  //     surfaceContainerHigh: colorScheme.surfaceContainerHigh,
+  //     surfaceContainer: colorScheme.surfaceContainer,
+  //     surfaceContainerLow: colorScheme.surfaceContainerLow,
+  //     surfaceContainerLowest: colorScheme.surfaceContainerLowest,
+  //     inverseSurface: colorScheme.inverseSurface,
+  //     inverseOnSurface: colorScheme.onInverseSurface,
+  //     surfaceTint: colorScheme.surfaceTint,
+  //     // ignore: deprecated_member_use
+  //     background: colorScheme.background,
+  //     // ignore: deprecated_member_use
+  //     onBackground: colorScheme.onBackground,
+  //     surfaceBright: colorScheme.surfaceBright,
+  //     surfaceDim: colorScheme.surfaceDim,
+  //     scrim: colorScheme.scrim,
+  //     shadow: colorScheme.shadow,
+  //     outline: colorScheme.outline,
+  //     outlineVariant: colorScheme.outlineVariant,
+  //   );
+  // }
+
   Brightness get brightness;
 
   // Primary
