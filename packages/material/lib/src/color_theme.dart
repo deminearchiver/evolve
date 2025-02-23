@@ -81,14 +81,136 @@ abstract class ColorThemeData with Diagnosticable {
     required Color outlineVariant,
   }) = _ColorThemeData;
 
+  @Deprecated("Use ColorThemeData.baseline instead")
   factory ColorThemeData.static({required Brightness brightness}) {
-    // ? Does this correspond like the offcial static scheme?
-    // TODO: replace with hardcoded values
-    return ColorThemeData.fromSeed(
-      seedColor: const Color(0xFF6750A4),
-      brightness: brightness,
-    );
+    return ColorThemeData.baseline(brightness: brightness);
   }
+
+  /// ### Baseline colors
+  /// ![Baseline scheme colors in light theme](https://lh3.googleusercontent.com/rfxJv95pIoJ3cEZ9ypfimJFC5Ps8sEEVBNWD36C-fy3DYvec8J_VLRosBkwTNsnpSCgSpxWXBypOXT8Ydm4fJOQ2ajWoy7SjocrzJcK7KA8=s0)
+  /// ![Baseline scheme colors in dark theme](https://lh3.googleusercontent.com/S-tgf061eUWcbEBhyicTYR9PWVDeXSsSgZ2e2yYSr6Jn4W-F9z5czZCG6sv58wgJQODQakVRBDvUX5gaotfq3BuqMDLROrCO4D0Kz9F494LW=s0)
+  factory ColorThemeData.baseline({required Brightness brightness}) {
+    // TODO(deminearchiver): decide if we should use:
+    //  1. Baseline color tokens from the Material Design 3 website
+    //  2. Implement and use md-ref-palette tokens
+    //  3. Use ColorThemeData.fromSeed with the seed color #6750A4
+    return switch (brightness) {
+      Brightness.light => _baselineLight,
+      Brightness.dark => _baselineDark,
+    };
+  }
+
+  /// Baseline scheme with values taken from the
+  /// official Material Design 3 guidelines:
+  /// https://m3.material.io/styles/color/static/baseline
+  static const ColorThemeData _baselineLight = ColorThemeData(
+    brightness: Brightness.light,
+    primary: Color(0xFF6750A4),
+    onPrimary: Color(0xFFFFFFFF),
+    primaryContainer: Color(0xFFEADDFF),
+    onPrimaryContainer: Color(0xFF4F378B),
+    primaryFixed: Color(0xFFEADDFF),
+    onPrimaryFixed: Color(0xFF21005D),
+    primaryFixedDim: Color(0xFFD0BCFF),
+    onPrimaryFixedVariant: Color(0xFF4F378B),
+    inversePrimary: Color(0xFFD0BCFF),
+    secondary: Color(0xFF625B71),
+    onSecondary: Color(0xFFFFFFFF),
+    secondaryContainer: Color(0xFFE8DEF8),
+    onSecondaryContainer: Color(0xFF4A4458),
+    secondaryFixed: Color(0xFFE8DEF8),
+    secondaryFixedDim: Color(0xFFCCC2DC),
+    onSecondaryFixed: Color(0xFF1D192B),
+    onSecondaryFixedVariant: Color(0xFF4A4458),
+    tertiary: Color(0xFF7D5260),
+    onTertiary: Color(0xFFFFFFFF),
+    tertiaryContainer: Color(0xFFFFD8E4),
+    onTertiaryContainer: Color(0xFF633B48),
+    tertiaryFixed: Color(0xFFFFD8E4),
+    tertiaryFixedDim: Color(0xFFEFB8C8),
+    onTertiaryFixed: Color(0xFF31111D),
+    onTertiaryFixedVariant: Color(0xFF633B48),
+    error: Color(0xFFB3261E),
+    onError: Color(0xFFFFFFFF),
+    errorContainer: Color(0xFFF9DEDC),
+    onErrorContainer: Color(0xFF8C1D18),
+    surface: Color(0xFFFEF7FF),
+    onSurface: Color(0xFF1D1B20),
+    surfaceVariant: Color(0xFFE7E0EC),
+    onSurfaceVariant: Color(0xFF49454F),
+    surfaceContainerHighest: Color(0xFFE6E0E9),
+    surfaceContainerHigh: Color(0xFFECE6F0),
+    surfaceContainer: Color(0xFFF3EDF7),
+    surfaceContainerLow: Color(0xFFF7F2FA),
+    surfaceContainerLowest: Color(0xFFFFFFFF),
+    inverseSurface: Color(0xFF322F35),
+    inverseOnSurface: Color(0xFFF5EFF7),
+    surfaceTint: Color(0xFF6750A4),
+    background: Color(0xFFFEF7FF),
+    onBackground: Color(0xFF1D1B20),
+    surfaceBright: Color(0xFFFEF7FF),
+    surfaceDim: Color(0xFFDED8E1),
+    scrim: Color(0xFF000000),
+    shadow: Color(0xFF000000),
+    outline: Color(0xFF79747E),
+    outlineVariant: Color(0xFFCAC4D0),
+  );
+
+  /// Baseline scheme with values taken from the
+  /// official Material Design 3 guidelines:
+  /// https://m3.material.io/styles/color/static/baseline
+  static const ColorThemeData _baselineDark = ColorThemeData(
+    brightness: Brightness.light,
+    primary: Color(0xFFD0BCFF),
+    onPrimary: Color(0xFF381E72),
+    primaryContainer: Color(0xFF4F378B),
+    onPrimaryContainer: Color(0xFFEADDFF),
+    primaryFixed: Color(0xFFEADDFF),
+    onPrimaryFixed: Color(0xFF21005D),
+    primaryFixedDim: Color(0xFFD0BCFF),
+    onPrimaryFixedVariant: Color(0xFF4F378B),
+    inversePrimary: Color(0xFF6750A4),
+    secondary: Color(0xFFCCC2DC),
+    onSecondary: Color(0xFF332D41),
+    secondaryContainer: Color(0xFF4A4458),
+    onSecondaryContainer: Color(0xFFE8DEF8),
+    secondaryFixed: Color(0xFFE8DEF8),
+    secondaryFixedDim: Color(0xFFCCC2DC),
+    onSecondaryFixed: Color(0xFF1D192B),
+    onSecondaryFixedVariant: Color(0xFF4A4458),
+    tertiary: Color(0xFFEFB8C8),
+    onTertiary: Color(0xFF492532),
+    tertiaryContainer: Color(0xFF633B48),
+    onTertiaryContainer: Color(0xFFFFD8E4),
+    tertiaryFixed: Color(0xFFFFD8E4),
+    tertiaryFixedDim: Color(0xFFEFB8C8),
+    onTertiaryFixed: Color(0xFF31111D),
+    onTertiaryFixedVariant: Color(0xFF633B48),
+    error: Color(0xFFF2B8B5),
+    onError: Color(0xFF601410),
+    errorContainer: Color(0xFF8C1D18),
+    onErrorContainer: Color(0xFFF9DEDC),
+    surface: Color(0xFF141218),
+    onSurface: Color(0xFFE6E0E9),
+    surfaceVariant: Color(0xFF49454F),
+    onSurfaceVariant: Color(0xFFCAC4D0),
+    surfaceContainerHighest: Color(0xFF36343B),
+    surfaceContainerHigh: Color(0xFF2B2930),
+    surfaceContainer: Color(0xFF211F26),
+    surfaceContainerLow: Color(0xFF1D1B20),
+    surfaceContainerLowest: Color(0xFF0F0D13),
+    inverseSurface: Color(0xFFE6E0E9),
+    inverseOnSurface: Color(0xFF322F35),
+    surfaceTint: Color(0xFFD0BCFF),
+    background: Color(0xFF141218),
+    onBackground: Color(0xFFE6E0E9),
+    surfaceBright: Color(0xFF3B383E),
+    surfaceDim: Color(0xFF141218),
+    scrim: Color(0xFF000000),
+    shadow: Color(0xFF000000),
+    outline: Color(0xFF938F99),
+    outlineVariant: Color(0xFF49454F),
+  );
 
   factory ColorThemeData.fromDynamicScheme(DynamicScheme scheme) {
     return ColorThemeData(
@@ -203,6 +325,42 @@ abstract class ColorThemeData with Diagnosticable {
     );
   }
 
+  static const double contrastLevelNormal = 0.0;
+  static const double contrastLevelMedium = 0.5;
+  static const double contrastLevelHigh = 1.0;
+
+  /// Generate a [ColorThemeData] derived from the given `seedColor`.
+  ///
+  /// Using the `seedColor` as a starting point, a set of tonal palettes are
+  /// constructed. By default, the tonal palettes are based on the Material 3
+  /// Color system and provide all of the [ColorThemeData] colors. These colors are
+  /// designed to work well together and meet contrast requirements for
+  /// accessibility.
+  ///
+  /// Given the nature of the algorithm, the `seedColor` may not wind up as
+  /// one of the ColorScheme colors.
+  ///
+  /// The `variant` parameter creates different types of
+  /// [DynamicScheme]s, which are used to generate different styles of [ColorScheme]s.
+  /// By default, `variant` is set to `tonalSpot`. A [ColorScheme]
+  /// constructed by [DynamicSchemeVariant.tonalSpot] has pastel palettes and
+  /// won't be too "colorful" even if the `seedColor` has a high chroma value.
+  /// If the resulting color scheme is too dark, consider setting `variant`
+  /// to [DynamicSchemeVariant.fidelity], whose palettes match the seed color.
+  ///
+  /// The `contrastLevel` parameter indicates the contrast level between color
+  /// pairs, such as [primary] and [onPrimary]. 0.0 is the default (normal);
+  /// -1.0 is the lowest; 1.0 is the highest. This class contains convenience static members:
+  /// [ColorThemeData.contrastLevelNormal], [ColorThemeData.contrastLevelMedium]
+  /// and [ColorThemeData.contrastLevelHigh], which correspond to  the respective
+  /// contrast levels from Material Design guideline.
+  ///
+  /// See also:
+  ///
+  ///  * <https://m3.material.io/styles/color/roles>, the
+  ///    Material 3 Color system specification.
+  ///  * <https://pub.dev/packages/material_color_utilities>, the package
+  ///    used to generate the tonal palettes needed for the scheme.
   factory ColorThemeData.fromSeed({
     required Color seedColor,
     required Brightness brightness,
@@ -218,6 +376,28 @@ abstract class ColorThemeData with Diagnosticable {
     return ColorThemeData.fromDynamicScheme(scheme);
   }
 
+  /// Generate a [ColorThemeData] derived from the given `image`.
+  ///
+  /// Material Color Utilities extracts the dominant color from the
+  /// supplied [ImageProvider]. Using this color, a [ColorThemeData] is generated
+  /// with harmonious colors that meet contrast requirements for accessibility.
+  ///
+  /// Given the nature of the algorithm, the most dominant color of the
+  /// `image` may not wind up as one of the [ColorThemeData] colors.
+  ///
+  /// The provided image will be scaled down to a maximum size of 112x112 pixels
+  /// during color extraction.
+  ///
+  /// See also:
+  ///
+  ///  * [M3 Guidelines: Content-based color](https://m3.material.io/styles/color/dynamic/content-based-source)
+  ///  * <https://pub.dev/packages/dynamic_color>, a package to create
+  ///    [ColorScheme]s based on a platform's implementation of dynamic color.
+  ///  * <https://m3.material.io/styles/color/roles>, the
+  ///    Material 3 Color system specification.
+  ///  * <https://pub.dev/packages/material_color_utilities>, the package
+  ///    used to algorithmically determine the dominant color and to generate
+  ///    the [ColorThemeData].
   static Future<ColorThemeData> fromImage({
     required ImageProvider image,
     required Brightness brightness,
@@ -425,6 +605,7 @@ abstract class ColorThemeData with Diagnosticable {
       onErrorContainer: colorScheme.onErrorContainer,
       surface: colorScheme.surface,
       onSurface: colorScheme.onSurface,
+      // ignore: deprecated_member_use
       surfaceVariant: colorScheme.surfaceVariant,
       onSurfaceVariant: colorScheme.onSurfaceVariant,
       surfaceContainerHighest: colorScheme.surfaceContainerHighest,
@@ -672,6 +853,7 @@ abstract class ColorThemeData with Diagnosticable {
     onErrorContainer: onErrorContainer,
     surface: surface,
     onSurface: onSurface,
+    // ignore: deprecated_member_use
     surfaceVariant: surfaceVariant,
     onSurfaceVariant: onSurfaceVariant,
     surfaceContainerHighest: surfaceContainerHighest,
@@ -682,7 +864,9 @@ abstract class ColorThemeData with Diagnosticable {
     inverseSurface: inverseSurface,
     onInverseSurface: inverseOnSurface,
     surfaceTint: surfaceTint,
+    // ignore: deprecated_member_use, deprecated_member_use_from_same_package
     background: background,
+    // ignore: deprecated_member_use, deprecated_member_use_from_same_package
     onBackground: onBackground,
     surfaceBright: surfaceBright,
     surfaceDim: surfaceDim,
@@ -1180,6 +1364,7 @@ class _ColorThemeDataFromColorScheme extends ColorThemeData {
   Color get onSurface => colorScheme.onSurface;
 
   @override
+  // ignore: deprecated_member_use
   Color get surfaceVariant => colorScheme.surfaceVariant;
 
   @override
@@ -1210,9 +1395,11 @@ class _ColorThemeDataFromColorScheme extends ColorThemeData {
   Color get surfaceTint => colorScheme.surfaceTint;
 
   @override
+  // ignore: deprecated_member_use
   Color get background => colorScheme.background;
 
   @override
+  // ignore: deprecated_member_use
   Color get onBackground => colorScheme.onBackground;
 
   @override
@@ -1258,15 +1445,36 @@ class ColorTheme extends InheritedTheme {
     properties.add(DiagnosticsProperty<ColorThemeData>("data", data));
   }
 
+  /// The data from the closest instance of this class that encloses the given
+  /// context, if any.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// final ColorThemeData? colorTheme = ColorTheme.maybeOf(context);
+  /// ```
+  ///
+  /// Will return null if there is no ancestor [ColorTheme] in the `context`.
   static ColorThemeData? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<ColorTheme>()?.data;
   }
 
+  /// The data from the closest [ColorTheme] instance that encloses the given
+  /// context.
+  ///
+  /// Defaults to creating an instance of [ColorThemeData] from the closest
+  /// [ColorScheme] that encloses the given context if there is no
+  /// [ColorTheme] in the given build context.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// final ColorThemeData colorTheme = ColorTheme.of(context);
+  /// ```
   static ColorThemeData of(BuildContext context) {
     final result = maybeOf(context);
     if (result != null) return result;
-    final platformBrightness =
-        MediaQuery.maybePlatformBrightnessOf(context) ?? Brightness.light;
+
     final colorScheme = ColorScheme.of(context);
     return ColorThemeData.fromColorScheme(colorScheme: colorScheme);
   }
