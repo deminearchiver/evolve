@@ -315,7 +315,7 @@ class ShapeThemeData with Diagnosticable implements ShapeThemeDataPartial {
   @override
   ShapeThemeData merge(ShapeThemeDataPartial? other) {
     if (other == null) return this;
-    return copyWith(corner: corner.merge(other.corner));
+    return ShapeThemeData(corner: corner.merge(other.corner));
   }
 
   @override
