@@ -2,6 +2,31 @@ import 'package:flutter/foundation.dart';
 import 'package:material/material.dart';
 import 'package:meta/meta.dart';
 
+// Overoptimized version for the md-sys-motion-easing-linear curve,
+// should be preferred over Cubic(0.0, 0.0, 0.0, 0.0).
+class _Linear extends Curve {
+  const _Linear._();
+
+  @override
+  double transformInternal(double t) => t;
+
+  @override
+  String toString() {
+    return objectRuntimeType(this, "Linear");
+  }
+}
+
+// Extracted from the [Curves] class to be kept in sync with M3 guidelines,
+// until Flutter receives support for this easing type in the [Easings] class,
+// something like [Easings.emphasized].
+const Curve _easingEmphasized = ThreePointCubic(
+  Offset(0.05, 0),
+  Offset(0.133333, 0.06),
+  Offset(0.166666, 0.4),
+  Offset(0.208333, 0.82),
+  Offset(0.25, 1),
+);
+
 @experimental
 @immutable
 class MotionEasingThemeDataPartial with Diagnosticable {
@@ -192,8 +217,8 @@ class MotionEasingThemeData
   });
 
   const MotionEasingThemeData.fallback()
-    : linear = Easing.linear,
-      emphasized = Curves.easeInOutCubicEmphasized,
+    : linear = const _Linear._(),
+      emphasized = _easingEmphasized,
       emphasizedAccelerate = Easing.emphasizedAccelerate,
       emphasizedDecelerate = Easing.emphasizedDecelerate,
       standard = Easing.standard,
