@@ -267,11 +267,16 @@ mixin _DefaultsTypescaleTheme implements _DefaultsContext {
   late final TextTheme _typescale = Theme.of(context).textTheme;
 }
 
+mixin _DefaultsShapeTheme implements _DefaultsContext {
+  late final ShapeThemeData _shape = ShapeTheme.of(context);
+}
+
 mixin _IconButtonCommonDefaults on ButtonStyle
     implements
         _DefaultsColorTheme,
         _DefaultsElevationTheme,
-        _DefaultsTypescaleTheme {
+        _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme {
   @override
   WidgetStateProperty<Color?>? get shadowColor =>
       const WidgetStatePropertyAll(Colors.transparent);
@@ -290,7 +295,7 @@ mixin _IconButtonCommonDefaults on ButtonStyle
 
   @override
   WidgetStateProperty<OutlinedBorder?>? get shape =>
-      const WidgetStatePropertyAll(StadiumBorder());
+      WidgetStatePropertyAll(_shape.corner.full);
 
   @override
   WidgetStateProperty<Size?>? get minimumSize =>
@@ -324,6 +329,7 @@ class _StandardIconButtonDefaults extends _IconButtonDefaultsBase
         _DefaultsElevationTheme,
         _DefaultsStateTheme,
         _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme,
         // Implementations
         _IconButtonCommonDefaults {
   _StandardIconButtonDefaults({
@@ -369,6 +375,7 @@ class _FilledIconButtonDefaults extends _IconButtonDefaultsBase
         _DefaultsElevationTheme,
         _DefaultsStateTheme,
         _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme,
         // Implementations
         _IconButtonCommonDefaults {
   _FilledIconButtonDefaults({required super.context, required super.selected});
@@ -416,6 +423,7 @@ class _FilledTonalIconButtonDefaults extends _IconButtonDefaultsBase
         _DefaultsElevationTheme,
         _DefaultsStateTheme,
         _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme,
         // Implementations
         _IconButtonCommonDefaults {
   _FilledTonalIconButtonDefaults({
@@ -471,6 +479,7 @@ class _OutlinedIconButtonDefaults extends _IconButtonDefaultsBase
         _DefaultsElevationTheme,
         _DefaultsStateTheme,
         _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme,
         // Implementations
         _IconButtonCommonDefaults {
   _OutlinedIconButtonDefaults({

@@ -547,9 +547,15 @@ mixin _DefaultsStateTheme on ButtonStyle implements _DefaultsContext {
 mixin _DefaultsTypescaleTheme on ButtonStyle implements _DefaultsContext {
   late final TextTheme _typescale = Theme.of(context).textTheme;
 }
+mixin _DefaultsShapeTheme on ButtonStyle implements _DefaultsContext {
+  late final ShapeThemeData _shape = ShapeTheme.of(context);
+}
 
 mixin _ButtonCommonDefaults on ButtonStyle
-    implements _DefaultsColorTheme, _DefaultsTypescaleTheme {
+    implements
+        _DefaultsColorTheme,
+        _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme {
   @override
   WidgetStateProperty<TextStyle?>? get textStyle =>
       WidgetStatePropertyAll(_typescale.labelLarge);
@@ -560,7 +566,7 @@ mixin _ButtonCommonDefaults on ButtonStyle
 
   @override
   WidgetStateProperty<OutlinedBorder?>? get shape =>
-      const WidgetStatePropertyAll(StadiumBorder());
+      WidgetStatePropertyAll(_shape.corner.full);
 
   @override
   WidgetStateProperty<Size?>? get minimumSize =>
@@ -651,6 +657,7 @@ class _ElevatedButtonDefaults extends _ButtonDefaultsBase
         _DefaultsElevationTheme,
         _DefaultsStateTheme,
         _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme,
         // Implementations
         _ButtonCommonDefaults,
         _ContainedButtonElevationDefaults {
@@ -695,6 +702,7 @@ class _FilledButtonDefaults extends _ButtonDefaultsBase
         _DefaultsElevationTheme,
         _DefaultsStateTheme,
         _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme,
         // Implementations
         _ButtonCommonDefaults,
         _LoweredContainedButtonElevationDefaults {
@@ -741,6 +749,7 @@ class _FilledTonalButtonDefaults extends _ButtonDefaultsBase
         _DefaultsElevationTheme,
         _DefaultsStateTheme,
         _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme,
         // Implementations
         _ButtonCommonDefaults,
         _LoweredContainedButtonElevationDefaults {
@@ -787,6 +796,7 @@ class _OutlinedButtonDefaults extends _ButtonDefaultsBase
         _DefaultsElevationTheme,
         _DefaultsStateTheme,
         _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme,
         // Implementations
         _ButtonCommonDefaults,
         _UncontainedButtonElevationDefaults {
@@ -838,6 +848,7 @@ class _TextButtonDefaults extends _ButtonDefaultsBase
         _DefaultsElevationTheme,
         _DefaultsStateTheme,
         _DefaultsTypescaleTheme,
+        _DefaultsShapeTheme,
         // Implementations
         _ButtonCommonDefaults,
         _UncontainedButtonElevationDefaults {
