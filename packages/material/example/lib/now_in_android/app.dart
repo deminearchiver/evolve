@@ -765,8 +765,8 @@ class _SearchViewRoute<T> extends PageRoute<T> {
       _curvedAnimation.dispose();
       _curvedAnimation = CurvedAnimation(
         parent: animation,
-        curve: motionTheme.easingEmphasized,
-        reverseCurve: motionTheme.easingEmphasized.flipped,
+        curve: motionTheme.easing.emphasized,
+        reverseCurve: motionTheme.easing.emphasized.flipped,
       );
     }
   }
@@ -945,8 +945,8 @@ class _SettingsRoute extends PopupRoute<void> {
     final motionTheme = MotionTheme.of(context);
     return _SettingsRoute(
       barrierColor: colorTheme.onSurface.withValues(alpha: 0.5),
-      transitionDuration: motionTheme.durationLong2,
-      reverseTransitionDuration: motionTheme.durationShort3,
+      transitionDuration: motionTheme.duration.long2,
+      reverseTransitionDuration: motionTheme.duration.short3,
     );
   }
 
@@ -1001,8 +1001,8 @@ class _SettingsRoute extends PopupRoute<void> {
       _curvedAnimation.dispose();
       _curvedAnimation = CurvedAnimation(
         parent: animation,
-        curve: motionTheme.easingEmphasizedDecelerate,
-        reverseCurve: motionTheme.easingEmphasizedAccelerate.flipped,
+        curve: motionTheme.easing.emphasizedDecelerate,
+        reverseCurve: motionTheme.easing.emphasizedAccelerate.flipped,
         // curve: Easing.linear,
       );
       _splitCurvedAnimation.dispose();

@@ -506,8 +506,8 @@ class _GoogleFontsDialogState extends State<GoogleFontsDialog> {
             Flexible(
               fit: FlexFit.loose,
               child: AnimatedSize(
-                duration: motionTheme.durationExtraLong2,
-                curve: motionTheme.easingEmphasized,
+                duration: motionTheme.duration.extraLong2,
+                curve: motionTheme.easing.emphasized,
                 alignment: Alignment.topCenter,
                 child: CustomScrollView(
                   shrinkWrap: true,
