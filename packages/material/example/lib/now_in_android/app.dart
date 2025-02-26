@@ -251,12 +251,13 @@ class _NowInAndroidAppState extends State<NowInAndroidApp> {
   }
 
   Widget _buildTheme(BuildContext context) {
-    return _buildFilledButtonTheme(
-      context,
-      _buildOutlinedButtonTheme(
-        context,
-        _buildTextButtonTheme(context, _buildChild()),
-      ),
+    return CombiningBuilder(
+      builders: [
+        _buildFilledButtonTheme,
+        _buildOutlinedButtonTheme,
+        _buildTextButtonTheme,
+      ],
+      child: _buildChild(),
     );
   }
 
