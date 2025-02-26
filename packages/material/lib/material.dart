@@ -16,7 +16,7 @@ export 'package:flutter/material.dart'
         FilledButton,
         FilledButtonTheme,
         FilledButtonThemeData,
-        OutlinedBorder,
+        OutlinedButton,
         OutlinedButtonTheme,
         OutlinedButtonThemeData,
         TextButton,
