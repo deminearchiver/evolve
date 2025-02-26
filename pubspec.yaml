@@ -1,8 +1,14 @@
 name: _
 publish_to: none
+
 environment:
   sdk: ^3.8.0-116.0.dev
+
 workspace:
+
+  # Packages
   - packages/widgets
   - packages/material
+
+  # Apps
   - packages/material/example
