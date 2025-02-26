@@ -294,8 +294,12 @@ mixin _IconButtonCommonDefaults on ButtonStyle
       const WidgetStatePropertyAll(24.0);
 
   @override
-  WidgetStateProperty<OutlinedBorder?>? get shape =>
-      WidgetStatePropertyAll(_shape.corner.full);
+  WidgetStateProperty<OutlinedBorder?>? get shape => WidgetStatePropertyAll(
+    CornersBorder(
+      delegate: _shape.corner.family.delegate,
+      corners: Corners.all(_shape.corner.full),
+    ),
+  );
 
   @override
   WidgetStateProperty<Size?>? get minimumSize =>

@@ -1,11 +1,21 @@
 import 'package:flutter/foundation.dart';
-import 'package:material/material.dart';
 import 'package:meta/meta.dart';
+import 'package:material/material.dart';
+
+enum ShapeCornerFamily {
+  rounded(RoundedCornersBorderDelegate()),
+  cut(CutCornersBorderDelegate());
+
+  const ShapeCornerFamily(this.delegate);
+
+  final CornersBorderDelegate delegate;
+}
 
 @experimental
 @immutable
 class ShapeCornerThemeDataPartial with Diagnosticable {
   const ShapeCornerThemeDataPartial({
+    this.family,
     this.none,
     this.extraSmall,
     this.small,
@@ -15,24 +25,29 @@ class ShapeCornerThemeDataPartial with Diagnosticable {
     this.full,
   });
 
-  final OutlinedBorder? none;
-  final OutlinedBorder? extraSmall;
-  final OutlinedBorder? small;
-  final OutlinedBorder? medium;
-  final OutlinedBorder? large;
-  final OutlinedBorder? extraLarge;
-  final OutlinedBorder? full;
+  final ShapeCornerFamily? family;
+  final Corner? none;
+  final Corner? extraSmall;
+  final Corner? small;
+  final Corner? medium;
+  final Corner? large;
+  final Corner? extraLarge;
+  // final Corner? extraLargeIncreased;
+  // final Corner? extraExtraLarge;
+  final Corner? full;
 
   ShapeCornerThemeDataPartial copyWith({
-    OutlinedBorder? none,
-    OutlinedBorder? extraSmall,
-    OutlinedBorder? small,
-    OutlinedBorder? medium,
-    OutlinedBorder? large,
-    OutlinedBorder? extraLarge,
-    OutlinedBorder? full,
+    ShapeCornerFamily? family,
+    Corner? none,
+    Corner? extraSmall,
+    Corner? small,
+    Corner? medium,
+    Corner? large,
+    Corner? extraLarge,
+    Corner? full,
   }) {
-    if (none == null &&
+    if (family == null &&
+        none == null &&
         extraSmall == null &&
         small == null &&
         medium == null &&
@@ -42,6 +57,7 @@ class ShapeCornerThemeDataPartial with Diagnosticable {
       return this;
     }
     return ShapeCornerThemeDataPartial(
+      family: family ?? this.family,
       none: none ?? this.none,
       extraSmall: extraSmall ?? this.extraSmall,
       small: small ?? this.small,
@@ -55,6 +71,7 @@ class ShapeCornerThemeDataPartial with Diagnosticable {
   ShapeCornerThemeDataPartial merge(ShapeCornerThemeDataPartial? other) {
     if (other == null) return this;
     return copyWith(
+      family: other.family,
       none: other.none,
       extraSmall: other.extraSmall,
       small: other.small,
@@ -69,33 +86,28 @@ class ShapeCornerThemeDataPartial with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(
-      DiagnosticsProperty<OutlinedBorder>("none", none, defaultValue: null),
+      EnumProperty<ShapeCornerFamily>("family", family, defaultValue: null),
     );
     properties.add(
-      DiagnosticsProperty<OutlinedBorder>(
-        "extraSmall",
-        extraSmall,
-        defaultValue: null,
-      ),
+      DiagnosticsProperty<Corner>("none", none, defaultValue: null),
     );
     properties.add(
-      DiagnosticsProperty<OutlinedBorder>("small", small, defaultValue: null),
+      DiagnosticsProperty<Corner>("extraSmall", extraSmall, defaultValue: null),
     );
     properties.add(
-      DiagnosticsProperty<OutlinedBorder>("medium", medium, defaultValue: null),
+      DiagnosticsProperty<Corner>("small", small, defaultValue: null),
     );
     properties.add(
-      DiagnosticsProperty<OutlinedBorder>("large", large, defaultValue: null),
+      DiagnosticsProperty<Corner>("medium", medium, defaultValue: null),
     );
     properties.add(
-      DiagnosticsProperty<OutlinedBorder>(
-        "extraLarge",
-        extraLarge,
-        defaultValue: null,
-      ),
+      DiagnosticsProperty<Corner>("large", large, defaultValue: null),
     );
     properties.add(
-      DiagnosticsProperty<OutlinedBorder>("full", full, defaultValue: null),
+      DiagnosticsProperty<Corner>("extraLarge", extraLarge, defaultValue: null),
+    );
+    properties.add(
+      DiagnosticsProperty<Corner>("full", full, defaultValue: null),
     );
   }
 
@@ -103,6 +115,7 @@ class ShapeCornerThemeDataPartial with Diagnosticable {
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is ShapeCornerThemeDataPartial &&
+            family == other.family &&
             none == other.none &&
             extraSmall == other.extraSmall &&
             small == other.small &&
@@ -113,8 +126,16 @@ class ShapeCornerThemeDataPartial with Diagnosticable {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(none, extraSmall, small, medium, large, extraLarge, full);
+  int get hashCode => Object.hash(
+    family,
+    none,
+    extraSmall,
+    small,
+    medium,
+    large,
+    extraLarge,
+    full,
+  );
 }
 
 @experimental
@@ -123,6 +144,7 @@ class ShapeCornerThemeData
     with Diagnosticable
     implements ShapeCornerThemeDataPartial {
   const ShapeCornerThemeData({
+    required this.family,
     required this.none,
     required this.extraSmall,
     required this.small,
@@ -133,56 +155,55 @@ class ShapeCornerThemeData
   });
 
   const ShapeCornerThemeData.fallback()
-    : none = const RoundedRectangleBorder(),
-      extraSmall = const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(4.0)),
-      ),
-      small = const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-      ),
-      medium = const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12.0)),
-      ),
-      large = const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16.0)),
-      ),
-      extraLarge = const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(28.0)),
-      ),
-      full = const StadiumBorder();
+    : family = ShapeCornerFamily.rounded,
+      none = Corner.none,
+      extraSmall = const Corner.circular(4.0),
+      small = const Corner.circular(8.0),
+      medium = const Corner.circular(12.0),
+      large = const Corner.circular(16.0),
+      extraLarge = const Corner.circular(28.0),
+      // TODO: decice if we should include tokens from material-components-android
+      // extraLargeIncreased = const Corner.circular(32.0),
+      // extraExtraLarge = const Corner.circular(48.0),
+      full = Corner.full;
 
   @override
-  final OutlinedBorder none;
+  final ShapeCornerFamily family;
 
   @override
-  final OutlinedBorder extraSmall;
+  final Corner none;
 
   @override
-  final OutlinedBorder small;
+  final Corner extraSmall;
 
   @override
-  final OutlinedBorder medium;
+  final Corner small;
 
   @override
-  final OutlinedBorder large;
+  final Corner medium;
 
   @override
-  final OutlinedBorder extraLarge;
+  final Corner large;
 
   @override
-  final OutlinedBorder full;
+  final Corner extraLarge;
+
+  @override
+  final Corner full;
 
   @override
   ShapeCornerThemeData copyWith({
-    OutlinedBorder? none,
-    OutlinedBorder? extraSmall,
-    OutlinedBorder? small,
-    OutlinedBorder? medium,
-    OutlinedBorder? large,
-    OutlinedBorder? extraLarge,
-    OutlinedBorder? full,
+    ShapeCornerFamily? family,
+    Corner? none,
+    Corner? extraSmall,
+    Corner? small,
+    Corner? medium,
+    Corner? large,
+    Corner? extraLarge,
+    Corner? full,
   }) {
-    if (none == null &&
+    if (family == null &&
+        none == null &&
         extraSmall == null &&
         small == null &&
         medium == null &&
@@ -192,6 +213,7 @@ class ShapeCornerThemeData
       return this;
     }
     return ShapeCornerThemeData(
+      family: family ?? this.family,
       none: none ?? this.none,
       extraSmall: extraSmall ?? this.extraSmall,
       small: small ?? this.small,
@@ -206,6 +228,7 @@ class ShapeCornerThemeData
   ShapeCornerThemeData merge(ShapeCornerThemeDataPartial? other) {
     if (other == null) return this;
     return copyWith(
+      family: other.family,
       none: other.none,
       extraSmall: other.extraSmall,
       small: other.small,
@@ -219,31 +242,21 @@ class ShapeCornerThemeData
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<OutlinedBorder>("none", none));
-    properties.add(
-      DiagnosticsProperty<OutlinedBorder>(
-        "extraSmall",
-        extraSmall,
-        defaultValue: null,
-      ),
-    );
-    properties.add(DiagnosticsProperty<OutlinedBorder>("small", small));
-    properties.add(DiagnosticsProperty<OutlinedBorder>("medium", medium));
-    properties.add(DiagnosticsProperty<OutlinedBorder>("large", large));
-    properties.add(
-      DiagnosticsProperty<OutlinedBorder>(
-        "extraLarge",
-        extraLarge,
-        defaultValue: null,
-      ),
-    );
-    properties.add(DiagnosticsProperty<OutlinedBorder>("full", full));
+    properties.add(EnumProperty<ShapeCornerFamily>("family", family));
+    properties.add(DiagnosticsProperty<Corner>("none", none));
+    properties.add(DiagnosticsProperty<Corner>("extraSmall", extraSmall));
+    properties.add(DiagnosticsProperty<Corner>("small", small));
+    properties.add(DiagnosticsProperty<Corner>("medium", medium));
+    properties.add(DiagnosticsProperty<Corner>("large", large));
+    properties.add(DiagnosticsProperty<Corner>("extraLarge", extraLarge));
+    properties.add(DiagnosticsProperty<Corner>("full", full));
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is ShapeCornerThemeData &&
+            family == other.family &&
             none == other.none &&
             extraSmall == other.extraSmall &&
             small == other.small &&
@@ -254,8 +267,16 @@ class ShapeCornerThemeData
   }
 
   @override
-  int get hashCode =>
-      Object.hash(none, extraSmall, small, medium, large, extraLarge, full);
+  int get hashCode => Object.hash(
+    family,
+    none,
+    extraSmall,
+    small,
+    medium,
+    large,
+    extraLarge,
+    full,
+  );
 }
 
 @experimental
