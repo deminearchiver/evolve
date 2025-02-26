@@ -23,6 +23,20 @@ TODO: List what your package can do. Maybe include images, gifs, or videos.
 TODO: List prerequisites and provide or point to information on how to
 start using the package.
 
+```yaml
+dependencies:
+  widgets: # Nothing here because we've specified an override
+  
+dependency_overrides:
+  widgets:
+    git:
+      url: git@github.com:deminearchiver/evolve.git
+      # It's recommended to replace master with a fixed commit hash
+      # to avoid breaking changes upon remote updates
+      ref: master
+      path: packages/widgets
+```
+
 ## Usage
 
 TODO: Include short and useful examples for package users. Add longer examples

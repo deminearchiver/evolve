@@ -69,12 +69,28 @@ start using the package.
 
 ```yaml
 dependencies:
+  # Nothing here because we've set dependency overrides
+  widgets:
+  material:
+  
+dependency_overrides:
+  # This override is REQUIRED, otherwise dependant packages
+  # will try to get the dependency from pub
+  widgets:
+    git:
+      url: git@github.com:deminearchiver/evolve.git
+      # It's recommended to replace master with a fixed commit hash
+      # to avoid breaking changes upon remote updates
+      ref: master
+      path: packages/widgets
   material:
     git:
       url: git@github.com:deminearchiver/evolve.git
+      # It's recommended to replace master with a fixed commit hash
+      # to avoid breaking changes upon remote updates
+      ref: master
       path: packages/material
 ```
-
 ## Usage
 
 TODO: Include short and useful examples for package users. Add longer examples
