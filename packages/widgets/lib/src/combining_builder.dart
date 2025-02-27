@@ -67,7 +67,8 @@ class CombiningBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return builders.fold<Widget>(
+    // Reversed so that the first element is the outermost in the resulting tree
+    return builders.reversed.fold<Widget>(
       child,
       (child, builder) => builder(context, child),
     );
