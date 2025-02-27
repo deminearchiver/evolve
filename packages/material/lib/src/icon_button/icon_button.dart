@@ -153,12 +153,18 @@ class IconButton extends StatelessWidget {
   final Widget icon;
 
   Widget _buildIcon() {
-    final double? fill = switch (variant) {
+    // ignore: unnecessary_nullable_for_final_variable_declarations
+    final double? variantFill = switch (variant) {
       IconButtonVariant.filled => 1.0,
-      _ => null,
+      _ => 0.0,
+    };
+    final double? resolvedFill = switch (selected) {
+      false => 0.0,
+      true => 1.0,
+      null => variantFill,
     };
     return IconTheme.merge(
-      data: IconThemeData(fill: fill, opticalSize: 24),
+      data: IconThemeData(fill: resolvedFill, opticalSize: 24.0),
       child: icon,
     );
   }
