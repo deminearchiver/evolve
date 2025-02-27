@@ -677,8 +677,10 @@ class _ElevatedButtonDefaults extends _ButtonDefaultsBase
       });
 
   @override
-  WidgetStateProperty<Color?>? get overlayColor =>
-      WidgetStateLayerColor(_color.primary, opacity: _state.stateLayerOpacity);
+  WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
+    WidgetStatePropertyAll(_color.primary),
+    _state.stateLayerOpacity,
+  );
 
   @override
   WidgetStateProperty<Color?>? get foregroundColor =>
@@ -723,8 +725,8 @@ class _FilledButtonDefaults extends _ButtonDefaultsBase
 
   @override
   WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
-    _color.onPrimary,
-    opacity: _state.stateLayerOpacity,
+    WidgetStatePropertyAll(_color.onPrimary),
+    _state.stateLayerOpacity,
   );
 
   @override
@@ -770,8 +772,8 @@ class _FilledTonalButtonDefaults extends _ButtonDefaultsBase
 
   @override
   WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
-    _color.onSecondaryContainer,
-    opacity: _state.stateLayerOpacity,
+    WidgetStatePropertyAll(_color.onSecondaryContainer),
+    _state.stateLayerOpacity,
   );
 
   @override
@@ -811,8 +813,10 @@ class _OutlinedButtonDefaults extends _ButtonDefaultsBase
       const WidgetStatePropertyAll(Colors.transparent);
 
   @override
-  WidgetStateProperty<Color?>? get overlayColor =>
-      WidgetStateLayerColor(_color.primary, opacity: _state.stateLayerOpacity);
+  WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
+    WidgetStatePropertyAll(_color.primary),
+    _state.stateLayerOpacity,
+  );
 
   @override
   WidgetStateProperty<BorderSide?>? get side =>
@@ -863,8 +867,10 @@ class _TextButtonDefaults extends _ButtonDefaultsBase
       const WidgetStatePropertyAll(Colors.transparent);
 
   @override
-  WidgetStateProperty<Color?>? get overlayColor =>
-      WidgetStateLayerColor(_color.primary, opacity: _state.stateLayerOpacity);
+  WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
+    WidgetStatePropertyAll(_color.primary),
+    _state.stateLayerOpacity,
+  );
 
   @override
   WidgetStateProperty<Color?>? get foregroundColor =>

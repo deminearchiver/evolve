@@ -204,35 +204,52 @@ class StateTheme extends InheritedTheme {
   // }
 }
 
-const _standard = WidgetStateProperty<double>.fromMap({
-  WidgetState.disabled: 0.0,
-  WidgetState.dragged: 0.16,
-  WidgetState.pressed: 0.1,
-  WidgetState.hovered: 0.08,
-  WidgetState.focused: 0.1,
-  WidgetState.any: 0.0,
-});
-const _web = WidgetStateProperty<double>.fromMap({
-  WidgetState.disabled: 0.0,
-  WidgetState.dragged: 0.16,
-  WidgetState.pressed: 0.12,
-  WidgetState.hovered: 0.08,
-  WidgetState.focused: 0.12,
-  WidgetState.any: 0.0,
-});
+// const _standard = WidgetStateProperty<double>.fromMap({
+//   WidgetState.disabled: 0.0,
+//   WidgetState.dragged: 0.16,
+//   WidgetState.pressed: 0.1,
+//   WidgetState.hovered: 0.08,
+//   WidgetState.focused: 0.1,
+//   WidgetState.any: 0.0,
+// });
+// const _web = WidgetStateProperty<double>.fromMap({
+//   WidgetState.disabled: 0.0,
+//   WidgetState.dragged: 0.16,
+//   WidgetState.pressed: 0.12,
+//   WidgetState.hovered: 0.08,
+//   WidgetState.focused: 0.12,
+//   WidgetState.any: 0.0,
+// });
 
 class WidgetStateLayerColor implements WidgetStateProperty<Color> {
-  const WidgetStateLayerColor(this.color, {this.opacity});
+  const WidgetStateLayerColor(this.color, this.opacity);
 
-  final Color color;
-  final WidgetStateProperty<double>? opacity;
+  final WidgetStateProperty<Color?>? color;
+  final WidgetStateProperty<double?>? opacity;
 
   @override
   Color resolve(Set<WidgetState> states) {
-    if (states.contains(WidgetState.disabled)) return color.withAlpha(0);
-    if (opacity == null) return color.withAlpha(0);
-    final alpha = opacity!.resolve(states);
-    if (alpha == 0.0) return color.withAlpha(0);
-    return color.withValues(alpha: alpha);
+    // No color property provided
+    if (color == null) return Colors.transparent;
+    final resolvedColor = color!.resolve(states);
+
+    // Short circuit if no color found
+    if (resolvedColor == null) return Colors.transparent;
+
+    // Disabled
+    if (states.contains(WidgetState.disabled)) {
+      return resolvedColor.withAlpha(0);
+    }
+    // Opacity not provided
+    if (opacity == null) return resolvedColor.withAlpha(0);
+
+    // Default opacity is 0
+    final alpha = opacity!.resolve(states) ?? 0.0;
+
+    // Optimized for opacity = 0
+    if (alpha == 0.0) return resolvedColor.withAlpha(0);
+
+    // Unoptimized color spaces for opacity other than 0
+    return resolvedColor.withValues(alpha: alpha);
   }
 }

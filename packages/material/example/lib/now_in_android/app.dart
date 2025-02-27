@@ -431,8 +431,10 @@ class _Test1State extends State<Test1> {
                                     ),
                               ),
                           overlayColor: WidgetStateLayerColor(
-                            colorTheme.onPrimaryContainer,
-                            opacity: stateTheme.stateLayerOpacity,
+                            WidgetStatePropertyAll(
+                              colorTheme.onPrimaryContainer,
+                            ),
+                            stateTheme.stateLayerOpacity,
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),

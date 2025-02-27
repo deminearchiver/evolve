@@ -355,8 +355,10 @@ class _StandardIconButtonDefaults extends _IconButtonDefaultsBase
 
   @override
   WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
-    isSelected ? _color.primary : _color.onSurfaceVariant,
-    opacity: _state.stateLayerOpacity,
+    WidgetStatePropertyAll(
+      isSelected ? _color.primary : _color.onSurfaceVariant,
+    ),
+    _state.stateLayerOpacity,
   );
 
   @override
@@ -403,8 +405,8 @@ class _FilledIconButtonDefaults extends _IconButtonDefaultsBase
 
   @override
   WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
-    isSelected ? _color.onPrimary : _color.primary,
-    opacity: _state.stateLayerOpacity,
+    WidgetStatePropertyAll(isSelected ? _color.onPrimary : _color.primary),
+    _state.stateLayerOpacity,
   );
 
   @override
@@ -456,8 +458,10 @@ class _FilledTonalIconButtonDefaults extends _IconButtonDefaultsBase
 
   @override
   WidgetStateProperty<Color?>? get overlayColor => WidgetStateLayerColor(
-    isSelected ? _color.onSecondaryContainer : _color.onSurfaceVariant,
-    opacity: _state.stateLayerOpacity,
+    WidgetStatePropertyAll(
+      isSelected ? _color.onSecondaryContainer : _color.onSurfaceVariant,
+    ),
+    _state.stateLayerOpacity,
   );
 
   @override
