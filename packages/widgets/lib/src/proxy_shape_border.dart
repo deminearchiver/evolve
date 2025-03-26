@@ -12,21 +12,25 @@ abstract class ProxyShapeBorder extends ShapeBorder {
   EdgeInsetsGeometry get dimensions => shape.dimensions;
 
   @override
+  @mustCallSuper
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
     return shape.getInnerPath(rect, textDirection: textDirection);
   }
 
   @override
+  @mustCallSuper
   Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
     return shape.getOuterPath(rect, textDirection: textDirection);
   }
 
   @override
+  @mustCallSuper
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
     shape.paint(canvas, rect, textDirection: textDirection);
   }
 
   @override
+  @mustCallSuper
   void paintInterior(
     Canvas canvas,
     Rect rect,
