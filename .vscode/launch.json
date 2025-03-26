@@ -6,23 +6,69 @@
     "configurations": [
         {
             "name": "material",
-            "cwd": "packages\\material\\example",
+            "cwd": "packages/material/example",
             "request": "launch",
             "type": "dart"
         },
         {
             "name": "material (profile mode)",
-            "cwd": "packages\\material\\example",
+            "cwd": "packages/material/example",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
             "name": "material (release mode)",
-            "cwd": "packages\\material\\example",
+            "cwd": "packages/material/example",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "material/material_theme_builder",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/material_theme_builder/main.dart",
+        },
+        {
+            "name": "material/material_theme_builder (profile mode)",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "program": "lib/material_theme_builder/main.dart",
+        },
+        {
+            "name": "material/material_theme_builder (release mode)",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "program": "lib/material_theme_builder/main.dart",
+        },
+        {
+            "name": "material/browser",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/browser/main.dart",
+        },
+        {
+            "name": "material/browser (profile mode)",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "program": "lib/browser/main.dart",
+        },
+        {
+            "name": "material/browser (release mode)",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "program": "lib/browser/main.dart",
         }
     ]
 }
