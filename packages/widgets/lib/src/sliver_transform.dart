@@ -560,7 +560,7 @@ class RenderSliverTransform extends RenderProxySliver {
   }
 
   @override
-  void applyPaintTransform(RenderBox child, Matrix4 transform) {
+  void applyPaintTransform(RenderObject child, Matrix4 transform) {
     transform.multiply(_effectiveTransform!);
   }
 
