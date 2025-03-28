@@ -160,7 +160,7 @@ abstract class ColorThemeData with Diagnosticable {
   /// official Material Design 3 guidelines:
   /// https://m3.material.io/styles/color/static/baseline
   static const ColorThemeData _baselineDark = ColorThemeData(
-    brightness: Brightness.light,
+    brightness: Brightness.dark,
     primary: Color(0xFFD0BCFF),
     onPrimary: Color(0xFF381E72),
     primaryContainer: Color(0xFF4F378B),
