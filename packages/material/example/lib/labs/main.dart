@@ -8,9 +8,6 @@ import 'package:flutter/rendering.dart';
 import 'package:material/material.dart';
 import 'package:collection/collection.dart';
 
-import 'package:material/src/navigation/navigation_drawer.dart'
-    as navigation_drawer;
-
 import 'theme.dart';
 
 void main() async {
@@ -44,6 +41,52 @@ class _AppState extends State<App> {
       ),
       home: const Test1(),
       builder: _buildWrapper,
+    );
+  }
+}
+
+class Test2 extends StatefulWidget {
+  const Test2({super.key});
+
+  @override
+  State<Test2> createState() => _Test2State();
+}
+
+class _Test2State extends State<Test2> {
+  int _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      drawer: NavigationDrawer(
+        child: CustomScrollView(
+          slivers: [
+            SliverList.list(
+              children: [
+                NavigationDrawerDestination(
+                  onTap: () => setState(() => _selectedIndex = 0),
+                  selected: _selectedIndex == 0,
+                  icon: const Icon(Symbols.home),
+                  label: const Text("Home"),
+                ),
+                NavigationDrawerDestination(
+                  onTap: () => setState(() => _selectedIndex = 1),
+                  selected: _selectedIndex == 1,
+                  icon: const Icon(Symbols.home),
+                  label: const Text("Home"),
+                ),
+                NavigationDrawerDestination(
+                  onTap: () => setState(() => _selectedIndex = 2),
+                  selected: _selectedIndex == 2,
+                  icon: const Icon(Symbols.home),
+                  label: const Text("Home"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -307,9 +350,7 @@ class _Test1State extends State<Test1> {
     return MemoryImage(bytes);
   }
 
-  void _onDestinationSelected(int value) async {
-    final item = _drawerNavigationItems.elementAtOrNull(value);
-    if (item == null) return;
+  void _onDestinationSelected(_DrawerNavigationItem item) async {
     setState(() => _selectedDrawerNavigationItem = item);
     switch (item) {
       case _DrawerNavigationItem.settings:
@@ -360,20 +401,18 @@ class _Test1State extends State<Test1> {
         key: _repaintBoundaryKey,
         child: NavigationDrawer(
           key: _drawerKey,
-          onDestinationSelected: _onDestinationSelected,
-          selectedIndex:
-              _selectedDrawerNavigationItem != null
-                  ? _drawerNavigationItems.indexOf(
-                    _selectedDrawerNavigationItem!,
-                  )
-                  : null,
-          children: [
-            // SizedBox.shrink(key: _repaintBoundaryChildKey),
-            ..._NavigationDrawerLayout.list(
-              context: context,
-              items: _drawerItems,
-            ),
-          ],
+
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: _NavigationDrawerLayout(
+                  onSelectionChanged: _onDestinationSelected,
+                  selectedItem: _selectedDrawerNavigationItem,
+                  items: _drawerItems,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       body: SafeArea(
@@ -650,7 +689,7 @@ class _NavigationDrawerRoute<T extends Object?> extends PageRoute<T> {
     final rect =
         Rect.lerp(localContainerRect, navigatorRect, _curvedAnimation.value)!;
 
-    final layout = _NavigationDrawerLayout(items: items);
+    // final layout = _NavigationDrawerLayout(selectedItem: null, items: items);
 
     final colorTheme = ColorTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
@@ -736,41 +775,58 @@ class _NavigationDrawerRoute<T extends Object?> extends PageRoute<T> {
 }
 
 class _NavigationDrawerLayout extends StatefulWidget {
-  const _NavigationDrawerLayout({super.key, required this.items});
+  const _NavigationDrawerLayout({
+    super.key,
+    this.onSelectionChanged,
+    required this.selectedItem,
+    required this.items,
+  });
 
+  final ValueChanged<_DrawerNavigationItem>? onSelectionChanged;
+  final _DrawerNavigationItem? selectedItem;
   final List<_DrawerItem> items;
 
   @override
   State<_NavigationDrawerLayout> createState() =>
       _NavigationDrawerLayoutState();
 
-  static List<Widget> list({
-    required BuildContext context,
-    required List<_DrawerItem> items,
-  }) {
-    return [
-      const SizedBox(height: 12),
-      ...items.mapIndexed(
-        (index, item) =>
-            _NavigationDrawerLayoutState._buildNavigationDrawerItem(
-              context,
-              index,
-              item,
-            ),
-      ),
-      const SizedBox(height: 12),
-    ];
-  }
+  // static List<Widget> list({
+  //   required BuildContext context,
+  //   required _
+  //   required List<_DrawerItem> items,
+  // }) {
+  //   return [
+  //     const SizedBox(height: 12),
+  //     ...items.mapIndexed(
+  //       (index, item) =>
+  //           _NavigationDrawerLayoutState._buildNavigationDrawerItem(
+  //             context: context,
+  //             index,
+  //             item,
+  //           ),
+  //     ),
+  //     const SizedBox(height: 12),
+  //   ];
+  // }
 }
 
 class _NavigationDrawerLayoutState extends State<_NavigationDrawerLayout> {
-  static Widget _buildNavigationDrawerItem(
-    BuildContext context,
-    int index,
-    _DrawerItem item,
-  ) {
+  static Widget _buildNavigationDrawerItem({
+    required BuildContext context,
+    required int index,
+    required ValueChanged<_DrawerNavigationItem>? onSelectionChanged,
+    required _DrawerNavigationItem? selectedItem,
+    required _DrawerItem item,
+  }) {
     final colorTheme = ColorTheme.of(context);
     final textTheme = TextTheme.of(context);
+    final isSelected = selectedItem == item;
+    final VoidCallback? onTap =
+        !isSelected &&
+                onSelectionChanged != null &&
+                item is _DrawerNavigationItem
+            ? () => onSelectionChanged.call(item)
+            : null;
     return switch (item) {
       _DrawerDividerItem(:final label) => Padding(
         padding: const EdgeInsets.fromLTRB(28, 16, 28, 16),
@@ -796,90 +852,134 @@ class _NavigationDrawerLayoutState extends State<_NavigationDrawerLayout> {
         ),
       ),
       _DrawerNavigationItem.home => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.home),
         label: Text("Home"),
       ),
       _DrawerNavigationItem.search => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.search),
         label: Text("Search"),
       ),
       _DrawerNavigationItem.color => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.palette),
         label: Text("Color"),
       ),
       _DrawerNavigationItem.typography => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.text_fields),
         label: Text("Typography"),
       ),
       _DrawerNavigationItem.motion => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.animation),
         label: Text("Motion"),
       ),
       _DrawerNavigationItem.state => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.transition_fade),
         label: Text("State"),
       ),
       _DrawerNavigationItem.elevation => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.layers),
         label: Text("Elevation"),
       ),
       _DrawerNavigationItem.shape => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.category),
         label: Text("Shape"),
       ),
       _DrawerNavigationItem.settings => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.settings),
         label: Text("Settings"),
       ),
       _DrawerNavigationItem.about => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.info),
         label: Text("About"),
       ),
       _DrawerNavigationItem.commonButtons => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.buttons_alt),
         label: Text("Common buttons"),
       ),
       _DrawerNavigationItem.iconButtons => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.apps),
         label: Text("Icon buttons"),
       ),
       _DrawerNavigationItem.fab => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.add_circle),
         label: Text("FAB"),
       ),
       _DrawerNavigationItem.extendedFab => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.buttons_alt),
         label: Text("Extended FAB"),
       ),
       _DrawerNavigationItem.basicDialog => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.dialogs),
         label: Text("Basic dialog"),
       ),
       _DrawerNavigationItem.fullscreenDialog => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.fullscreen_portrait),
         label: Text("Full-screen dialog"),
       ),
       _DrawerNavigationItem.snackbar => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.toast),
         label: Text("Snackbar"),
       ),
       _DrawerNavigationItem.navigationBar => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.bottom_navigation),
         label: Text("Navigation bar"),
       ),
       _DrawerNavigationItem.navigationDrawer => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.side_navigation),
         label: Text("Navigation drawer"),
       ),
       _DrawerNavigationItem.navigationRail => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.dock_to_right),
         label: Text("Navigation rail"),
       ),
       _DrawerNavigationItem.carousel => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.view_carousel),
         label: Text("Carousel"),
       ),
       _DrawerNavigationItem.badge => NavigationDrawerDestination(
+        onTap: onTap,
+        selected: selectedItem == item,
         icon: const Icon(Symbols.app_badging),
         label: Text("Badge"),
       ),
@@ -891,7 +991,13 @@ class _NavigationDrawerLayoutState extends State<_NavigationDrawerLayout> {
     final children =
         widget.items
             .mapIndexed(
-              (index, item) => _buildNavigationDrawerItem(context, index, item),
+              (index, item) => _buildNavigationDrawerItem(
+                context: context,
+                index: index,
+                onSelectionChanged: widget.onSelectionChanged,
+                selectedItem: widget.selectedItem,
+                item: item,
+              ),
             )
             .toList();
     return Padding(

@@ -35,7 +35,12 @@ export 'package:flutter/material.dart'
         // TODO: uncomment after implementing switch
         // Switch,
         // Tooltip
-        Tooltip;
+        Tooltip,
+        // Navigation
+        NavigationDrawer,
+        NavigationDrawerDestination,
+        NavigationDrawerTheme,
+        NavigationDrawerThemeData;
 
 export 'package:widgets/widgets.dart';
 
@@ -78,6 +83,9 @@ export 'src/icon_button/icon_button_theme.dart';
 // export 'src/switch/switch_theme.dart';
 
 export 'src/tooltip/tooltip.dart';
+
+export 'src/navigation/navigation_drawer.dart';
+export 'src/navigation/navigation_drawer_theme.dart';
 
 // Utility
 

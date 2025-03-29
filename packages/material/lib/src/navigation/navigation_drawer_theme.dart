@@ -10,6 +10,7 @@ class NavigationDrawerThemeDataPartial with Diagnosticable {
     this.activeIndicatorColor,
     this.activeIndicatorSize,
     this.activeIndicatorShape,
+    this.stateLayerColor,
     this.iconTheme,
     this.labelTextStyle,
   });
@@ -26,6 +27,8 @@ class NavigationDrawerThemeDataPartial with Diagnosticable {
 
   final ShapeBorder? activeIndicatorShape;
 
+  final WidgetStateProperty<Color>? stateLayerColor;
+
   final WidgetStateProperty<IconThemeDataPartial>? iconTheme;
 
   final WidgetStateProperty<TextStyle>? labelTextStyle;
@@ -37,6 +40,7 @@ class NavigationDrawerThemeDataPartial with Diagnosticable {
     Color? activeIndicatorColor,
     Size? activeIndicatorSize,
     ShapeBorder? activeIndicatorShape,
+    WidgetStateProperty<Color>? stateLayerColor,
     WidgetStateProperty<IconThemeDataPartial>? iconTheme,
     WidgetStateProperty<TextStyle>? labelTextStyle,
   }) {
@@ -46,6 +50,7 @@ class NavigationDrawerThemeDataPartial with Diagnosticable {
         activeIndicatorColor == null &&
         activeIndicatorSize == null &&
         activeIndicatorShape == null &&
+        stateLayerColor == null &&
         iconTheme == null &&
         labelTextStyle == null) {
       return this;
@@ -57,6 +62,7 @@ class NavigationDrawerThemeDataPartial with Diagnosticable {
       activeIndicatorColor: activeIndicatorColor ?? this.activeIndicatorColor,
       activeIndicatorSize: activeIndicatorSize ?? this.activeIndicatorSize,
       activeIndicatorShape: activeIndicatorShape ?? this.activeIndicatorShape,
+      stateLayerColor: stateLayerColor ?? this.stateLayerColor,
       iconTheme: iconTheme ?? this.iconTheme,
       labelTextStyle: labelTextStyle ?? this.labelTextStyle,
     );
@@ -73,6 +79,7 @@ class NavigationDrawerThemeDataPartial with Diagnosticable {
       activeIndicatorColor: other.activeIndicatorColor,
       activeIndicatorSize: other.activeIndicatorSize,
       activeIndicatorShape: other.activeIndicatorShape,
+      stateLayerColor: other.stateLayerColor,
       iconTheme: other.iconTheme,
       labelTextStyle: other.labelTextStyle,
     );
@@ -110,6 +117,13 @@ class NavigationDrawerThemeDataPartial with Diagnosticable {
       ),
     );
     properties.add(
+      DiagnosticsProperty<WidgetStateProperty<Color>>(
+        "stateLayerColor",
+        stateLayerColor,
+        defaultValue: null,
+      ),
+    );
+    properties.add(
       DiagnosticsProperty<WidgetStateProperty<IconThemeDataPartial>>(
         "iconTheme",
         iconTheme,
@@ -135,6 +149,7 @@ class NavigationDrawerThemeDataPartial with Diagnosticable {
             activeIndicatorColor == other.activeIndicatorColor &&
             activeIndicatorSize == other.activeIndicatorSize &&
             activeIndicatorShape == other.activeIndicatorShape &&
+            stateLayerColor == other.stateLayerColor &&
             iconTheme == other.iconTheme &&
             labelTextStyle == other.labelTextStyle;
   }
@@ -147,6 +162,7 @@ class NavigationDrawerThemeDataPartial with Diagnosticable {
     activeIndicatorColor,
     activeIndicatorSize,
     activeIndicatorShape,
+    stateLayerColor,
     iconTheme,
     labelTextStyle,
   );
@@ -163,6 +179,7 @@ class NavigationDrawerThemeData
     required this.activeIndicatorColor,
     required this.activeIndicatorSize,
     required this.activeIndicatorShape,
+    required this.stateLayerColor,
     required this.iconTheme,
     required this.labelTextStyle,
   });
@@ -190,6 +207,9 @@ class NavigationDrawerThemeData
   final ShapeBorder activeIndicatorShape;
 
   @override
+  final WidgetStateProperty<Color> stateLayerColor;
+
+  @override
   final WidgetStateProperty<IconThemeDataPartial> iconTheme;
 
   @override
@@ -203,6 +223,7 @@ class NavigationDrawerThemeData
     Color? activeIndicatorColor,
     Size? activeIndicatorSize,
     ShapeBorder? activeIndicatorShape,
+    WidgetStateProperty<Color>? stateLayerColor,
     WidgetStateProperty<IconThemeDataPartial>? iconTheme,
     WidgetStateProperty<TextStyle>? labelTextStyle,
   }) {
@@ -212,6 +233,7 @@ class NavigationDrawerThemeData
         activeIndicatorColor == null &&
         activeIndicatorSize == null &&
         activeIndicatorShape == null &&
+        stateLayerColor == null &&
         iconTheme == null &&
         labelTextStyle == null) {
       return this;
@@ -223,6 +245,7 @@ class NavigationDrawerThemeData
       activeIndicatorColor: activeIndicatorColor ?? this.activeIndicatorColor,
       activeIndicatorSize: activeIndicatorSize ?? this.activeIndicatorSize,
       activeIndicatorShape: activeIndicatorShape ?? this.activeIndicatorShape,
+      stateLayerColor: stateLayerColor ?? this.stateLayerColor,
       iconTheme: iconTheme ?? this.iconTheme,
       labelTextStyle: labelTextStyle ?? this.labelTextStyle,
     );
@@ -238,6 +261,7 @@ class NavigationDrawerThemeData
       activeIndicatorColor: other.activeIndicatorColor,
       activeIndicatorSize: other.activeIndicatorSize,
       activeIndicatorShape: other.activeIndicatorShape,
+      stateLayerColor: other.stateLayerColor,
       iconTheme: other.iconTheme,
       labelTextStyle: other.labelTextStyle,
     );
@@ -257,6 +281,12 @@ class NavigationDrawerThemeData
       DiagnosticsProperty<ShapeBorder>(
         "activeIndicatorShape",
         activeIndicatorShape,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<WidgetStateProperty<Color>>(
+        "stateLayerColor",
+        stateLayerColor,
       ),
     );
     properties.add(
@@ -283,6 +313,7 @@ class NavigationDrawerThemeData
             activeIndicatorColor == other.activeIndicatorColor &&
             activeIndicatorSize == other.activeIndicatorSize &&
             activeIndicatorShape == other.activeIndicatorShape &&
+            stateLayerColor == other.stateLayerColor &&
             iconTheme == other.iconTheme &&
             labelTextStyle == other.labelTextStyle;
   }
@@ -295,6 +326,7 @@ class NavigationDrawerThemeData
     activeIndicatorColor,
     activeIndicatorSize,
     activeIndicatorShape,
+    stateLayerColor,
     iconTheme,
     labelTextStyle,
   );
@@ -365,6 +397,7 @@ class _NavigationDrawerThemeDataFallback
   final BuildContext context;
   late final ColorThemeData _color = ColorTheme.of(context);
   late final ShapeThemeData _shape = ShapeTheme.of(context);
+  late final StateThemeData _state = StateTheme.of(context);
   late final ElevationThemeData _elevation = ElevationTheme.of(context);
   late final TextTheme _text = TextTheme.of(context);
 
@@ -382,6 +415,16 @@ class _NavigationDrawerThemeDataFallback
 
   @override
   final Size activeIndicatorSize;
+
+  @override
+  WidgetStateProperty<Color> get stateLayerColor => WidgetStateLayerColor(
+    WidgetStateProperty.resolveWith((states) {
+      return states.contains(WidgetState.selected)
+          ? _color.onSecondaryContainer
+          : _color.onSurface;
+    }),
+    _state.stateLayerOpacity,
+  );
 
   @override
   WidgetStateProperty<IconThemeDataPartial> get iconTheme =>
@@ -420,7 +463,6 @@ class _NavigationDrawerThemeDataFallback
     delegate: _shape.corner.family.delegate,
     corners: Corners.all(_shape.corner.full),
   );
-
   @override
   NavigationDrawerThemeData copyWith({
     Color? backgroundColor,
@@ -429,6 +471,7 @@ class _NavigationDrawerThemeDataFallback
     Color? activeIndicatorColor,
     Size? activeIndicatorSize,
     ShapeBorder? activeIndicatorShape,
+    WidgetStateProperty<Color>? stateLayerColor,
     WidgetStateProperty<IconThemeDataPartial>? iconTheme,
     WidgetStateProperty<TextStyle>? labelTextStyle,
   }) {
@@ -438,6 +481,8 @@ class _NavigationDrawerThemeDataFallback
         activeIndicatorColor == null &&
         activeIndicatorSize == null &&
         activeIndicatorShape == null &&
+        stateLayerColor == null &&
+        iconTheme == null &&
         labelTextStyle == null) {
       return this;
     }
@@ -448,6 +493,7 @@ class _NavigationDrawerThemeDataFallback
       activeIndicatorColor: activeIndicatorColor ?? this.activeIndicatorColor,
       activeIndicatorSize: activeIndicatorSize ?? this.activeIndicatorSize,
       activeIndicatorShape: activeIndicatorShape ?? this.activeIndicatorShape,
+      stateLayerColor: stateLayerColor ?? this.stateLayerColor,
       iconTheme: iconTheme ?? this.iconTheme,
       labelTextStyle: labelTextStyle ?? this.labelTextStyle,
     );
@@ -463,6 +509,7 @@ class _NavigationDrawerThemeDataFallback
       activeIndicatorColor: other.activeIndicatorColor,
       activeIndicatorSize: other.activeIndicatorSize,
       activeIndicatorShape: other.activeIndicatorShape,
+      stateLayerColor: other.stateLayerColor,
       iconTheme: other.iconTheme,
       labelTextStyle: other.labelTextStyle,
     );
@@ -482,6 +529,12 @@ class _NavigationDrawerThemeDataFallback
       DiagnosticsProperty<ShapeBorder>(
         "activeIndicatorShape",
         activeIndicatorShape,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<WidgetStateProperty<Color>>(
+        "stateLayerColor",
+        stateLayerColor,
       ),
     );
     properties.add(
@@ -508,6 +561,7 @@ class _NavigationDrawerThemeDataFallback
             activeIndicatorColor == other.activeIndicatorColor &&
             activeIndicatorSize == other.activeIndicatorSize &&
             activeIndicatorShape == other.activeIndicatorShape &&
+            stateLayerColor == other.stateLayerColor &&
             iconTheme == other.iconTheme &&
             labelTextStyle == other.labelTextStyle;
   }
@@ -520,6 +574,7 @@ class _NavigationDrawerThemeDataFallback
     activeIndicatorColor,
     activeIndicatorSize,
     activeIndicatorShape,
+    stateLayerColor,
     iconTheme,
     labelTextStyle,
   );

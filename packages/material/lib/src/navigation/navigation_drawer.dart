@@ -42,7 +42,7 @@ class NavigationDrawer extends StatelessWidget {
   }
 }
 
-class NavigationDrawerDestination extends StatefulWidget {
+class NavigationDrawerDestination extends StatelessWidget {
   const NavigationDrawerDestination({
     super.key,
     this.onTap,
@@ -66,13 +66,6 @@ class NavigationDrawerDestination extends StatefulWidget {
   final Widget? selectedIcon;
   final Widget label;
 
-  @override
-  State<NavigationDrawerDestination> createState() =>
-      _NavigationDrawerDestinationState();
-}
-
-class _NavigationDrawerDestinationState
-    extends State<NavigationDrawerDestination> {
   Widget _buildSelectable(BuildContext context, Animation<double> animation) {
     const Set<WidgetState> disabledState = <WidgetState>{WidgetState.disabled};
     const Set<WidgetState> selectedState = <WidgetState>{WidgetState.selected};
@@ -84,29 +77,30 @@ class _NavigationDrawerDestinationState
     const bool enabled = true;
 
     return _NavigationDestinationBuilder(
+      onTap: onTap,
       animation: animation,
-      color: widget.activeIndicatorColor,
-      size: widget.activeIndicatorSize,
-      shape: widget.activeIndicatorShape,
-      buildIcon: (BuildContext context) {
+      color: activeIndicatorColor,
+      size: activeIndicatorSize,
+      shape: activeIndicatorShape,
+      buildIcon: (context) {
         final Widget selectedIconWidget = IconTheme.merge(
           data: navigationDrawerTheme.iconTheme.resolve(
             enabled ? selectedState : disabledState,
           ),
-          child: widget.selectedIcon ?? widget.icon,
+          child: selectedIcon ?? icon,
         );
         final Widget unselectedIconWidget = IconTheme.merge(
           data: navigationDrawerTheme.iconTheme.resolve(
             enabled ? unselectedState : disabledState,
           ),
-          child: widget.icon,
+          child: icon,
         );
 
         return animation.isForwardOrCompleted
             ? selectedIconWidget
             : unselectedIconWidget;
       },
-      buildLabel: (BuildContext context) {
+      buildLabel: (context) {
         final effectiveSelectedLabelTextStyle = navigationDrawerTheme
             .labelTextStyle
             .resolve(enabled ? selectedState : disabledState);
@@ -119,7 +113,7 @@ class _NavigationDrawerDestinationState
               animation.isForwardOrCompleted
                   ? effectiveSelectedLabelTextStyle
                   : effectiveUnselectedLabelTextStyle,
-          child: widget.label,
+          child: label,
         );
       },
     );
@@ -129,7 +123,7 @@ class _NavigationDrawerDestinationState
   Widget build(BuildContext context) {
     final motionTheme = MotionTheme.of(context);
     return SelectableAnimatedBuilder(
-      selected: widget.selected,
+      selected: selected,
       duration: motionTheme.duration.long2,
       builder: _buildSelectable,
     );
@@ -167,9 +161,9 @@ class _NavigationDestinationBuilder extends StatelessWidget {
     final resolvedShape = shape ?? navigationDrawerTheme.activeIndicatorShape;
 
     final Widget inkWell = InkWell(
-      highlightColor: Colors.transparent,
       onTap: onTap,
       customBorder: resolvedShape,
+      overlayColor: navigationDrawerTheme.stateLayerColor,
       child: Stack(
         alignment: Alignment.center,
         children: [

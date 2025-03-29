@@ -21,7 +21,6 @@ class MaterialThemeBuilderApp extends StatefulWidget {
 class _MaterialThemeBuilderAppState extends State<MaterialThemeBuilderApp> {
   @override
   Widget build(BuildContext context) {
-    debugPrint("${MediaQuery.sizeOf(context)}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
@@ -493,7 +492,6 @@ class _BrowserViewState extends State<BrowserView> {
                 },
                 onLoadStop: (controller, url) {},
                 onProgressChanged: (controller, progress) {
-                  debugPrint("${progress}");
                   setState(() => _progress = progress / 100);
                 },
               ),

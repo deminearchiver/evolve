@@ -119,24 +119,24 @@ class _ComponentThemesState extends State<ComponentThemes> {
     };
     final disabledBackgroundColor = _color.onSurface.withValues(alpha: 0.12);
     final disabledForegroundColor = _color.onSurface.withValues(alpha: 0.38);
-    return NavigationDrawerTheme(
-      data: NavigationDrawerThemeData(
+    return NavigationDrawerTheme.merge(
+      data: NavigationDrawerThemeDataPartial(
         backgroundColor: _color.surface,
-        indicatorColor: selectedBackgroundColor,
-        // iconTheme: WidgetStateProperty.fromMap({
-        //   WidgetState.disabled: IconThemeData(
-        //     color: disabledForegroundColor,
-        //     fill: 0,
-        //   ),
-        //   WidgetState.selected: IconThemeData(
-        //     fill: 1,
-        //     color: selectedForegroundColor,
-        //   ),
-        //   WidgetState.any: IconThemeData(
-        //     fill: 0,
-        //     color: unselectedForegroundColor,
-        //   ),
-        // }),
+        activeIndicatorColor: selectedBackgroundColor,
+        iconTheme: WidgetStateProperty.fromMap({
+          WidgetState.disabled: IconThemeDataPartial(
+            color: disabledForegroundColor,
+            fill: 0,
+          ),
+          WidgetState.selected: IconThemeDataPartial(
+            fill: 1,
+            color: selectedForegroundColor,
+          ),
+          WidgetState.any: IconThemeDataPartial(
+            fill: 0,
+            color: unselectedForegroundColor,
+          ),
+        }),
         labelTextStyle: WidgetStateProperty.fromMap({
           WidgetState.disabled: _text.labelLarge!.copyWith(
             color: disabledForegroundColor,
@@ -148,7 +148,6 @@ class _ComponentThemesState extends State<ComponentThemes> {
             color: unselectedForegroundColor,
           ),
         }),
-        surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         elevation: _elevation.level1,
       ),
