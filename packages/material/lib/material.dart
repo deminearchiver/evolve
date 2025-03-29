@@ -9,6 +9,8 @@ export 'package:flutter/material.dart'
         Flexible,
         Expanded,
         Spacer,
+        // Special
+        ButtonStyleButton,
         // Common buttons
         ElevatedButton,
         ElevatedButtonTheme,
@@ -22,12 +24,16 @@ export 'package:flutter/material.dart'
         TextButton,
         TextButtonTheme,
         TextButtonThemeData,
+        // Icon
+        Icon,
+        IconTheme,
+        IconThemeData,
         // Icon button
         IconButton,
         IconButtonTheme,
         IconButtonThemeData,
-        // Switch
-        Switch,
+        // TODO: uncomment after implementing switch
+        // Switch,
         // Tooltip
         Tooltip;
 
@@ -53,15 +59,22 @@ export 'src/elevation_theme.dart';
 
 export 'src/motion_theme.dart';
 
+// TODO: decide what to do with ButtonStyleButton
+export 'src/button_style_button.dart';
+
 // Material Design 3 components
 
 export 'src/button/button.dart';
 export 'src/button/button_theme.dart';
 
+export 'src/icon/icon.dart';
+export 'src/icon/icon_theme.dart';
+
 export 'src/icon_button/icon_button.dart';
 export 'src/icon_button/icon_button_theme.dart';
 
-export 'src/switch/switch.dart';
+// TODO: uncomment after implementing switch
+// export 'src/switch/switch.dart';
 // export 'src/switch/switch_theme.dart';
 
 export 'src/tooltip/tooltip.dart';

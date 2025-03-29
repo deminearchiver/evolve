@@ -121,10 +121,11 @@ abstract final class NowInAndroidTheme {
         //   WidgetState.selected: TextStyle(color: colorScheme.onPrimaryContainer),
         //   WidgetState.any: TextStyle(color: colorScheme.onSurfaceVariant),
         // }),
-        iconTheme: WidgetStateProperty.fromMap({
-          WidgetState.selected: IconThemeData(color: colorScheme.onPrimary),
-          WidgetState.any: IconThemeData(color: colorScheme.onSurfaceVariant),
-        }),
+        // TODO: fix to account for new IconThemeData
+        // iconTheme: WidgetStateProperty.fromMap({
+        //   WidgetState.selected: IconThemeData(color: colorScheme.onPrimary),
+        //   WidgetState.any: IconThemeData(color: colorScheme.onSurfaceVariant),
+        // }),
       ),
       searchBarTheme: SearchBarThemeData(
         backgroundColor: WidgetStatePropertyAll(colorScheme.surface),

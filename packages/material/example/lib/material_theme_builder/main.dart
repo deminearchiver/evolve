@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:example/labs/dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material/material.dart';
 
@@ -52,6 +53,25 @@ class _Test1State extends State<Test1> {
                 ),
             label: Text("Primary color"),
           ),
+          Button.filled(
+            onPressed:
+                () => showBasicDialog(
+                  context: context,
+                  builder:
+                      (context) => BasicDialog(
+                        headline: Text("Basic dialog"),
+                        actions: [
+                          Button.text(onPressed: () {}, label: Text("Cancel")),
+                          const SizedBox(width: 8),
+                          Button.filledTonal(
+                            onPressed: () {},
+                            label: Text("OK"),
+                          ),
+                        ],
+                      ),
+                ),
+            label: Text("Show basic dialog"),
+          ),
         ],
       ),
     );
@@ -72,26 +92,26 @@ class _Test2State extends State<Test2> {
     return AlertDialog(
       icon: const Icon(Symbols.palette),
       title: Text("HCT Color Picker"),
-      content: Align.center(
-        child: Ink(
-          child: CustomPaint(
-            size: Size.square(40),
-            painter: _WheelPainter(
-              rotation: math.pi,
-              colors: [
-                colorTheme.primary,
-                colorTheme.primary,
-                colorTheme.tertiary,
-                colorTheme.secondary,
-              ],
-            ),
-            child: InkWell(onTap: () {}),
-          ),
-        ),
-      ),
+      // content: Align.center(
+      //   child: Ink(
+      //     child: CustomPaint(
+      //       size: Size.square(40),
+      //       painter: _WheelPainter(
+      //         rotation: math.pi,
+      //         colors: [
+      //           colorTheme.primary,
+      //           colorTheme.primary,
+      //           colorTheme.tertiary,
+      //           colorTheme.secondary,
+      //         ],
+      //       ),
+      //       child: InkWell(onTap: () {}),
+      //     ),
+      //   ),
+      // ),
       actions: [
         Button.text(onPressed: () {}, label: Text("Cancel")),
-        Button.text(onPressed: () {}, label: Text("OK")),
+        Button.filledTonal(onPressed: () {}, label: Text("OK")),
       ],
     );
   }

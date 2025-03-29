@@ -803,7 +803,7 @@ class ContextMenuItem extends StatelessWidget {
                     leading != null
                         ? Align.center(
                           child: IconTheme.merge(
-                            data: IconThemeData(
+                            data: IconThemeDataPartial(
                               color: colorTheme.onSurface,
                               size: 20,
                               opticalSize: 20,
@@ -1376,7 +1376,7 @@ class SearchSuggestion extends StatelessWidget {
         children: [
           if (leading != null)
             IconTheme.merge(
-              data: IconThemeData(color: colorTheme.onSurface),
+              data: IconThemeDataPartial(color: colorTheme.onSurface),
               child: leading!,
             ),
           DefaultTextStyle.merge(
@@ -1426,7 +1426,7 @@ class _SearchInputState extends State<SearchInput> {
         children: [
           ...widget.leading.map(
             (child) => IconTheme.merge(
-              data: IconThemeData(color: colorTheme.onSurface),
+              data: IconThemeDataPartial(color: colorTheme.onSurface),
               child: child,
             ),
           ),
@@ -1453,7 +1453,7 @@ class _SearchInputState extends State<SearchInput> {
           ),
           ...widget.trailing.map(
             (child) => IconTheme.merge(
-              data: IconThemeData(color: colorTheme.onSurfaceVariant),
+              data: IconThemeDataPartial(color: colorTheme.onSurfaceVariant),
               child: child,
             ),
           ),
@@ -1465,13 +1465,16 @@ class _SearchInputState extends State<SearchInput> {
 
 extension SetStateSafeWidgetExtension on State {
   void setStateSafe(VoidCallback callback) {
-    if (SchedulerBinding.instance.schedulerPhase ==
-        SchedulerPhase.persistentCallbacks) {
-      // ignore: invalid_use_of_protected_member
-      SchedulerBinding.instance.addPostFrameCallback((_) => setState(callback));
-    } else {
-      // ignore: invalid_use_of_protected_member
-      setState(callback);
+    switch (SchedulerBinding.instance.schedulerPhase) {
+      case SchedulerPhase.persistentCallbacks:
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          // ignore: invalid_use_of_protected_member
+          if (mounted) setState(callback);
+        });
+      case _ when mounted:
+        // ignore: invalid_use_of_protected_member
+        setState(callback);
+      default:
     }
   }
 }

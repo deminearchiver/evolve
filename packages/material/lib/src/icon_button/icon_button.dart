@@ -164,7 +164,7 @@ class IconButton extends StatelessWidget {
       null => variantFill,
     };
     return IconTheme.merge(
-      data: IconThemeData(fill: resolvedFill, opticalSize: 24.0),
+      data: IconThemeDataPartial(fill: resolvedFill, opticalSize: 24.0),
       child: icon,
     );
   }

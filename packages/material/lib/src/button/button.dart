@@ -421,7 +421,7 @@ class _ButtonWithIconChild extends StatelessWidget {
 
   Widget _buildContent(BuildContext context) {
     return IconTheme.merge(
-      data: const IconThemeData(size: 24, opticalSize: 24),
+      data: const IconThemeDataPartial(size: 24, opticalSize: 24),
       child: icon,
     );
   }
@@ -481,7 +481,7 @@ class _ButtonWithIconAndLabelChild extends StatelessWidget {
 
   Widget _buildContent(BuildContext context) {
     final wrappedIcon = IconTheme.merge(
-      data: const IconThemeData(size: 18, opticalSize: 18, fill: 1),
+      data: const IconThemeDataPartial(size: 18, opticalSize: 18, fill: 1),
       child: icon,
     );
     return Flex.horizontal(
