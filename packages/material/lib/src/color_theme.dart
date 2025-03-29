@@ -1063,6 +1063,79 @@ abstract class ColorThemeData with Diagnosticable {
     outline,
     outlineVariant,
   ]);
+
+  static ColorThemeData lerp(ColorThemeData a, ColorThemeData b, double t) {
+    if (identical(a, b)) {
+      return a;
+    }
+    return ColorThemeData(
+      brightness: t < 0.5 ? a.brightness : b.brightness,
+      primary: Color.lerp(a.primary, b.primary, t)!,
+      onPrimary: Color.lerp(a.onPrimary, b.onPrimary, t)!,
+      primaryContainer: Color.lerp(a.primaryContainer, b.primaryContainer, t)!,
+      onPrimaryContainer:
+          Color.lerp(a.onPrimaryContainer, b.onPrimaryContainer, t)!,
+      primaryFixed: Color.lerp(a.primaryFixed, b.primaryFixed, t)!,
+      onPrimaryFixed: Color.lerp(a.onPrimaryFixed, b.onPrimaryFixed, t)!,
+      primaryFixedDim: Color.lerp(a.primaryFixedDim, b.primaryFixedDim, t)!,
+      onPrimaryFixedVariant:
+          Color.lerp(a.onPrimaryFixedVariant, b.onPrimaryFixedVariant, t)!,
+      inversePrimary: Color.lerp(a.inversePrimary, b.inversePrimary, t)!,
+      secondary: Color.lerp(a.secondary, b.secondary, t)!,
+      onSecondary: Color.lerp(a.onSecondary, b.onSecondary, t)!,
+      secondaryContainer:
+          Color.lerp(a.secondaryContainer, b.secondaryContainer, t)!,
+      onSecondaryContainer:
+          Color.lerp(a.onSecondaryContainer, b.onSecondaryContainer, t)!,
+      secondaryFixed: Color.lerp(a.secondaryFixed, b.secondaryFixed, t)!,
+      secondaryFixedDim:
+          Color.lerp(a.secondaryFixedDim, b.secondaryFixedDim, t)!,
+      onSecondaryFixed: Color.lerp(a.onSecondaryFixed, b.onSecondaryFixed, t)!,
+      onSecondaryFixedVariant:
+          Color.lerp(a.onSecondaryFixedVariant, b.onSecondaryFixedVariant, t)!,
+      tertiary: Color.lerp(a.tertiary, b.tertiary, t)!,
+      onTertiary: Color.lerp(a.onTertiary, b.onTertiary, t)!,
+      tertiaryContainer:
+          Color.lerp(a.tertiaryContainer, b.tertiaryContainer, t)!,
+      onTertiaryContainer:
+          Color.lerp(a.onTertiaryContainer, b.onTertiaryContainer, t)!,
+      tertiaryFixed: Color.lerp(a.tertiaryFixed, b.tertiaryFixed, t)!,
+      tertiaryFixedDim: Color.lerp(a.tertiaryFixedDim, b.tertiaryFixedDim, t)!,
+      onTertiaryFixed: Color.lerp(a.onTertiaryFixed, b.onTertiaryFixed, t)!,
+      onTertiaryFixedVariant:
+          Color.lerp(a.onTertiaryFixedVariant, b.onTertiaryFixedVariant, t)!,
+      error: Color.lerp(a.error, b.error, t)!,
+      onError: Color.lerp(a.onError, b.onError, t)!,
+      errorContainer: Color.lerp(a.errorContainer, b.errorContainer, t)!,
+      onErrorContainer: Color.lerp(a.onErrorContainer, b.onErrorContainer, t)!,
+      surface: Color.lerp(a.surface, b.surface, t)!,
+      onSurface: Color.lerp(a.onSurface, b.onSurface, t)!,
+      surfaceVariant: Color.lerp(a.surfaceVariant, b.surfaceVariant, t)!,
+      onSurfaceVariant: Color.lerp(a.onSurfaceVariant, b.onSurfaceVariant, t)!,
+      surfaceContainerHighest:
+          Color.lerp(a.surfaceContainerHighest, b.surfaceContainerHighest, t)!,
+      surfaceContainerHigh:
+          Color.lerp(a.surfaceContainerHigh, b.surfaceContainerHigh, t)!,
+      surfaceContainer: Color.lerp(a.surfaceContainer, b.surfaceContainer, t)!,
+      surfaceContainerLow:
+          Color.lerp(a.surfaceContainerLow, b.surfaceContainerLow, t)!,
+      surfaceContainerLowest:
+          Color.lerp(a.surfaceContainerLowest, b.surfaceContainerLowest, t)!,
+      inverseSurface: Color.lerp(a.inverseSurface, b.inverseSurface, t)!,
+      inverseOnSurface: Color.lerp(a.inverseOnSurface, b.inverseOnSurface, t)!,
+      surfaceTint: Color.lerp(a.surfaceTint, b.surfaceTint, t)!,
+      // ignore: deprecated_member_use_from_same_package
+      background: Color.lerp(a.background, b.background, t)!,
+      // ignore: deprecated_member_use_from_same_package
+      onBackground: Color.lerp(a.onBackground, b.onBackground, t)!,
+      surfaceBright: Color.lerp(a.surfaceBright, b.surfaceBright, t)!,
+      surfaceDim: Color.lerp(a.surfaceDim, b.surfaceDim, t)!,
+      scrim: Color.lerp(a.scrim, b.scrim, t)!,
+      shadow: Color.lerp(a.shadow, b.shadow, t)!,
+      outline: Color.lerp(a.outline, b.outline, t)!,
+      outlineVariant: Color.lerp(a.outlineVariant, b.outlineVariant, t)!,
+    );
+  }
 }
 
 class _ColorThemeData extends ColorThemeData {
