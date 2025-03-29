@@ -29,5 +29,9 @@ export 'src/sliver_transform.dart';
 export 'src/sliver_header.dart';
 export 'src/sliver_persistent_footer.dart';
 
+//
 // Other
+//
+
 export 'src/gradient_stack.dart';
+export 'src/state.dart';
