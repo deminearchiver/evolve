@@ -245,8 +245,6 @@ class Icon extends StatelessWidget {
 
     final IconThemeData iconTheme = IconTheme.of(context);
 
-    debugPrint("${iconTheme.color}");
-
     final bool applyTextScaling =
         this.applyTextScaling ?? iconTheme.applyTextScaling;
 
