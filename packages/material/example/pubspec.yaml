@@ -17,6 +17,9 @@ dependencies:
   google_fonts: ^6.2.1
   flutter_svg: ^2.0.17
   flutter_inappwebview: ^6.2.0-beta.2
+  collection: ^1.19.1
+  async: ^2.13.0
+  html: ^0.15.5
 
 dev_dependencies:
   flutter_test:

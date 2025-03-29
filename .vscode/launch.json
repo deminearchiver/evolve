@@ -25,6 +25,29 @@
             "flutterMode": "release"
         },
         {
+            "name": "material/labs",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/labs/main.dart",
+        },
+        {
+            "name": "material/labs (profile mode)",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "program": "lib/labs/main.dart",
+        },
+        {
+            "name": "material/labs (release mode)",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "program": "lib/labs/main.dart",
+        },
+        {
             "name": "material/material_theme_builder",
             "cwd": "packages/material/example",
             "request": "launch",
