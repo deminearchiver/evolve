@@ -18,7 +18,11 @@ export 'src/cropped_border.dart';
 
 // Builders
 export 'src/combining_builder.dart';
+
+// Animation
 export 'src/ticker_builder.dart';
+export 'src/selectable_animated_builder.dart';
+export 'src/status_transition_builder.dart';
 
 // Slivers
 export 'src/sliver_transform.dart';
