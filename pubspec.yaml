@@ -9,6 +9,10 @@ workspace:
   # Packages
   - packages/widgets
   - packages/material
+  - packages/dynamic_color
 
   # Apps
   - packages/material/example
+
+dependency_overrides:
+  material_color_utilities: ^0.12.0
