@@ -283,19 +283,18 @@ class Button extends StatelessWidget {
 
 class _Button extends ButtonStyleButton {
   const _Button({
-    super.key,
     required this.variant,
     required super.onPressed,
-    super.onLongPress,
-    super.onHover,
-    super.onFocusChange,
-    super.style,
-    super.focusNode,
-    super.autofocus = false,
-    super.clipBehavior,
-    super.statesController,
-    super.isSemanticButton,
-    super.tooltip,
+    required super.onLongPress,
+    required super.onHover,
+    required super.onFocusChange,
+    required super.style,
+    required super.focusNode,
+    required super.autofocus,
+    required super.clipBehavior,
+    required super.statesController,
+    required super.isSemanticButton,
+    required super.tooltip,
     required super.child,
   });
 

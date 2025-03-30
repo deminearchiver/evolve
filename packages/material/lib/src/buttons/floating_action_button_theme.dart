@@ -1,0 +1,3 @@
+class FloatingActionButtonThemeData {}
+
+class FloatingActionButtonTheme {}

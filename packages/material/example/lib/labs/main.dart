@@ -32,14 +32,14 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light,
+      // themeMode: ThemeMode.light,
       theme: AppTheme.fromColorTheme(
         colorTheme: ColorThemeData.baseline(brightness: Brightness.light),
       ),
       darkTheme: AppTheme.fromColorTheme(
         colorTheme: ColorThemeData.baseline(brightness: Brightness.dark),
       ),
-      home: const Test1(),
+      home: const Test2(),
       builder: _buildWrapper,
     );
   }
@@ -53,34 +53,152 @@ class Test2 extends StatefulWidget {
 }
 
 class _Test2State extends State<Test2> {
-  int _selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) {
+    final colorTheme = ColorTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+    final stateTheme = StateTheme.of(context);
+    final textTheme = TextTheme.of(context);
     return Scaffold(
-      appBar: AppBar(),
-      drawer: NavigationDrawer(
+      floatingActionButton: FloatingActionButton.large(
+        onPressed: () {},
+        icon: const Icon(Symbols.add),
+      ),
+      body: SafeArea(
+        top: false,
         child: CustomScrollView(
           slivers: [
+            SliverAppBar.large(
+              leadingWidth: 56,
+              titleSpacing: 0,
+              leading: Align.center(
+                child: IconButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                    iconColor: WidgetStatePropertyAll(colorTheme.onSurface),
+                  ),
+                  icon: const Icon(Symbols.arrow_back),
+                ),
+              ),
+              title: Text("Themes"),
+            ),
             SliverList.list(
               children: [
-                NavigationDrawerDestination(
-                  onTap: () => setState(() => _selectedIndex = 0),
-                  selected: _selectedIndex == 0,
-                  icon: const Icon(Symbols.home),
-                  label: const Text("Home"),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: Text(
+                    "Choose a theme preset",
+                    style: textTheme.bodyMedium!.copyWith(
+                      color: colorTheme.onSurfaceVariant,
+                    ),
+                  ),
                 ),
-                NavigationDrawerDestination(
-                  onTap: () => setState(() => _selectedIndex = 1),
-                  selected: _selectedIndex == 1,
-                  icon: const Icon(Symbols.home),
-                  label: const Text("Home"),
+              ],
+            ),
+            SliverList.list(
+              children: [
+                InkWell(
+                  onTap: () {},
+                  overlayColor: WidgetStateLayerColor(
+                    WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
+                    stateTheme.stateLayerOpacity,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    child: Flex.horizontal(
+                      children: [
+                        Icon(Symbols.line_weight, color: colorTheme.onSurface),
+                        const SizedBox(width: 24),
+                        Flexible.expanded(
+                          child: Flex.vertical(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                "Default",
+                                style: textTheme.titleLarge!.copyWith(
+                                  color: colorTheme.onSurface,
+                                ),
+                              ),
+                              Text(
+                                "How Material You was intended to look and feel like",
+                                style: textTheme.bodyMedium!.copyWith(
+                                  color: colorTheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                NavigationDrawerDestination(
-                  onTap: () => setState(() => _selectedIndex = 2),
-                  selected: _selectedIndex == 2,
-                  icon: const Icon(Symbols.home),
-                  label: const Text("Home"),
+                InkWell(
+                  onTap: () {},
+                  overlayColor: WidgetStateLayerColor(
+                    WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
+                    stateTheme.stateLayerOpacity,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    child: Flex.horizontal(
+                      children: [
+                        Icon(Symbols.android, color: colorTheme.onSurface),
+                        const SizedBox(width: 24),
+                        Flexible.expanded(
+                          child: Flex.vertical(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                "Now in Android",
+                                style: textTheme.titleLarge!.copyWith(
+                                  color: colorTheme.onSurface,
+                                ),
+                              ),
+                              Text(
+                                "How Material You was intended to look and feel like",
+                                style: textTheme.bodyMedium!.copyWith(
+                                  color: colorTheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {},
+                  overlayColor: WidgetStateLayerColor(
+                    WidgetStatePropertyAll(colorTheme.onSurface),
+                    stateTheme.stateLayerOpacity,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    child: Flex.horizontal(
+                      children: [
+                        Icon(Symbols.add_2, color: colorTheme.onSurfaceVariant),
+                        const SizedBox(width: 24),
+                        Flexible.expanded(
+                          child: Text(
+                            "Create your own theme",
+                            style: textTheme.titleLarge!.copyWith(
+                              color: colorTheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -156,6 +274,9 @@ class _Test1State extends State<Test1> {
     _DrawerNavigationItem.extendedFab,
     _DrawerNavigationItem.basicDialog,
     _DrawerNavigationItem.fullscreenDialog,
+    _DrawerNavigationItem.navigationBar,
+    _DrawerNavigationItem.navigationDrawer,
+    _DrawerNavigationItem.navigationRail,
     _DrawerNavigationItem.snackbar,
 
     _DrawerNavigationItem.carousel,
@@ -290,13 +411,17 @@ class _Test1State extends State<Test1> {
 
   Timer? _drawerTimer;
 
+  late ScrollController _drawerScrollController;
+
   @override
   void initState() {
     super.initState();
+    _drawerScrollController = ScrollController();
   }
 
   @override
   void dispose() {
+    _drawerScrollController.dispose();
     _drawerTimer?.cancel();
     _drawerTimer = null;
     super.dispose();
@@ -403,6 +528,8 @@ class _Test1State extends State<Test1> {
           key: _drawerKey,
 
           child: CustomScrollView(
+            controller: _drawerScrollController,
+            reverse: false,
             slivers: [
               SliverToBoxAdapter(
                 child: _NavigationDrawerLayout(
@@ -827,6 +954,8 @@ class _NavigationDrawerLayoutState extends State<_NavigationDrawerLayout> {
                 item is _DrawerNavigationItem
             ? () => onSelectionChanged.call(item)
             : null;
+
+    final Key? key = item is _DrawerNavigationItem ? ValueKey(item) : null;
     return switch (item) {
       _DrawerDividerItem(:final label) => Padding(
         padding: const EdgeInsets.fromLTRB(28, 16, 28, 16),
@@ -852,132 +981,154 @@ class _NavigationDrawerLayoutState extends State<_NavigationDrawerLayout> {
         ),
       ),
       _DrawerNavigationItem.home => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.home),
         label: Text("Home"),
       ),
       _DrawerNavigationItem.search => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.search),
         label: Text("Search"),
       ),
       _DrawerNavigationItem.color => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.palette),
         label: Text("Color"),
       ),
       _DrawerNavigationItem.typography => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.text_fields),
         label: Text("Typography"),
       ),
       _DrawerNavigationItem.motion => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.animation),
         label: Text("Motion"),
       ),
       _DrawerNavigationItem.state => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.transition_fade),
         label: Text("State"),
       ),
       _DrawerNavigationItem.elevation => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.layers),
         label: Text("Elevation"),
       ),
       _DrawerNavigationItem.shape => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.category),
         label: Text("Shape"),
       ),
       _DrawerNavigationItem.settings => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.settings),
         label: Text("Settings"),
       ),
       _DrawerNavigationItem.about => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.info),
         label: Text("About"),
       ),
       _DrawerNavigationItem.commonButtons => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.buttons_alt),
         label: Text("Common buttons"),
       ),
       _DrawerNavigationItem.iconButtons => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.apps),
         label: Text("Icon buttons"),
       ),
       _DrawerNavigationItem.fab => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.add_circle),
         label: Text("FAB"),
       ),
       _DrawerNavigationItem.extendedFab => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.buttons_alt),
         label: Text("Extended FAB"),
       ),
       _DrawerNavigationItem.basicDialog => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.dialogs),
         label: Text("Basic dialog"),
       ),
       _DrawerNavigationItem.fullscreenDialog => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.fullscreen_portrait),
         label: Text("Full-screen dialog"),
       ),
       _DrawerNavigationItem.snackbar => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.toast),
         label: Text("Snackbar"),
       ),
       _DrawerNavigationItem.navigationBar => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.bottom_navigation),
         label: Text("Navigation bar"),
       ),
       _DrawerNavigationItem.navigationDrawer => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.side_navigation),
         label: Text("Navigation drawer"),
       ),
       _DrawerNavigationItem.navigationRail => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.dock_to_right),
         label: Text("Navigation rail"),
       ),
       _DrawerNavigationItem.carousel => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.view_carousel),
         label: Text("Carousel"),
       ),
       _DrawerNavigationItem.badge => NavigationDrawerDestination(
+        key: key,
         onTap: onTap,
         selected: selectedItem == item,
         icon: const Icon(Symbols.app_badging),
