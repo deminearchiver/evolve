@@ -325,6 +325,7 @@ abstract class ColorThemeData with Diagnosticable {
     );
   }
 
+  static const double contrastLevelLow = -1.0;
   static const double contrastLevelNormal = 0.0;
   static const double contrastLevelMedium = 0.5;
   static const double contrastLevelHigh = 1.0;
