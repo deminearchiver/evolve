@@ -20,6 +20,7 @@ dependencies:
   collection: ^1.19.1
   async: ^2.13.0
   html: ^0.15.5
+  material_color_utilities: ^0.11.1
 
 dev_dependencies:
   flutter_test:

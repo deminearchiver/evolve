@@ -10,6 +10,8 @@ import 'package:collection/collection.dart';
 
 import 'theme.dart';
 
+import 'package:material_color_utilities/material_color_utilities.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const App());
@@ -52,7 +54,37 @@ class Test2 extends StatefulWidget {
   State<Test2> createState() => _Test2State();
 }
 
+abstract final class ExtendedDynamicColors {
+  static final DynamicColor color = MaterialDynamicColors.primary;
+
+  static final DynamicColor onColor = MaterialDynamicColors.onPrimary;
+
+  static final DynamicColor colorContainer =
+      MaterialDynamicColors.primaryContainer;
+
+  static final DynamicColor onColorContainer =
+      MaterialDynamicColors.onPrimaryContainer;
+}
+
 class _Test2State extends State<Test2> {
+  void _extendedColor() {
+    final greenHct = Hct.fromInt(0xFF00FF00);
+    final scheme = SchemeTonalSpot(
+      sourceColorHct: greenHct,
+      isDark: false,
+      contrastLevel: ColorThemeData.contrastLevelNormal,
+    );
+
+    debugPrint(ExtendedDynamicColors.color.getArgb(scheme).toRadixString(16));
+    debugPrint(ExtendedDynamicColors.onColor.getArgb(scheme).toRadixString(16));
+    debugPrint(
+      ExtendedDynamicColors.colorContainer.getArgb(scheme).toRadixString(16),
+    );
+    debugPrint(
+      ExtendedDynamicColors.onColorContainer.getArgb(scheme).toRadixString(16),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorTheme = ColorTheme.of(context);
@@ -61,8 +93,9 @@ class _Test2State extends State<Test2> {
     final textTheme = TextTheme.of(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton.large(
-        onPressed: () {},
-        icon: const Icon(Symbols.add),
+        onPressed: _extendedColor,
+        icon: const Icon(Symbols.palette),
+        tooltip: "Extended color",
       ),
       body: SafeArea(
         top: false,

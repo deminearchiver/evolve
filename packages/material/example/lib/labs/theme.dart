@@ -52,7 +52,7 @@ class _ComponentThemesState extends State<ComponentThemes> {
         weight: 400,
         opticalSize: 24,
         opacity: 1,
-        shadows: [],
+        shadows: const [],
         applyTextScaling: false,
       ),
       child: child,
@@ -61,14 +61,22 @@ class _ComponentThemesState extends State<ComponentThemes> {
 
   Widget _buildBadgeTheme(BuildContext context, Widget child) {
     return BadgeTheme(
-      data: BadgeThemeData(padding: const EdgeInsets.symmetric(horizontal: 4)),
+      data: const BadgeThemeData(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+      ),
       child: child,
     );
   }
 
   Widget _buildDividerTheme(BuildContext context, Widget child) {
     return DividerTheme(
-      data: DividerThemeData(indent: 0, endIndent: 0, space: 1, thickness: 1),
+      data: DividerThemeData(
+        indent: 0,
+        endIndent: 0,
+        space: 1,
+        thickness: 1,
+        color: _color.outlineVariant,
+      ),
       child: child,
     );
   }
@@ -85,7 +93,7 @@ class _ComponentThemesState extends State<ComponentThemes> {
           color: _color.inverseSurface,
         ),
         textStyle: _text.bodySmall!.copyWith(color: _color.inverseOnSurface),
-        waitDuration: Duration(milliseconds: 500),
+        waitDuration: const Duration(milliseconds: 500),
         padding: const EdgeInsets.symmetric(horizontal: 8),
       ),
       child: child,
