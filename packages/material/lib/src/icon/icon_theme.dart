@@ -2,9 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as flutter_material;
 import 'package:material/material.dart';
 
-// TODO: remove this global used during development
-late final flutter_material.IconThemeData _iconThemeData;
-
 @immutable
 class IconThemeDataPartial with Diagnosticable {
   const IconThemeDataPartial({
@@ -21,6 +18,23 @@ class IconThemeDataPartial with Diagnosticable {
        assert(weight == null || (0.0 < weight)),
        assert(opticalSize == null || (0.0 < opticalSize)),
        assert(opacity == null || (0.0 <= opacity && opacity <= 1.0));
+
+  @Deprecated("")
+  factory IconThemeDataPartial.fromLegacy(
+    flutter_material.IconThemeData legacy,
+  ) {
+    return IconThemeDataPartial(
+      size: legacy.size,
+      fill: legacy.fill,
+      weight: legacy.weight,
+      grade: legacy.grade,
+      opticalSize: legacy.opticalSize,
+      color: legacy.color,
+      opacity: legacy.opacity,
+      shadows: legacy.shadows,
+      applyTextScaling: legacy.applyTextScaling,
+    );
+  }
 
   /// The default for [Icon.size].
   ///
@@ -117,6 +131,23 @@ class IconThemeDataPartial with Diagnosticable {
     );
   }
 
+  /// Returns a partial [flutter_material.IconThemeData]
+  ///
+  /// The [flutter_material.IconThemeData.isConcrete] of the returned object
+  /// may be `false`
+  @Deprecated("")
+  flutter_material.IconThemeData toLegacy() => flutter_material.IconThemeData(
+    size: size,
+    fill: fill,
+    weight: weight,
+    grade: grade,
+    opticalSize: opticalSize,
+    color: color,
+    opacity: opacity,
+    shadows: shadows,
+    applyTextScaling: applyTextScaling,
+  );
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -170,133 +201,6 @@ class IconThemeDataPartial with Diagnosticable {
   );
 }
 
-// mixin IconThemeDataPartialMixin implements Diagnosticable {
-//   /// The default for [Icon.size].
-//   ///
-//   /// Falls back to 24.0.
-//   double? get size;
-
-//   /// The default for [Icon.fill].
-//   ///
-//   /// Falls back to 0.0.
-//   double? get fill;
-
-//   /// The default for [Icon.weight].
-//   ///
-//   /// Falls back to 400.0.
-//   double? get weight;
-
-//   /// The default for [Icon.grade].
-//   ///
-//   /// Falls back to 0.0.
-//   double? get grade;
-
-//   /// The default for [Icon.opticalSize].
-//   ///
-//   /// Falls back to 48.0.
-//   double? get opticalSize;
-
-//   /// The default for [Icon.color].
-//   ///
-//   /// In material apps, if there is a [Theme] without any [IconTheme]s
-//   /// specified, icon colors default to white if [ThemeData.brightness] is dark
-//   /// and black if [ThemeData.brightness] is light.
-//   ///
-//   /// Otherwise, falls back to black.
-//   Color? get color;
-
-//   /// An opacity to apply to both explicit and default icon colors.
-//   ///
-//   /// Falls back to 1.0.
-//   double? get opacity;
-
-//   /// The default for [Icon.shadows].
-//   List<Shadow>? get shadows;
-
-//   /// The default for [Icon.applyTextScaling].
-//   bool? get applyTextScaling;
-
-//   IconThemeDataPartial copyWith({
-//     double? size,
-//     double? fill,
-//     double? weight,
-//     double? grade,
-//     double? opticalSize,
-//     Color? color,
-//     double? opacity,
-//     List<Shadow>? shadows,
-//     bool? applyTextScaling,
-//   }) {
-//     if (size == null &&
-//         fill == null &&
-//         weight == null &&
-//         grade == null &&
-//         opticalSize == null &&
-//         color == null &&
-//         opacity == null &&
-//         shadows == null &&
-//         applyTextScaling == null) {
-//       return this;
-//     }
-//     return IconThemeDataPartial(
-//       size: size ?? this.size,
-//       fill: fill ?? this.fill,
-//       weight: weight ?? this.weight,
-//       grade: grade ?? this.grade,
-//       opticalSize: opticalSize ?? this.opticalSize,
-//       color: color ?? this.color,
-//       opacity: opacity ?? this.opacity,
-//       shadows: shadows ?? this.shadows,
-//       applyTextScaling: applyTextScaling ?? this.applyTextScaling,
-//     );
-//   }
-
-//   IconThemeDataPartial merge(IconThemeDataPartial? other) {
-//     if (other == null) return this;
-//     return copyWith(
-//       size: other.size,
-//       fill: other.fill,
-//       weight: other.weight,
-//       grade: other.grade,
-//       opticalSize: other.opticalSize,
-//       color: other.color,
-//       opacity: other.opacity,
-//       shadows: other.shadows,
-//       applyTextScaling: other.applyTextScaling,
-//     );
-//   }
-// }
-
-// mixin IconThemeDataMixin on IconThemeDataPartialMixin
-//     implements Diagnosticable {
-//   @override
-//   double get size;
-
-//   @override
-//   double get fill;
-
-//   @override
-//   double get weight;
-
-//   @override
-//   double get grade;
-
-//   @override
-//   double get opticalSize;
-
-//   @override
-//   Color get color;
-
-//   @override
-//   double get opacity;
-
-//   @override
-//   List<Shadow> get shadows;
-
-//   @override
-//   bool get applyTextScaling;
-// }
-
 @immutable
 class IconThemeData with Diagnosticable implements IconThemeDataPartial {
   const IconThemeData({
@@ -313,6 +217,22 @@ class IconThemeData with Diagnosticable implements IconThemeDataPartial {
        assert(0.0 < weight),
        assert(0.0 < opticalSize),
        assert(0.0 <= opacity && opacity <= 1.0);
+
+  @Deprecated("")
+  factory IconThemeData.fromLegacy(flutter_material.IconThemeData legacy) {
+    assert(legacy.isConcrete);
+    return IconThemeData(
+      size: legacy.size!,
+      fill: legacy.fill!,
+      weight: legacy.weight!,
+      grade: legacy.grade!,
+      opticalSize: legacy.opticalSize!,
+      color: legacy.color!,
+      opacity: legacy.opacity!,
+      shadows: legacy.shadows!,
+      applyTextScaling: legacy.applyTextScaling!,
+    );
+  }
 
   @override
   final double size;
@@ -393,6 +313,24 @@ class IconThemeData with Diagnosticable implements IconThemeDataPartial {
     );
   }
 
+  /// Returns a concrete [flutter_material.IconThemeData]
+  ///
+  /// The [flutter_material.IconThemeData.isConcrete] of the returned object
+  /// is always `true`
+  @override
+  @Deprecated("")
+  flutter_material.IconThemeData toLegacy() => flutter_material.IconThemeData(
+    size: size,
+    fill: fill,
+    weight: weight,
+    grade: grade,
+    opticalSize: opticalSize,
+    color: color,
+    opacity: opacity,
+    shadows: shadows,
+    applyTextScaling: applyTextScaling,
+  );
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -465,9 +403,9 @@ class IconTheme extends InheritedTheme {
     required Widget child,
   }) {
     return Builder(
-      builder: (BuildContext context) {
-        return IconTheme(key: key, data: of(context).merge(data), child: child);
-      },
+      builder:
+          (context) =>
+              IconTheme(key: key, data: of(context).merge(data), child: child),
     );
   }
 
@@ -477,7 +415,28 @@ class IconTheme extends InheritedTheme {
 
   static IconThemeData of(BuildContext context) {
     final result = maybeOf(context);
-    return result ?? _IconThemeDataFallback(context: context);
+    if (result != null) return result;
+
+    // ignore: deprecated_member_use_from_same_package
+    final legacy = maybeLegacyOf(context)?.resolve(context);
+
+    if (legacy != null && legacy.isConcrete) {
+      // ignore: deprecated_member_use_from_same_package
+      return IconThemeData.fromLegacy(legacy);
+    }
+    final fallback = _IconThemeDataFallback(context: context);
+    if (legacy == null) return fallback;
+    // ignore: deprecated_member_use_from_same_package
+    final partial = IconThemeDataPartial.fromLegacy(legacy);
+    return fallback.merge(partial);
+  }
+
+  @Deprecated("Use IconTheme.maybeOf instead")
+  static flutter_material.IconThemeData? maybeLegacyOf(BuildContext context) {
+    final iconTheme =
+        context
+            .dependOnInheritedWidgetOfExactType<flutter_material.IconTheme>();
+    return iconTheme?.data;
   }
 
   @Deprecated("Use IconTheme.of instead")
@@ -578,6 +537,19 @@ class _IconThemeDataFallback with Diagnosticable implements IconThemeData {
       applyTextScaling: other.applyTextScaling,
     );
   }
+
+  @override
+  flutter_material.IconThemeData toLegacy() => flutter_material.IconThemeData(
+    size: size,
+    fill: fill,
+    weight: weight,
+    grade: grade,
+    opticalSize: opticalSize,
+    color: color,
+    opacity: opacity,
+    shadows: shadows,
+    applyTextScaling: applyTextScaling,
+  );
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
