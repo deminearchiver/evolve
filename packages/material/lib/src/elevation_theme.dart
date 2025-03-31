@@ -207,13 +207,12 @@ class ElevationTheme extends InheritedTheme {
     required Widget child,
   }) {
     return Builder(
-      builder: (BuildContext context) {
-        return ElevationTheme(
-          key: key,
-          data: of(context).merge(data),
-          child: child,
-        );
-      },
+      builder:
+          (context) => ElevationTheme(
+            key: key,
+            data: of(context).merge(data),
+            child: child,
+          ),
     );
   }
 

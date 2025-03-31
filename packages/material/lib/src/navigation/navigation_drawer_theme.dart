@@ -365,13 +365,12 @@ class NavigationDrawerTheme extends InheritedTheme {
     required Widget child,
   }) {
     return Builder(
-      builder: (BuildContext context) {
-        return NavigationDrawerTheme(
-          key: key,
-          data: of(context).merge(data),
-          child: child,
-        );
-      },
+      builder:
+          (context) => NavigationDrawerTheme(
+            key: key,
+            data: of(context).merge(data),
+            child: child,
+          ),
     );
   }
 
