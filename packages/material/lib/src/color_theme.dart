@@ -352,7 +352,7 @@ abstract class ColorThemeData with Diagnosticable {
   /// The `contrastLevel` parameter indicates the contrast level between color
   /// pairs, such as [primary] and [onPrimary]. 0.0 is the default (normal);
   /// -1.0 is the lowest; 1.0 is the highest. This class contains convenience static members:
-  /// [ColorThemeData.contrastLevelNormal], [ColorThemeData.contrastLevelMedium]
+  /// [ColorThemeData.contrastLevelLow], [ColorThemeData.contrastLevelNormal], [ColorThemeData.contrastLevelMedium]
   /// and [ColorThemeData.contrastLevelHigh], which correspond to  the respective
   /// contrast levels from Material Design guideline.
   ///
@@ -366,7 +366,7 @@ abstract class ColorThemeData with Diagnosticable {
     required Color seedColor,
     required Brightness brightness,
     DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
-    double contrastLevel = 0.0,
+    double contrastLevel = ColorThemeData.contrastLevelNormal,
   }) {
     final scheme = _buildDynamicScheme(
       brightness,
@@ -518,9 +518,11 @@ abstract class ColorThemeData with Diagnosticable {
     double contrastLevel,
   ) {
     assert(
-      contrastLevel >= -1.0 && contrastLevel <= 1.0,
-      "contrastLevel must be between -1.0 and 1.0 inclusive.",
+      contrastLevel >= ColorThemeData.contrastLevelLow &&
+          contrastLevel <= ColorThemeData.contrastLevelHigh,
+      "contrastLevel must be between ${ColorThemeData.contrastLevelLow} and ${ColorThemeData.contrastLevelHigh} inclusive.",
     );
+
     final bool isDark = brightness == Brightness.dark;
     final Hct sourceColor = Hct.fromInt(seedColor.toARGB32());
     return switch (schemeVariant) {
