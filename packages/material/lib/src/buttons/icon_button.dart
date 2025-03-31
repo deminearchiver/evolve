@@ -234,7 +234,15 @@ class _IconButton extends ButtonStyleButton {
   }
 
   @override
-  ButtonStyle? themeStyleOf(BuildContext context) => null;
+  ButtonStyle? themeStyleOf(BuildContext context) {
+    final iconButtonTheme = IconButtonTheme.maybeOf(context);
+    if (iconButtonTheme == null) return null;
+    return switch (selected) {
+      null => iconButtonTheme.style,
+      false => iconButtonTheme.unselectedStyle,
+      true => iconButtonTheme.selectedStyle,
+    };
+  }
 }
 
 class _IconButtonDefaultsBase extends ButtonStyle implements _DefaultsContext {
