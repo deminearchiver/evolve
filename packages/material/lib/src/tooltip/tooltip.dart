@@ -2,6 +2,79 @@ import 'package:flutter/foundation.dart';
 import 'package:material/material.dart';
 import 'package:flutter/material.dart' as flutter_material;
 
+/// A Material Design tooltip.
+///
+/// Tooltips provide text labels which help explain the function of a button or
+/// other user interface action. Wrap the button in a [Tooltip] widget and provide
+/// a message which will be shown when the widget is long pressed.
+///
+/// Many widgets, such as [IconButton], [FloatingActionButton], and
+/// [PopupMenuButton] have a `tooltip` property that, when non-null, causes the
+/// widget to include a [Tooltip] in its build.
+///
+/// Tooltips improve the accessibility of visual widgets by proving a textual
+/// representation of the widget, which, for example, can be vocalized by a
+/// screen reader.
+///
+/// {@youtube 560 315 https://www.youtube.com/watch?v=EeEfD5fI-5Q}
+///
+/// {@tool dartpad}
+/// This example show a basic [Tooltip] which has a [Text] as child.
+/// [message] contains your label to be shown by the tooltip when
+/// the child that Tooltip wraps is hovered over on web or desktop. On mobile,
+/// the tooltip is shown when the widget is long pressed.
+///
+/// This tooltip will default to showing above the [Text] instead of below
+/// because its ambient [TooltipThemeData.preferBelow] is false.
+/// (See the use of [MaterialApp.theme].)
+/// Setting that piece of theme data is recommended to avoid having a finger or
+/// cursor hide the tooltip. For other ways to set that piece of theme data see:
+///
+/// * [Theme.data], [ThemeData.tooltipTheme]
+/// * [TooltipTheme.data]
+///
+/// or it can be set directly on each tooltip with [Tooltip.preferBelow].
+///
+/// ** See code in examples/api/lib/material/tooltip/tooltip.0.dart **
+/// {@end-tool}
+///
+/// {@tool dartpad}
+/// This example covers most of the attributes available in Tooltip.
+/// `decoration` has been used to give a gradient and borderRadius to Tooltip.
+/// `constraints` has been used to set the minimum width of the Tooltip.
+/// `preferBelow` is true; the tooltip will prefer showing below [Tooltip]'s child widget.
+/// However, it may show the tooltip above if there's not enough space
+/// below the widget.
+/// `textStyle` has been used to set the font size of the 'message'.
+/// `showDuration` accepts a Duration to continue showing the message after the long
+/// press has been released or the mouse pointer exits the child widget.
+/// `waitDuration` accepts a Duration for which a mouse pointer has to hover over the child
+/// widget before the tooltip is shown.
+///
+/// ** See code in examples/api/lib/material/tooltip/tooltip.1.dart **
+/// {@end-tool}
+///
+/// {@tool dartpad}
+/// This example shows a rich [Tooltip] that specifies the [richMessage]
+/// parameter instead of the [message] parameter (only one of these may be
+/// non-null. Any [InlineSpan] can be specified for the [richMessage] attribute,
+/// including [WidgetSpan].
+///
+/// ** See code in examples/api/lib/material/tooltip/tooltip.2.dart **
+/// {@end-tool}
+///
+/// {@tool dartpad}
+/// This example shows how [Tooltip] can be shown manually with [TooltipTriggerMode.manual]
+/// by calling the [TooltipState.ensureTooltipVisible] function.
+///
+/// ** See code in examples/api/lib/material/tooltip/tooltip.3.dart **
+/// {@end-tool}
+///
+/// See also:
+///
+///  * <https://material.io/design/components/tooltips.html>
+///  * [TooltipTheme] or [ThemeData.tooltipTheme]
+///  * [TooltipVisibility]
 class Tooltip extends StatelessWidget {
   /// Creates a tooltip.
   ///
@@ -19,7 +92,12 @@ class Tooltip extends StatelessWidget {
     super.key,
     this.message,
     this.richMessage,
+    @Deprecated(
+      "Use Tooltip.constraints instead. "
+      "This feature was deprecated after v3.30.0-0.1.pre.",
+    )
     this.height,
+    this.constraints,
     this.padding,
     this.margin,
     this.verticalOffset,
@@ -43,10 +121,8 @@ class Tooltip extends StatelessWidget {
          'Either `message` or `richMessage` must be specified',
        ),
        assert(
-         richMessage == null || textStyle == null,
-         'If `richMessage` is specified, `textStyle` will have no effect. '
-         'If you wish to provide a `textStyle` for a rich tooltip, add the '
-         '`textStyle` directly to the `richMessage` InlineSpan.',
+         height == null || constraints == null,
+         'Only one of `height` and `constraints` may be specified.',
        );
 
   /// The text to display in the tooltip.
@@ -59,12 +135,22 @@ class Tooltip extends StatelessWidget {
   /// Only one of [message] and [richMessage] may be non-null.
   final InlineSpan? richMessage;
 
-  /// The height of the tooltip's [child].
-  ///
-  /// If the [child] is null, then this is the tooltip's intrinsic height.
+  /// The minimum height of the [Tooltip]'s message.
+  @Deprecated(
+    'Use Tooltip.constraints instead. '
+    'This feature was deprecated after v3.30.0-0.1.pre.',
+  )
   final double? height;
 
-  /// The amount of space by which to inset the tooltip's [child].
+  /// Constrains the size of the [Tooltip]'s message.
+  ///
+  /// If null, then the [TooltipThemeData.constraints] of the ambient [ThemeData.tooltipTheme]
+  /// will be used. If that is also null, then a default value will be picked based on the current
+  /// platform. For desktop platforms, the default value is `BoxConstraints(minHeight: 24.0)`,
+  /// while for mobile platforms the default value is `BoxConstraints(minHeight: 32.0)`.
+  final BoxConstraints? constraints;
+
+  /// The amount of space by which to inset the [Tooltip]'s message.
   ///
   /// On mobile, defaults to 16.0 logical pixels horizontally and 4.0 vertically.
   /// On desktop, defaults to 8.0 logical pixels horizontally and 4.0 vertically.
@@ -81,6 +167,10 @@ class Tooltip extends StatelessWidget {
   /// If this property is null, then [TooltipThemeData.margin] is used.
   /// If [TooltipThemeData.margin] is also null, the default margin is
   /// 0.0 logical pixels on all sides.
+  ///
+  /// See also:
+  ///
+  ///  * [constraints], which allow setting an explicit size for the tooltip.
   final EdgeInsetsGeometry? margin;
 
   /// The vertical gap between the widget and the displayed tooltip.
@@ -227,15 +317,17 @@ class Tooltip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaults = _TooltipDefaults(context: context);
+    final TooltipThemeData defaults = _TooltipDefaults(context: context);
     final tooltipTheme = TooltipTheme.of(context);
     return TooltipTheme(
-      data: defaults,
+      data: defaults.merge(tooltipTheme),
       child: flutter_material.Tooltip(
         key: key,
+        // ignore: deprecated_member_use, deprecated_member_use_from_same_package
+        height: height,
+        constraints: constraints,
         message: message,
         richMessage: richMessage,
-        height: height,
         padding: padding,
         margin: margin,
         verticalOffset: verticalOffset,
@@ -263,7 +355,7 @@ class Tooltip extends StatelessWidget {
     super.debugFillProperties(properties);
     properties.add(
       StringProperty(
-        "message",
+        'message',
         message,
         showName: message == null,
         defaultValue: message == null ? null : kNoDefaultValue,
@@ -271,92 +363,104 @@ class Tooltip extends StatelessWidget {
     );
     properties.add(
       StringProperty(
-        "richMessage",
+        'richMessage',
         richMessage?.toPlainText(),
         showName: richMessage == null,
         defaultValue: richMessage == null ? null : kNoDefaultValue,
       ),
     );
-    properties.add(DoubleProperty("height", height, defaultValue: null));
+    properties.add(DoubleProperty('height', height, defaultValue: null));
+    properties.add(
+      DiagnosticsProperty<BoxConstraints>(
+        'constraints',
+        constraints,
+        defaultValue: null,
+      ),
+    );
     properties.add(
       DiagnosticsProperty<EdgeInsetsGeometry>(
-        "padding",
+        'padding',
         padding,
         defaultValue: null,
       ),
     );
     properties.add(
       DiagnosticsProperty<EdgeInsetsGeometry>(
-        "margin",
+        'margin',
         margin,
         defaultValue: null,
       ),
     );
     properties.add(
-      DoubleProperty("vertical offset", verticalOffset, defaultValue: null),
+      DoubleProperty('vertical offset', verticalOffset, defaultValue: null),
     );
     properties.add(
       FlagProperty(
-        "position",
+        'position',
         value: preferBelow,
-        ifTrue: "below",
-        ifFalse: "above",
+        ifTrue: 'below',
+        ifFalse: 'above',
         showName: true,
       ),
     );
     properties.add(
       FlagProperty(
-        "semantics",
+        'semantics',
         value: excludeFromSemantics,
-        ifTrue: "excluded",
+        ifTrue: 'excluded',
         showName: true,
       ),
     );
     properties.add(
       DiagnosticsProperty<Duration>(
-        "wait duration",
+        'wait duration',
         waitDuration,
         defaultValue: null,
       ),
     );
     properties.add(
       DiagnosticsProperty<Duration>(
-        "show duration",
+        'show duration',
         showDuration,
         defaultValue: null,
       ),
     );
     properties.add(
       DiagnosticsProperty<Duration>(
-        "exit duration",
+        'exit duration',
         exitDuration,
         defaultValue: null,
       ),
     );
     properties.add(
       DiagnosticsProperty<TooltipTriggerMode>(
-        "triggerMode",
+        'triggerMode',
         triggerMode,
         defaultValue: null,
       ),
     );
     properties.add(
       FlagProperty(
-        "enableFeedback",
+        'enableFeedback',
         value: enableFeedback,
-        ifTrue: "true",
+        ifTrue: 'true',
         showName: true,
       ),
     );
     properties.add(
       DiagnosticsProperty<TextAlign>(
-        "textAlign",
+        'textAlign',
         textAlign,
         defaultValue: null,
       ),
     );
   }
 
+  /// Dismiss all of the tooltips that are currently shown on the screen,
+  /// including those with mouse cursors currently hovering over them.
+  ///
+  /// This method returns true if it successfully dismisses the tooltips. It
+  /// returns false if there is no tooltip shown on the screen.
   static bool dismissAllToolTips() {
     return flutter_material.Tooltip.dismissAllToolTips();
   }
@@ -367,12 +471,17 @@ class _TooltipDefaults extends TooltipThemeData {
 
   final BuildContext context;
   late final ColorThemeData _color = ColorTheme.of(context);
+  late final ShapeThemeData _shape = ShapeTheme.of(context);
   late final TextTheme _text = TextTheme.of(context);
 
   @override
+  bool? get preferBelow => false;
+
+  @override
   Decoration? get decoration => ShapeDecoration(
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(4)),
+    shape: CornersBorder(
+      delegate: _shape.corner.family.delegate,
+      corners: Corners.all(_shape.corner.extraSmall),
     ),
     color: _color.inverseSurface,
   );
@@ -385,5 +494,8 @@ class _TooltipDefaults extends TooltipThemeData {
   EdgeInsetsGeometry? get padding => const EdgeInsets.symmetric(horizontal: 8);
 
   @override
-  double? get height => 24.0;
+  BoxConstraints? get constraints => const BoxConstraints(minHeight: 24);
+
+  @override
+  Duration? get waitDuration => const Duration(milliseconds: 500);
 }

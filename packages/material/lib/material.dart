@@ -91,6 +91,7 @@ export 'src/buttons/floating_action_button_theme.dart';
 // export 'src/switch/switch_theme.dart';
 
 export 'src/tooltip/tooltip.dart';
+export 'src/tooltip/tooltip_theme.dart';
 
 export 'src/navigation/navigation_drawer.dart';
 export 'src/navigation/navigation_drawer_theme.dart';
