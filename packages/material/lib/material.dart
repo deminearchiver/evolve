@@ -1,5 +1,6 @@
 library;
 
+// Flutter
 export 'package:flutter/material.dart'
     hide
         // Widgets
@@ -47,32 +48,31 @@ export 'package:flutter/material.dart'
         NavigationDrawerTheme,
         NavigationDrawerThemeData;
 
+// Widgets
 export 'package:widgets/widgets.dart';
 
+// Material Symbols
 export 'package:material_symbols_icons/material_symbols_icons.dart';
 
-// Material Design 3 foundations
-
-export 'src/typeface_theme.dart';
-
+// Color
 export 'src/color_theme.dart';
 
-export 'src/typescale_theme.dart';
-
-export 'src/state_theme.dart';
-
+// Shape
 export 'src/shape_theme.dart';
 export 'src/shape/corners.dart';
 export 'src/shape/corners_border.dart';
 
+// State
+export 'src/state_theme.dart';
+
+// Elevation
 export 'src/elevation_theme.dart';
 
+// Motion
 export 'src/motion_theme.dart';
 
 // TODO: decide what to do with ButtonStyleButton
 export 'src/button_style_button.dart';
-
-// Material Design 3 components
 
 export 'src/icon/icon.dart';
 export 'src/icon/icon_theme.dart';
@@ -86,16 +86,12 @@ export 'src/buttons/icon_button_theme.dart';
 export 'src/buttons/floating_action_button.dart';
 export 'src/buttons/floating_action_button_theme.dart';
 
-// TODO: uncomment after implementing switch
-// export 'src/switch/switch.dart';
-// export 'src/switch/switch_theme.dart';
-
 export 'src/tooltip/tooltip.dart';
 export 'src/tooltip/tooltip_theme.dart';
 
 export 'src/navigation/navigation_drawer.dart';
 export 'src/navigation/navigation_drawer_theme.dart';
 
-// Utility
-
-export 'src/app.dart';
+// TODO: uncomment after implementing switch
+// export 'src/switch/switch.dart';
+// export 'src/switch/switch_theme.dart';
