@@ -15,4 +15,6 @@ workspace:
   - packages/material/example
 
 dependency_overrides:
+  # Override pinned SDK dependency
+  # material_color_utilities v0.12.0 introduced new expressive on-colors spec
   material_color_utilities: ^0.12.0
