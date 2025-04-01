@@ -79,6 +79,7 @@ class NavigationDrawerDestination extends StatelessWidget {
     return _NavigationDestinationBuilder(
       onTap: onTap,
       animation: animation,
+      selected: selected,
       color: activeIndicatorColor,
       size: activeIndicatorSize,
       shape: activeIndicatorShape,
@@ -134,6 +135,7 @@ class _NavigationDestinationBuilder extends StatelessWidget {
   const _NavigationDestinationBuilder({
     this.onTap,
     required this.animation,
+    required this.selected,
     this.color,
     this.size,
     this.shape,
@@ -143,6 +145,7 @@ class _NavigationDestinationBuilder extends StatelessWidget {
 
   final VoidCallback? onTap;
   final Animation<double> animation;
+  final bool selected;
 
   final WidgetBuilder buildIcon;
 
@@ -163,7 +166,12 @@ class _NavigationDestinationBuilder extends StatelessWidget {
     final Widget inkWell = InkWell(
       onTap: onTap,
       customBorder: resolvedShape,
-      overlayColor: navigationDrawerTheme.stateLayerColor,
+      overlayColor: WidgetStateProperty.resolveWith(
+        (states) => navigationDrawerTheme.stateLayerColor.resolve({
+          ...states,
+          if (selected) WidgetState.selected,
+        }),
+      ),
       child: Stack(
         alignment: Alignment.center,
         children: [
