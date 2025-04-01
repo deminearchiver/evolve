@@ -92,6 +92,29 @@
             "type": "dart",
             "flutterMode": "release",
             "program": "lib/browser/main.dart",
+        },
+        {
+            "name": "material/keep",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/keep/main.dart",
+        },
+        {
+            "name": "material/keep (profile mode)",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "program": "lib/keep/main.dart",
+        },
+        {
+            "name": "material/keep (release mode)",
+            "cwd": "packages/material/example",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "program": "lib/keep/main.dart",
         }
     ]
 }

@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  dynamic_system_colors
   flutter_inappwebview_windows
 )
 

@@ -53,6 +53,9 @@ export 'package:widgets/widgets.dart';
 
 // Material Symbols
 export 'package:material_symbols_icons/material_symbols_icons.dart';
+export 'package:material_symbols_icons/get.dart';
+export 'package:material_symbols_icons/iconname_to_unicode_map.dart';
+export 'package:material_symbols_icons/symbols_map.dart';
 
 // Color
 export 'src/color_theme.dart';

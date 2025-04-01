@@ -7,7 +7,7 @@ resolution: workspace
 
 environment:
   sdk: ^3.8.0-219.0.dev
-  flutter: ">=1.17.0"
+  flutter: ">=3.31.0-1.0.pre.198"
 
 dependencies:
   flutter:
@@ -15,8 +15,8 @@ dependencies:
   widgets:
     path: ../widgets
   material_color_utilities: ^0.11.1
-  material_symbols_icons: ^4.2805.1
-  follow_the_leader: ^0.0.4+8
+  material_symbols_icons: any
+  follow_the_leader: any
   meta: ^1.16.0
 
 dev_dependencies:
