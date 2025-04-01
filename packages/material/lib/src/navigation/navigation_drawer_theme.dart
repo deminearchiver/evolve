@@ -448,13 +448,13 @@ class _NavigationDrawerThemeDataFallback
   @override
   WidgetStateProperty<TextStyle> get labelTextStyle =>
       WidgetStateProperty.resolveWith((states) {
-        final Color color;
         if (states.contains(WidgetState.selected)) {
-          color = _color.onSecondaryContainer;
-        } else {
-          color = _color.onSurfaceVariant;
+          return _text.labelLarge!.copyWith(
+            color: _color.onSecondaryContainer,
+            fontWeight: FontWeight.w700,
+          );
         }
-        return _text.labelLarge!.copyWith(color: color);
+        return _text.labelLarge!.copyWith(color: _color.onSurfaceVariant);
       });
 
   @override
