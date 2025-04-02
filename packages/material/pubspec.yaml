@@ -14,10 +14,10 @@ dependencies:
     sdk: flutter
   widgets:
     path: ../widgets
-  material_color_utilities: ^0.11.1
+  material_color_utilities: any
   material_symbols_icons: any
   follow_the_leader: any
-  meta: ^1.16.0
+  meta: any
 
 dev_dependencies:
   flutter_test:
