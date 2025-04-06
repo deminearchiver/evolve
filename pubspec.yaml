@@ -9,6 +9,7 @@ workspace:
   # Packages
   - packages/widgets
   - packages/material
+  - packages/material_rfw
   - packages/dynamic_color
 
   # Apps
