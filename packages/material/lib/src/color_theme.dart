@@ -69,8 +69,8 @@ abstract class ColorThemeData with Diagnosticable {
     required Color surfaceTint,
 
     // Add-on surface
-    @Deprecated("Use surface instead") required Color background,
-    @Deprecated("Use onSurface instead") required Color onBackground,
+    @Deprecated("Use surface instead") Color? background,
+    @Deprecated("Use onSurface instead") Color? onBackground,
     required Color surfaceBright,
     required Color surfaceDim,
     required Color scrim,
@@ -82,9 +82,8 @@ abstract class ColorThemeData with Diagnosticable {
   }) = _ColorThemeData;
 
   @Deprecated("Use ColorThemeData.baseline instead")
-  factory ColorThemeData.static({required Brightness brightness}) {
-    return ColorThemeData.baseline(brightness: brightness);
-  }
+  factory ColorThemeData.static({required Brightness brightness}) =
+      ColorThemeData.baseline;
 
   /// ### Baseline colors
   /// ![Baseline scheme colors in light theme](https://lh3.googleusercontent.com/rfxJv95pIoJ3cEZ9ypfimJFC5Ps8sEEVBNWD36C-fy3DYvec8J_VLRosBkwTNsnpSCgSpxWXBypOXT8Ydm4fJOQ2ajWoy7SjocrzJcK7KA8=s0)
@@ -94,6 +93,7 @@ abstract class ColorThemeData with Diagnosticable {
     //  1. Baseline color tokens from the Material Design 3 website
     //  2. Implement and use md-ref-palette tokens
     //  3. Use ColorThemeData.fromSeed with the seed color #6750A4
+    // This factory shouldn't and cannot be const because of the avove notice
     return switch (brightness) {
       Brightness.light => _baselineLight,
       Brightness.dark => _baselineDark,
@@ -146,7 +146,9 @@ abstract class ColorThemeData with Diagnosticable {
     inverseSurface: Color(0xFF322F35),
     inverseOnSurface: Color(0xFFF5EFF7),
     surfaceTint: Color(0xFF6750A4),
+    // ignore: deprecated_member_use_from_same_package
     background: Color(0xFFFEF7FF),
+    // ignore: deprecated_member_use_from_same_package
     onBackground: Color(0xFF1D1B20),
     surfaceBright: Color(0xFFFEF7FF),
     surfaceDim: Color(0xFFDED8E1),
@@ -202,7 +204,9 @@ abstract class ColorThemeData with Diagnosticable {
     inverseSurface: Color(0xFFE6E0E9),
     inverseOnSurface: Color(0xFF322F35),
     surfaceTint: Color(0xFFD0BCFF),
+    // ignore: deprecated_member_use_from_same_package
     background: Color(0xFF141218),
+    // ignore: deprecated_member_use_from_same_package
     onBackground: Color(0xFFE6E0E9),
     surfaceBright: Color(0xFF3B383E),
     surfaceDim: Color(0xFF141218),
@@ -312,7 +316,9 @@ abstract class ColorThemeData with Diagnosticable {
         MaterialDynamicColors.inverseOnSurface.getArgb(scheme),
       ),
       surfaceTint: Color(MaterialDynamicColors.surfaceTint.getArgb(scheme)),
+      // ignore: deprecated_member_use_from_same_package
       background: Color(MaterialDynamicColors.background.getArgb(scheme)),
+      // ignore: deprecated_member_use_from_same_package
       onBackground: Color(MaterialDynamicColors.onBackground.getArgb(scheme)),
       surfaceBright: Color(MaterialDynamicColors.surfaceBright.getArgb(scheme)),
       surfaceDim: Color(MaterialDynamicColors.surfaceDim.getArgb(scheme)),
@@ -1185,15 +1191,17 @@ class _ColorThemeData extends ColorThemeData {
     required this.inverseSurface,
     required this.inverseOnSurface,
     required this.surfaceTint,
-    @Deprecated("Use surface instead") required this.background,
-    @Deprecated("Use onSurface instead") required this.onBackground,
+    @Deprecated("Use surface instead") Color? background,
+    @Deprecated("Use onSurface instead") Color? onBackground,
     required this.surfaceBright,
     required this.surfaceDim,
     required this.scrim,
     required this.shadow,
     required this.outline,
     required this.outlineVariant,
-  }) : super._();
+  }) : _background = background,
+       _onBackground = onBackground,
+       super._();
 
   @override
   final Brightness brightness;
@@ -1321,11 +1329,15 @@ class _ColorThemeData extends ColorThemeData {
   @override
   final Color surfaceTint;
 
-  @override
-  final Color background;
+  final Color? _background;
 
   @override
-  final Color onBackground;
+  Color get background => _background ?? surface;
+
+  final Color? _onBackground;
+
+  @override
+  Color get onBackground => _onBackground ?? onSurface;
 
   @override
   final Color surfaceBright;
