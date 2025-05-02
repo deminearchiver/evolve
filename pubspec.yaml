@@ -9,11 +9,11 @@ workspace:
   # Packages
   - packages/widgets
   - packages/material
-  - packages/material_rfw
   - packages/material3
   - packages/mcu
 
   # Apps
+  # - apps/material_theme_builder
   # - packages/material/example
 
 dependency_overrides:
