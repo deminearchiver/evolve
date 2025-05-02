@@ -1,5 +1,6 @@
 library;
 
-export 'src/typeface/typeface_theme.dart';
-export 'src/typescale/typescale_style.dart';
-export 'src/typescale/typescale_theme.dart';
+export 'src/typeface/typeface.dart';
+
+export 'src/typescale/typescale.dart';
+export 'src/color/color.dart';

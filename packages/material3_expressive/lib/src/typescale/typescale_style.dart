@@ -1,8 +1,4 @@
-import 'dart:ui';
-
-import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+part of 'typescale.dart';
 
 FontWeight _closestFontWeightFor(double weight) {
   assert(weight >= 0, "Font weight cannot be negative.");
