@@ -1,0 +1,24 @@
+import '../utils/math_utils.dart' as math_utils;
+
+final class ContrastCurve {
+  const ContrastCurve(this.low, this.normal, this.medium, this.high);
+
+  final double low;
+  final double normal;
+  final double medium;
+  final double high;
+
+  double get(double contrastLevel) {
+    if (contrastLevel <= -1.0) {
+      return low;
+    } else if (contrastLevel < 0.0) {
+      return math_utils.lerp(low, normal, (contrastLevel + 1.0) / 1.0);
+    } else if (contrastLevel < 0.5) {
+      return math_utils.lerp(normal, medium, (contrastLevel - 0.0) / 0.5);
+    } else if (contrastLevel < 1.0) {
+      return math_utils.lerp(medium, high, (contrastLevel - 0.5) / 0.5);
+    } else {
+      return high;
+    }
+  }
+}
