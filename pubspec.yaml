@@ -14,7 +14,7 @@ workspace:
   - packages/mcu
 
   # Apps
-  - packages/material/example
+  # - packages/material/example
 
 dependency_overrides:
   # Override pinned SDK dependency
