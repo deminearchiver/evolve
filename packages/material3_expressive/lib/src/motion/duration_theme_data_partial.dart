@@ -1,5 +1,6 @@
 part of 'motion.dart';
 
+@immutable
 abstract class DurationThemeDataPartial with Diagnosticable {
   const factory DurationThemeDataPartial({
     Duration? short1,
@@ -259,6 +260,7 @@ mixin DurationThemeDataPartialMixin on Diagnosticable
   );
 }
 
+@immutable
 class _DurationThemeDataPartial
     with Diagnosticable, DurationThemeDataPartialMixin {
   const _DurationThemeDataPartial({

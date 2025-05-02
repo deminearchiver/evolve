@@ -1,5 +1,6 @@
 part of 'motion.dart';
 
+@immutable
 abstract class EasingThemeDataPartial with Diagnosticable {
   const factory EasingThemeDataPartial({
     Curve? linear,
@@ -195,6 +196,7 @@ mixin EasingThemeDataPartialMixin on Diagnosticable
   );
 }
 
+@immutable
 class _EasingThemeDataPartial with Diagnosticable, EasingThemeDataPartialMixin {
   const _EasingThemeDataPartial({
     this.linear,

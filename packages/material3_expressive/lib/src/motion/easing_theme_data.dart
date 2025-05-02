@@ -1,5 +1,6 @@
 part of 'motion.dart';
 
+@immutable
 abstract class EasingThemeData
     with Diagnosticable
     implements EasingThemeDataPartial {
@@ -194,6 +195,7 @@ class _Linear extends Curve {
   double transformInternal(double t) => t;
 }
 
+@immutable
 class _EasingThemeData with Diagnosticable, EasingThemeDataMixin {
   const _EasingThemeData({
     required this.linear,

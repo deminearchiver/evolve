@@ -1,5 +1,6 @@
 part of 'typeface.dart';
 
+@immutable
 abstract class TypefaceThemeData
     with Diagnosticable
     implements TypefaceThemeDataPartial {
@@ -163,6 +164,7 @@ mixin TypefaceThemeDataMixin on Diagnosticable implements TypefaceThemeData {
   );
 }
 
+@immutable
 class _TypefaceThemeData with Diagnosticable, TypefaceThemeDataMixin {
   const _TypefaceThemeData({
     required this.plain,

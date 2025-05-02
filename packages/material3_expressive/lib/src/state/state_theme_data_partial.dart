@@ -1,5 +1,6 @@
 part of 'state.dart';
 
+@immutable
 abstract class StateThemeDataPartial with Diagnosticable {
   const factory StateThemeDataPartial({
     double? hoverStateLayerOpacity,
@@ -119,6 +120,7 @@ mixin StateThemeDataPartialMixin on Diagnosticable
   );
 }
 
+@immutable
 class _StateThemeDataPartial with Diagnosticable, StateThemeDataPartialMixin {
   const _StateThemeDataPartial({
     this.hoverStateLayerOpacity,

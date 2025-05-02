@@ -1,5 +1,6 @@
 part of 'shape.dart';
 
+@immutable
 abstract class ShapeThemeDataPartial with Diagnosticable {
   const factory ShapeThemeDataPartial({
     Corner? none,
@@ -164,6 +165,7 @@ mixin ShapeThemeDataPartialMixin on Diagnosticable
   );
 }
 
+@immutable
 class _ShapeThemeDataPartial with Diagnosticable, ShapeThemeDataPartialMixin {
   const _ShapeThemeDataPartial({
     this.none,

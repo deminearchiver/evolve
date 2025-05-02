@@ -1,5 +1,6 @@
 part of 'typeface.dart';
 
+@immutable
 abstract class TypefaceThemeDataPartial with Diagnosticable {
   const factory TypefaceThemeDataPartial({
     List<String>? plain,
@@ -163,6 +164,7 @@ mixin TypefaceThemeDataPartialMixin on Diagnosticable
   );
 }
 
+@immutable
 class _TypefaceThemeDataPartial
     with Diagnosticable, TypefaceThemeDataPartialMixin {
   const _TypefaceThemeDataPartial({

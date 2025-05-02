@@ -1,5 +1,6 @@
 part of 'elevation.dart';
 
+@immutable
 abstract class ElevationThemeData
     with Diagnosticable
     implements ElevationThemeDataPartial {
@@ -121,6 +122,7 @@ mixin ElevationThemeDataMixin on Diagnosticable implements ElevationThemeData {
       Object.hash(level0, level1, level2, level3, level4, level5);
 }
 
+@immutable
 class _ElevationThemeData with Diagnosticable, ElevationThemeDataMixin {
   const _ElevationThemeData({
     required this.level0,

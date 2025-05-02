@@ -1,5 +1,6 @@
 part of 'motion.dart';
 
+@immutable
 abstract class DurationThemeData
     with Diagnosticable
     implements DurationThemeDataPartial {
@@ -247,6 +248,7 @@ mixin DurationThemeDataMixin on Diagnosticable implements DurationThemeData {
   );
 }
 
+@immutable
 class _DurationThemeData with Diagnosticable, DurationThemeDataMixin {
   const _DurationThemeData({
     required this.short1,

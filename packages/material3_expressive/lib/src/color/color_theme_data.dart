@@ -1,5 +1,6 @@
 part of 'color.dart';
 
+@immutable
 abstract class ColorThemeData
     with Diagnosticable
     implements ColorThemeDataPartial {
@@ -812,6 +813,7 @@ mixin ColorThemeDataMixin on Diagnosticable implements ColorThemeData {
   }
 }
 
+@immutable
 class _ColorThemeData with Diagnosticable, ColorThemeDataMixin {
   const _ColorThemeData({
     required this.brightness,
@@ -1089,6 +1091,7 @@ class _ColorThemeData with Diagnosticable, ColorThemeDataMixin {
   final Color textHintInverse;
 }
 
+@immutable
 class _ColorSchemeFromColorThemeData
     with Diagnosticable
     implements ColorScheme {

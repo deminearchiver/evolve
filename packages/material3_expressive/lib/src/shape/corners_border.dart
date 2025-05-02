@@ -1,5 +1,6 @@
 part of 'shape.dart';
 
+@immutable
 abstract class CornersBorderDelegate {
   const CornersBorderDelegate();
 
@@ -322,8 +323,7 @@ class SuperellipseCornersBorderDelegate extends CornersBorderDelegate {
   }
 }
 
-RoundedSuperellipseBorder? _a; // TODO: remove temp line
-
+@immutable
 class CornersBorder extends OutlinedBorder {
   const CornersBorder({
     super.side,

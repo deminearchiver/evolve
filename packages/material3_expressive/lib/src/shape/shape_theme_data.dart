@@ -1,5 +1,6 @@
 part of 'shape.dart';
 
+@immutable
 abstract class ShapeThemeData
     with Diagnosticable
     implements ShapeThemeDataPartial {
@@ -172,6 +173,7 @@ mixin ShapeThemeDataMixin on Diagnosticable implements ShapeThemeData {
   );
 }
 
+@immutable
 class _ShapeThemeData with Diagnosticable, ShapeThemeDataMixin {
   const _ShapeThemeData({
     required this.none,

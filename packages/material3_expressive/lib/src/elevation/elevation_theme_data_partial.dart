@@ -1,5 +1,6 @@
 part of 'elevation.dart';
 
+@immutable
 abstract class ElevationThemeDataPartial with Diagnosticable {
   const factory ElevationThemeDataPartial({
     double? level0,
@@ -105,6 +106,7 @@ mixin ElevationThemeDataPartialMixin on Diagnosticable
       Object.hash(level0, level1, level2, level3, level4, level5);
 }
 
+@immutable
 class _ElevationThemeDataPartial
     with Diagnosticable, ElevationThemeDataPartialMixin {
   const _ElevationThemeDataPartial({

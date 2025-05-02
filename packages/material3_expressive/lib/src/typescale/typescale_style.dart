@@ -51,6 +51,7 @@ extension FontWeightExtension on FontWeight {
   double toDouble() => value.toDouble();
 }
 
+@immutable
 class TypescaleStylePartial with Diagnosticable {
   const TypescaleStylePartial({
     this.font,
@@ -209,6 +210,7 @@ class TypescaleStylePartial with Diagnosticable {
   );
 }
 
+@immutable
 class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
   const TypescaleStyle({
     required this.font,

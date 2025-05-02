@@ -1,5 +1,6 @@
 part of 'typescale.dart';
 
+@immutable
 abstract class TypescaleThemeData
     with Diagnosticable
     implements TypescaleThemeDataPartial {
@@ -700,6 +701,7 @@ mixin TypescaleThemeDataMixin on Diagnosticable implements TypescaleThemeData {
   ]);
 }
 
+@immutable
 class _TypescaleThemeData with Diagnosticable, TypescaleThemeDataMixin {
   const _TypescaleThemeData({
     required this.displayLarge,
@@ -825,6 +827,7 @@ class _TypescaleThemeData with Diagnosticable, TypescaleThemeDataMixin {
   final TypescaleStyle labelSmallEmphasized;
 }
 
+@immutable
 class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   _TypescaleThemeDataFallback(this._context);
 

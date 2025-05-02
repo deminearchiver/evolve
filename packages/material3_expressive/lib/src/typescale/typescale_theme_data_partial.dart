@@ -1,5 +1,6 @@
 part of 'typescale.dart';
 
+@immutable
 abstract class TypescaleThemeDataPartial with Diagnosticable {
   const factory TypescaleThemeDataPartial({
     TypescaleStylePartial? displayLarge,
@@ -750,6 +751,7 @@ mixin TypescaleThemeDataPartialMixin on Diagnosticable
   ]);
 }
 
+@immutable
 class _TypescaleThemeDataPartial
     with Diagnosticable, TypescaleThemeDataPartialMixin {
   const _TypescaleThemeDataPartial({
