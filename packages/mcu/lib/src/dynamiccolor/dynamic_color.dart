@@ -1,7 +1,5 @@
-import 'dart:math' as math;
 import '../contrast/contrast.dart';
 import '../utils/math_utils.dart' as math_utils;
-import '../utils/color_utils.dart' as color_utils;
 
 import 'color_spec.dart';
 import 'color_specs.dart';
@@ -223,32 +221,3 @@ final class DynamicColor {
     );
   }
 }
-
-// class Builder {
-//   String? _name;
-//   DynamicSchemeCallback<TonalPalette>? _palette;
-//   DynamicSchemeCallback<double>? _tone;
-//   bool? _isBackground;
-
-//   Builder setName(String name) {
-//     _name = name;
-//     return this;
-//   }
-
-//   Builder setPalette(DynamicSchemeCallback<TonalPalette> palette) {
-//     _palette = palette;
-//     return this;
-//   }
-
-//   Builder setTone(DynamicSchemeCallback<double> tone) {
-//     _tone = tone;
-//     return this;
-//   }
-
-//   Builder setIsBackground(bool isBackground) {
-//     _isBackground = isBackground;
-//     return this;
-//   }
-
-//   Builder setChromaMultiplier()
-// }
