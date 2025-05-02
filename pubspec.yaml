@@ -9,7 +9,6 @@ workspace:
   # Packages
   - packages/widgets
   - packages/material
-  - packages/material3_shapes
   - packages/material_rfw
   - packages/dynamic_color
   - packages/material3
