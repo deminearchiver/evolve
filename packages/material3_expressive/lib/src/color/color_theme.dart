@@ -1,7 +1,342 @@
+import 'dart:async';
+import 'dart:ui' as ui;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:mcu/mcu.dart' as material_color_utilities;
+import 'package:material_color_utilities/material_color_utilities.dart'
+    as mcu_legacy;
+
+import 'package:mcu/mcu.dart' as mcu;
+import 'package:mcu/src/quantize/quantizer_result.dart' as mcu;
+import 'package:mcu/src/quantize/quantizer_celebi.dart' as mcu;
+import 'package:mcu/src/score/score.dart' as mcu;
+// import 'package:material_color_utilities/quantize/qa'
+
+enum DynamicSchemeVariant {
+  monochrome(mcu.Variant.monochrome),
+  neutral(mcu.Variant.neutral),
+  tonalSpot(mcu.Variant.tonalSpot),
+  vibrant(mcu.Variant.vibrant),
+  expressive(mcu.Variant.expressive),
+  fidelity(mcu.Variant.fidelity),
+  content(mcu.Variant.content),
+  rainbow(mcu.Variant.rainbow),
+  fruitSalad(mcu.Variant.fruitSalad);
+
+  const DynamicSchemeVariant(this._variant);
+
+  // TODO: find a use or remove
+  final mcu.Variant _variant;
+}
+
+// TODO: migrate these constants into some class and make them public
+const double _contrastLevelLow = -1.0;
+const double _contrastLevelNormal = 0.0;
+const double _contrastLevelMedium = 0.5;
+const double _contrastLevelHigh = 1.0;
+
+mcu.DynamicScheme _buildDynamicScheme({
+  required DynamicSchemeVariant variant,
+  required Color sourceColor,
+  required Brightness brightness,
+  double contrastLevel = _contrastLevelNormal,
+  mcu.SpecVersion? specVersion,
+  mcu.Platform? platform,
+}) {
+  final sourceColorHct = mcu.Hct.fromInt(sourceColor.toARGB32());
+  final isDark = brightness == Brightness.dark;
+  return switch (variant) {
+    DynamicSchemeVariant.monochrome => mcu.SchemeMonochrome(
+      sourceColorHct: sourceColorHct,
+      isDark: isDark,
+      contrastLevel: contrastLevel,
+    ),
+    DynamicSchemeVariant.neutral => mcu.SchemeNeutral(
+      sourceColorHct: sourceColorHct,
+      isDark: isDark,
+      contrastLevel: contrastLevel,
+      specVersion: specVersion ?? mcu.SchemeNeutral.defaultSpecVersion,
+      platform: platform ?? mcu.SchemeNeutral.defaultPlatform,
+    ),
+    DynamicSchemeVariant.tonalSpot => mcu.SchemeTonalSpot(
+      sourceColorHct: sourceColorHct,
+      isDark: isDark,
+      contrastLevel: contrastLevel,
+      specVersion: specVersion ?? mcu.SchemeTonalSpot.defaultSpecVersion,
+      platform: platform ?? mcu.SchemeTonalSpot.defaultPlatform,
+    ),
+    DynamicSchemeVariant.vibrant => mcu.SchemeVibrant(
+      sourceColorHct: sourceColorHct,
+      isDark: isDark,
+      contrastLevel: contrastLevel,
+      specVersion: specVersion ?? mcu.SchemeVibrant.defaultSpecVersion,
+      platform: platform ?? mcu.SchemeVibrant.defaultPlatform,
+    ),
+    DynamicSchemeVariant.expressive => mcu.SchemeExpressive(
+      sourceColorHct: sourceColorHct,
+      isDark: isDark,
+      contrastLevel: contrastLevel,
+      specVersion: specVersion ?? mcu.SchemeExpressive.defaultSpecVersion,
+      platform: platform ?? mcu.SchemeExpressive.defaultPlatform,
+    ),
+    DynamicSchemeVariant.fidelity => mcu.SchemeFidelity(
+      sourceColorHct: sourceColorHct,
+      isDark: isDark,
+      contrastLevel: contrastLevel,
+    ),
+    DynamicSchemeVariant.content => mcu.SchemeContent(
+      sourceColorHct: sourceColorHct,
+      isDark: isDark,
+      contrastLevel: contrastLevel,
+    ),
+    DynamicSchemeVariant.rainbow => mcu.SchemeRainbow(
+      sourceColorHct: sourceColorHct,
+      isDark: isDark,
+      contrastLevel: contrastLevel,
+    ),
+    DynamicSchemeVariant.fruitSalad => mcu.SchemeFruitSalad(
+      sourceColorHct: sourceColorHct,
+      isDark: isDark,
+      contrastLevel: contrastLevel,
+    ),
+  };
+}
+
+extension on mcu.Hct {
+  Color _toColor() => Color(toInt());
+}
+
+extension on Color {
+  mcu.Hct _toHct() => mcu.Hct.fromInt(toARGB32());
+}
+
+extension on mcu.DynamicColor {
+  Color _getColor(mcu.DynamicScheme scheme) => getHct(scheme)._toColor();
+}
+
+ColorThemeData _fromDynamicScheme(mcu.DynamicScheme scheme) {
+  final colors = const mcu.MaterialDynamicColors();
+  return ColorThemeData(
+    brightness: scheme.isDark ? Brightness.dark : Brightness.light,
+    primaryPaletteKeyColor: colors.primaryPaletteKeyColor()._getColor(scheme),
+    secondaryPaletteKeyColor: colors.secondaryPaletteKeyColor()._getColor(
+      scheme,
+    ),
+    tertiaryPaletteKeyColor: colors.tertiaryPaletteKeyColor()._getColor(scheme),
+    neutralPaletteKeyColor: colors.neutralPaletteKeyColor()._getColor(scheme),
+    neutralVariantPaletteKeyColor: colors
+        .neutralVariantPaletteKeyColor()
+        ._getColor(scheme),
+    errorPaletteKeyColor: colors.errorPaletteKeyColor()._getColor(scheme),
+    background: colors.background()._getColor(scheme),
+    onBackground: colors.onBackground()._getColor(scheme),
+    surface: colors.surface()._getColor(scheme),
+    surfaceDim: colors.surfaceDim()._getColor(scheme),
+    surfaceBright: colors.surfaceBright()._getColor(scheme),
+    surfaceContainerLowest: colors.surfaceContainerLowest()._getColor(scheme),
+    surfaceContainerLow: colors.surfaceContainerLow()._getColor(scheme),
+    surfaceContainer: colors.surfaceContainer()._getColor(scheme),
+    surfaceContainerHigh: colors.surfaceContainerHigh()._getColor(scheme),
+    surfaceContainerHighest: colors.surfaceContainerHighest()._getColor(scheme),
+    onSurface: colors.onSurface()._getColor(scheme),
+    surfaceVariant: colors.surfaceVariant()._getColor(scheme),
+    onSurfaceVariant: colors.onSurfaceVariant()._getColor(scheme),
+    outline: colors.outline()._getColor(scheme),
+    outlineVariant: colors.outlineVariant()._getColor(scheme),
+    inverseSurface: colors.inverseSurface()._getColor(scheme),
+    inverseOnSurface: colors.inverseOnSurface()._getColor(scheme),
+    shadow: colors.shadow()._getColor(scheme),
+    scrim: colors.scrim()._getColor(scheme),
+    surfaceTint: colors.surfaceTint()._getColor(scheme),
+    primary: colors.primary()._getColor(scheme),
+    primaryDim: colors.primaryDim()._getColor(scheme),
+    onPrimary: colors.onPrimary()._getColor(scheme),
+    primaryContainer: colors.primaryContainer()._getColor(scheme),
+    onPrimaryContainer: colors.onPrimaryContainer()._getColor(scheme),
+    primaryFixed: colors.primaryFixed()._getColor(scheme),
+    primaryFixedDim: colors.primaryFixedDim()._getColor(scheme),
+    onPrimaryFixed: colors.onPrimaryFixed()._getColor(scheme),
+    onPrimaryFixedVariant: colors.onPrimaryFixedVariant()._getColor(scheme),
+    inversePrimary: colors.inversePrimary()._getColor(scheme),
+    secondary: colors.secondary()._getColor(scheme),
+    secondaryDim: colors.secondaryDim()._getColor(scheme),
+    onSecondary: colors.onSecondary()._getColor(scheme),
+    secondaryContainer: colors.secondaryContainer()._getColor(scheme),
+    onSecondaryContainer: colors.onSecondaryContainer()._getColor(scheme),
+    secondaryFixed: colors.secondaryFixed()._getColor(scheme),
+    secondaryFixedDim: colors.secondaryFixedDim()._getColor(scheme),
+    onSecondaryFixed: colors.onSecondaryFixed()._getColor(scheme),
+    onSecondaryFixedVariant: colors.onSecondaryFixedVariant()._getColor(scheme),
+    tertiary: colors.tertiary()._getColor(scheme),
+    tertiaryDim: colors.tertiaryDim()._getColor(scheme),
+    onTertiary: colors.onTertiary()._getColor(scheme),
+    tertiaryContainer: colors.tertiaryContainer()._getColor(scheme),
+    onTertiaryContainer: colors.onTertiaryContainer()._getColor(scheme),
+    tertiaryFixed: colors.tertiaryFixed()._getColor(scheme),
+    tertiaryFixedDim: colors.tertiaryFixedDim()._getColor(scheme),
+    onTertiaryFixed: colors.onTertiaryFixed()._getColor(scheme),
+    onTertiaryFixedVariant: colors.onTertiaryFixedVariant()._getColor(scheme),
+    error: colors.error()._getColor(scheme),
+    errorDim: colors.errorDim()._getColor(scheme),
+    onError: colors.onError()._getColor(scheme),
+    errorContainer: colors.errorContainer()._getColor(scheme),
+    onErrorContainer: colors.onErrorContainer()._getColor(scheme),
+    controlActivated: colors.controlActivated()._getColor(scheme),
+    controlNormal: colors.controlNormal()._getColor(scheme),
+    controlHighlight: colors.controlHighlight()._getColor(scheme),
+    textPrimaryInverse: colors.textPrimaryInverse()._getColor(scheme),
+    textSecondaryAndTertiaryInverse: colors
+        .textSecondaryAndTertiaryInverse()
+        ._getColor(scheme),
+    textPrimaryInverseDisableOnly: colors
+        .textPrimaryInverseDisableOnly()
+        ._getColor(scheme),
+    textSecondaryAndTertiaryInverseDisabled: colors
+        .textSecondaryAndTertiaryInverseDisabled()
+        ._getColor(scheme),
+    textHintInverse: colors.textHintInverse()._getColor(scheme),
+  );
+}
+
+ColorThemeData _fromSourceColor({
+  required DynamicSchemeVariant variant,
+  required Color sourceColor,
+  required Brightness brightness,
+  double contrastLevel = _contrastLevelNormal,
+}) {
+  final scheme = _buildDynamicScheme(
+    variant: variant,
+    sourceColor: sourceColor,
+    brightness: brightness,
+    contrastLevel: contrastLevel,
+    specVersion: mcu.SpecVersion.spec2025,
+    platform: mcu.Platform.phone,
+  );
+  return ColorThemeData.fromDynamicScheme(scheme);
+}
+
+Future<ColorThemeData> _fromImage({
+  required ImageProvider image,
+  required Brightness brightness,
+  DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
+  double contrastLevel = 0.0,
+}) async {
+  // Extract dominant colors from image.
+  final quantizerResult = await _extractColorsFromImageProvider(image);
+  final colorToCount = quantizerResult.colorToCount.map(
+    (key, value) => MapEntry<int, int>(_getArgbFromAbgr(key), value),
+  );
+
+  // Score colors for color scheme suitability.
+  final List<int> scoredResults = mcu.Score.score(colorToCount, desired: 1);
+  final baseColor = Color(scoredResults.first);
+  final scheme = _buildDynamicScheme(
+    variant: variant,
+    sourceColor: baseColor,
+    brightness: brightness,
+    contrastLevel: contrastLevel,
+  );
+  return ColorThemeData.fromDynamicScheme(scheme);
+  // return ColorThemeData.fromSeed(
+  //   seedColor: baseColor,
+  //   brightness: brightness,
+  //   variant: variant,
+  //   contrastLevel: contrastLevel,
+  // );
+}
+
+int _getArgbFromAbgr(int abgr) {
+  const int exceptRMask = 0xFF00FFFF;
+  const int onlyRMask = ~exceptRMask;
+  const int exceptBMask = 0xFFFFFF00;
+  const int onlyBMask = ~exceptBMask;
+  final int r = (abgr & onlyRMask) >> 16;
+  final int b = abgr & onlyBMask;
+  return (abgr & exceptRMask & exceptBMask) | (b << 16) | r;
+}
+
+Future<ui.Image> _imageProviderToScaled(ImageProvider imageProvider) async {
+  const double maxDimension = 112.0;
+  final stream = imageProvider.resolve(
+    const ImageConfiguration(size: Size(maxDimension, maxDimension)),
+  );
+  final imageCompleter = Completer<ui.Image>();
+  late ImageStreamListener listener;
+  late ui.Image scaledImage;
+  Timer? loadFailureTimeout;
+
+  listener = ImageStreamListener(
+    (info, sync) async {
+      loadFailureTimeout?.cancel();
+      stream.removeListener(listener);
+      final image = info.image;
+      final width = image.width;
+      final height = image.height;
+      double paintWidth = width.toDouble();
+      double paintHeight = height.toDouble();
+      assert(width > 0 && height > 0);
+
+      final rescale = width > maxDimension || height > maxDimension;
+      if (rescale) {
+        paintWidth = (width > height)
+            ? maxDimension
+            : (maxDimension / height) * width;
+        paintHeight = (height > width)
+            ? maxDimension
+            : (maxDimension / width) * height;
+      }
+      final pictureRecorder = ui.PictureRecorder();
+      final canvas = Canvas(pictureRecorder);
+      paintImage(
+        canvas: canvas,
+        rect: Rect.fromLTRB(0, 0, paintWidth, paintHeight),
+        image: image,
+        filterQuality: FilterQuality.none,
+      );
+
+      final picture = pictureRecorder.endRecording();
+      scaledImage = await picture.toImage(
+        paintWidth.toInt(),
+        paintHeight.toInt(),
+      );
+      imageCompleter.complete(info.image);
+    },
+    onError: (exception, stackTrace) {
+      stream.removeListener(listener);
+      throw Exception("Failed to render image: $exception");
+    },
+  );
+
+  loadFailureTimeout = Timer(const Duration(seconds: 5), () {
+    stream.removeListener(listener);
+    imageCompleter.completeError(
+      TimeoutException("Timeout occurred trying to load image"),
+    );
+  });
+
+  stream.addListener(listener);
+  await imageCompleter.future;
+  return scaledImage;
+}
+
+Future<mcu.QuantizerResult> _extractColorsFromImageProvider(
+  ImageProvider imageProvider,
+) async {
+  final scaledImage = await _imageProviderToScaled(imageProvider);
+  final imageBytes = await scaledImage.toByteData();
+
+  // final quantizerResult = await QuantizerCelebi().quantize(
+  //   imageBytes!.buffer.asUint32List(),
+  //   128,
+  //   returnInputPixelToClusterPixel: true,
+  // );
+  final quantizerResult = mcu.QuantizerCelebi.quantize(
+    imageBytes!.buffer.asUint32List(),
+    128,
+  );
+  return mcu.QuantizerResult(quantizerResult);
+}
 
 // class ContrastLevel {
 //   const ContrastLevel(this.value);
@@ -92,6 +427,29 @@ abstract class ColorThemeDataPartial with Diagnosticable {
 
   const factory ColorThemeDataPartial.fromColorScheme(ColorScheme colorScheme) =
       _ColorThemeDataPartialFromColorScheme;
+
+  // TODO: decide if fromDynamicScheme should be exposed on ColorThemeDataPartial,
+  //  since ColorThemeData is assignable to ColorThemeDataPartial
+  // factory ColorThemeDataPartial.fromDynamicScheme(mcu.DynamicScheme scheme) =
+  //     ColorThemeData.fromDynamicScheme;
+
+  // TODO: decide if fromSourceColor should be exposed on ColorThemeDataPartial,
+  //  since ColorThemeData is assignable to ColorThemeDataPartial
+  // factory ColorThemeDataPartial.fromSourceColor({
+  //   required DynamicSchemeVariant variant,
+  //   required Color sourceColor,
+  //   required Brightness brightness,
+  //   double contrastLevel,
+  // }) = ColorThemeData.fromSourceColor;
+
+  /// Baseline scheme with values taken from the
+  /// official Material Design 3 (2021) guidelines:
+  /// https://m3.material.io/styles/color/static/baseline
+  factory ColorThemeDataPartial.static({required Brightness brightness}) =>
+      switch (brightness) {
+        Brightness.light => _staticLight,
+        Brightness.dark => _staticDark,
+      };
 
   Brightness? get brightness;
 
@@ -239,10 +597,126 @@ abstract class ColorThemeDataPartial with Diagnosticable {
 
   ColorThemeDataPartial merge(ColorThemeDataPartial? other);
 
+  // TODO: implement
+  // bool get isConcrete;
+  // ColorThemeData? get concreteOrNull;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
   }
+
+  /// Baseline scheme with values taken from the
+  /// official Material Design 3 guidelines:
+  /// https://m3.material.io/styles/color/static/baseline
+  static const ColorThemeDataPartial _staticLight = ColorThemeDataPartial(
+    brightness: Brightness.light,
+    primary: Color(0xFF6750A4),
+    onPrimary: Color(0xFFFFFFFF),
+    primaryContainer: Color(0xFFEADDFF),
+    onPrimaryContainer: Color(0xFF4F378B),
+    primaryFixed: Color(0xFFEADDFF),
+    onPrimaryFixed: Color(0xFF21005D),
+    primaryFixedDim: Color(0xFFD0BCFF),
+    onPrimaryFixedVariant: Color(0xFF4F378B),
+    inversePrimary: Color(0xFFD0BCFF),
+    secondary: Color(0xFF625B71),
+    onSecondary: Color(0xFFFFFFFF),
+    secondaryContainer: Color(0xFFE8DEF8),
+    onSecondaryContainer: Color(0xFF4A4458),
+    secondaryFixed: Color(0xFFE8DEF8),
+    secondaryFixedDim: Color(0xFFCCC2DC),
+    onSecondaryFixed: Color(0xFF1D192B),
+    onSecondaryFixedVariant: Color(0xFF4A4458),
+    tertiary: Color(0xFF7D5260),
+    onTertiary: Color(0xFFFFFFFF),
+    tertiaryContainer: Color(0xFFFFD8E4),
+    onTertiaryContainer: Color(0xFF633B48),
+    tertiaryFixed: Color(0xFFFFD8E4),
+    tertiaryFixedDim: Color(0xFFEFB8C8),
+    onTertiaryFixed: Color(0xFF31111D),
+    onTertiaryFixedVariant: Color(0xFF633B48),
+    error: Color(0xFFB3261E),
+    onError: Color(0xFFFFFFFF),
+    errorContainer: Color(0xFFF9DEDC),
+    onErrorContainer: Color(0xFF8C1D18),
+    surface: Color(0xFFFEF7FF),
+    onSurface: Color(0xFF1D1B20),
+    surfaceVariant: Color(0xFFE7E0EC),
+    onSurfaceVariant: Color(0xFF49454F),
+    surfaceContainerHighest: Color(0xFFE6E0E9),
+    surfaceContainerHigh: Color(0xFFECE6F0),
+    surfaceContainer: Color(0xFFF3EDF7),
+    surfaceContainerLow: Color(0xFFF7F2FA),
+    surfaceContainerLowest: Color(0xFFFFFFFF),
+    inverseSurface: Color(0xFF322F35),
+    inverseOnSurface: Color(0xFFF5EFF7),
+    surfaceTint: Color(0xFF6750A4),
+    background: Color(0xFFFEF7FF),
+    onBackground: Color(0xFF1D1B20),
+    surfaceBright: Color(0xFFFEF7FF),
+    surfaceDim: Color(0xFFDED8E1),
+    scrim: Color(0xFF000000),
+    shadow: Color(0xFF000000),
+    outline: Color(0xFF79747E),
+    outlineVariant: Color(0xFFCAC4D0),
+  );
+
+  /// Baseline scheme with values taken from the
+  /// official Material Design 3 guidelines:
+  /// https://m3.material.io/styles/color/static/baseline
+  static const ColorThemeDataPartial _staticDark = ColorThemeDataPartial(
+    brightness: Brightness.dark,
+    primary: Color(0xFFD0BCFF),
+    onPrimary: Color(0xFF381E72),
+    primaryContainer: Color(0xFF4F378B),
+    onPrimaryContainer: Color(0xFFEADDFF),
+    primaryFixed: Color(0xFFEADDFF),
+    onPrimaryFixed: Color(0xFF21005D),
+    primaryFixedDim: Color(0xFFD0BCFF),
+    onPrimaryFixedVariant: Color(0xFF4F378B),
+    inversePrimary: Color(0xFF6750A4),
+    secondary: Color(0xFFCCC2DC),
+    onSecondary: Color(0xFF332D41),
+    secondaryContainer: Color(0xFF4A4458),
+    onSecondaryContainer: Color(0xFFE8DEF8),
+    secondaryFixed: Color(0xFFE8DEF8),
+    secondaryFixedDim: Color(0xFFCCC2DC),
+    onSecondaryFixed: Color(0xFF1D192B),
+    onSecondaryFixedVariant: Color(0xFF4A4458),
+    tertiary: Color(0xFFEFB8C8),
+    onTertiary: Color(0xFF492532),
+    tertiaryContainer: Color(0xFF633B48),
+    onTertiaryContainer: Color(0xFFFFD8E4),
+    tertiaryFixed: Color(0xFFFFD8E4),
+    tertiaryFixedDim: Color(0xFFEFB8C8),
+    onTertiaryFixed: Color(0xFF31111D),
+    onTertiaryFixedVariant: Color(0xFF633B48),
+    error: Color(0xFFF2B8B5),
+    onError: Color(0xFF601410),
+    errorContainer: Color(0xFF8C1D18),
+    onErrorContainer: Color(0xFFF9DEDC),
+    surface: Color(0xFF141218),
+    onSurface: Color(0xFFE6E0E9),
+    surfaceVariant: Color(0xFF49454F),
+    onSurfaceVariant: Color(0xFFCAC4D0),
+    surfaceContainerHighest: Color(0xFF36343B),
+    surfaceContainerHigh: Color(0xFF2B2930),
+    surfaceContainer: Color(0xFF211F26),
+    surfaceContainerLow: Color(0xFF1D1B20),
+    surfaceContainerLowest: Color(0xFF0F0D13),
+    inverseSurface: Color(0xFFE6E0E9),
+    inverseOnSurface: Color(0xFF322F35),
+    surfaceTint: Color(0xFFD0BCFF),
+    background: Color(0xFF141218),
+    onBackground: Color(0xFFE6E0E9),
+    surfaceBright: Color(0xFF3B383E),
+    surfaceDim: Color(0xFF141218),
+    scrim: Color(0xFF000000),
+    shadow: Color(0xFF000000),
+    outline: Color(0xFF938F99),
+    outlineVariant: Color(0xFF49454F),
+  );
 }
 
 mixin ColorThemeDataPartialMixin on Diagnosticable
@@ -2123,6 +2597,37 @@ abstract class ColorThemeData
     required Color textSecondaryAndTertiaryInverseDisabled,
     required Color textHintInverse,
   }) = _ColorThemeData;
+
+  factory ColorThemeData.fromDynamicScheme(mcu.DynamicScheme scheme) =>
+      _fromDynamicScheme(scheme);
+
+  factory ColorThemeData.fromSourceColor({
+    required DynamicSchemeVariant variant,
+    required Color sourceColor,
+    required Brightness brightness,
+    double contrastLevel = _contrastLevelNormal,
+  }) => _fromSourceColor(
+    variant: variant,
+    sourceColor: sourceColor,
+    brightness: brightness,
+    contrastLevel: contrastLevel,
+  );
+
+  factory ColorThemeData.baseline({
+    required Brightness brightness,
+    double contrastLevel = _contrastLevelNormal,
+  }) {
+    const sourceColor = Color(0xFF6750A4);
+    final scheme = _buildDynamicScheme(
+      variant: DynamicSchemeVariant.tonalSpot,
+      sourceColor: sourceColor,
+      brightness: brightness,
+      contrastLevel: contrastLevel,
+      specVersion: mcu.SpecVersion.spec2021,
+      platform: mcu.Platform.phone,
+    );
+    return ColorThemeData.fromDynamicScheme(scheme);
+  }
 
   @override
   Brightness get brightness;

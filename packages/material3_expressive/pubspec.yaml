@@ -1,7 +1,7 @@
 name: material3_expressive
 description: "A new Flutter package project."
 version: 0.0.1
-homepage:
+publish_to: none
 resolution: workspace
 
 environment:
@@ -14,6 +14,7 @@ dependencies:
   mcu:
     path: ../mcu
   collection: ^1.19.1
+  material_color_utilities: ^0.12.0
 
 dev_dependencies:
   flutter_test:
