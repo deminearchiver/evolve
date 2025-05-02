@@ -1,5 +1,9 @@
 library;
 
+// New exports
+export './src/dynamiccolor/color_spec.dart' show SpecVersion;
+
+// Old exports
 export './src/blend/blend.dart';
 export './src/contrast/contrast.dart';
 export './src/dislike/dislike_analyzer.dart';

@@ -7,7 +7,7 @@ import 'dynamic_scheme.dart';
 final class MaterialDynamicColors {
   const MaterialDynamicColors();
 
-  static const ColorSpec _colorSpec = ColorSpec2025();
+  static const ColorSpec2025 _colorSpec = ColorSpec2025();
 
   DynamicColor highestSurface(DynamicScheme s) {
     return _colorSpec.highestSurface(s);
@@ -133,7 +133,7 @@ final class MaterialDynamicColors {
     return _colorSpec.primary();
   }
 
-  DynamicColor? primaryDim() {
+  DynamicColor primaryDim() {
     return _colorSpec.primaryDim();
   }
 
@@ -181,7 +181,7 @@ final class MaterialDynamicColors {
     return _colorSpec.secondary();
   }
 
-  DynamicColor? secondaryDim() {
+  DynamicColor secondaryDim() {
     return _colorSpec.secondaryDim();
   }
 
@@ -225,7 +225,7 @@ final class MaterialDynamicColors {
     return _colorSpec.tertiary();
   }
 
-  DynamicColor? tertiaryDim() {
+  DynamicColor tertiaryDim() {
     return _colorSpec.tertiaryDim();
   }
 
@@ -269,7 +269,7 @@ final class MaterialDynamicColors {
     return _colorSpec.error();
   }
 
-  DynamicColor? errorDim() {
+  DynamicColor errorDim() {
     return _colorSpec.errorDim();
   }
 
