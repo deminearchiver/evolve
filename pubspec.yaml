@@ -9,7 +9,6 @@ workspace:
   # Packages
   - packages/widgets
   - packages/material
-  - packages/material3
   - packages/mcu
   - packages/material3_expressive
 
