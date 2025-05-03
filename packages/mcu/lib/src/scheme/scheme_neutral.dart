@@ -2,6 +2,7 @@ import '../dynamiccolor/color_spec.dart';
 import '../dynamiccolor/dynamic_scheme.dart';
 import '../dynamiccolor/variant.dart';
 
+/// A theme that's slightly more chromatic than monochrome, which is purely black / white / gray.
 class SchemeNeutral extends DynamicScheme {
   SchemeNeutral({
     required super.sourceColorHct,

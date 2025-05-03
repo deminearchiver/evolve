@@ -2,6 +2,7 @@ import '../dynamiccolor/color_spec.dart';
 import '../dynamiccolor/dynamic_scheme.dart';
 import '../dynamiccolor/variant.dart';
 
+/// A playful theme - the source color's hue does not appear in the theme.
 class SchemeFruitSalad extends DynamicScheme {
   SchemeFruitSalad({
     required super.sourceColorHct,

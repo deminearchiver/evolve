@@ -2,6 +2,7 @@ import '../dynamiccolor/color_spec.dart';
 import '../dynamiccolor/dynamic_scheme.dart';
 import '../dynamiccolor/variant.dart';
 
+/// A monochrome theme, colors are purely black / white / gray.
 class SchemeMonochrome extends DynamicScheme {
   SchemeMonochrome({
     required super.sourceColorHct,
