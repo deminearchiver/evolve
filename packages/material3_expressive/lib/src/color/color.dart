@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 import 'package:material_color_utilities/material_color_utilities.dart'
     as mcu_legacy;
@@ -17,6 +18,8 @@ part 'color_theme.dart';
 part 'color_theme_data.dart';
 part 'color_theme_data_partial.dart';
 
+final _log = Logger("m3expressive.color");
+
 extension on mcu.Hct {
   Color _toColor() => Color(toInt());
 }
@@ -30,20 +33,95 @@ extension on mcu.DynamicColor {
 }
 
 enum DynamicSchemeVariant {
-  monochrome(mcu.Variant.monochrome),
-  neutral(mcu.Variant.neutral),
-  tonalSpot(mcu.Variant.tonalSpot),
-  vibrant(mcu.Variant.vibrant),
-  expressive(mcu.Variant.expressive),
-  fidelity(mcu.Variant.fidelity),
-  content(mcu.Variant.content),
-  rainbow(mcu.Variant.rainbow),
-  fruitSalad(mcu.Variant.fruitSalad);
+  monochrome,
+  neutral,
+  tonalSpot,
+  vibrant,
+  expressive,
+  fidelity,
+  content,
+  rainbow,
+  fruitSalad;
 
-  const DynamicSchemeVariant(this._variant);
+  DynamicSchemeVersion get defaultVersion =>
+      DynamicSchemeVersion._from(switch (this) {
+        neutral => mcu.SchemeNeutral.defaultSpecVersion,
+        tonalSpot => mcu.SchemeTonalSpot.defaultSpecVersion,
+        vibrant => mcu.SchemeVibrant.defaultSpecVersion,
+        expressive => mcu.SchemeExpressive.defaultSpecVersion,
+        _ => mcu.SpecVersion.spec2021,
+      });
 
-  // TODO: find a use or remove
-  final mcu.Variant _variant;
+  DynamicSchemePlatform get defaultPlatform =>
+      DynamicSchemePlatform._from(switch (this) {
+        neutral => mcu.SchemeNeutral.defaultPlatform,
+        tonalSpot => mcu.SchemeTonalSpot.defaultPlatform,
+        vibrant => mcu.SchemeVibrant.defaultPlatform,
+        expressive => mcu.SchemeExpressive.defaultPlatform,
+        _ => mcu.Platform.phone,
+      });
+
+  bool get _supportsSpec2025 => switch (this) {
+    neutral || tonalSpot || vibrant || expressive => true,
+    _ => false,
+  };
+
+  bool supportsVersion(DynamicSchemeVersion version) {
+    return switch (version) {
+      DynamicSchemeVersion.spec2021 => true,
+      DynamicSchemeVersion.spec2025 => _supportsSpec2025,
+    };
+  }
+
+  bool supportsPlatform(DynamicSchemePlatform platform) {
+    return supportsVersion(platform._since);
+  }
+}
+
+enum DynamicSchemeVersion implements Comparable<DynamicSchemeVersion> {
+  spec2021(mcu.SpecVersion.spec2021, 2021),
+  spec2025(mcu.SpecVersion.spec2025, 2025);
+
+  const DynamicSchemeVersion(this._specVersion, this._year);
+
+  final mcu.SpecVersion _specVersion;
+  final int _year;
+
+  bool supportsPlatform(DynamicSchemePlatform platform) {
+    return platform._since >= this;
+  }
+
+  @override
+  int compareTo(DynamicSchemeVersion other) {
+    return _year.compareTo(other._year);
+  }
+
+  bool operator >(DynamicSchemeVersion other) => _year > other._year;
+  bool operator >=(DynamicSchemeVersion other) => _year >= other._year;
+  bool operator <(DynamicSchemeVersion other) => _year < other._year;
+  bool operator <=(DynamicSchemeVersion other) => _year <= other._year;
+
+  static DynamicSchemeVersion _from(mcu.SpecVersion specVersion) =>
+      switch (specVersion) {
+        mcu.SpecVersion.spec2021 => spec2021,
+        mcu.SpecVersion.spec2025 => spec2025,
+      };
+}
+
+enum DynamicSchemePlatform {
+  phone(mcu.Platform.phone, DynamicSchemeVersion.spec2021),
+  watch(mcu.Platform.watch, DynamicSchemeVersion.spec2025);
+
+  const DynamicSchemePlatform(this._platform, this._since);
+
+  final mcu.Platform _platform;
+  final DynamicSchemeVersion _since;
+
+  static DynamicSchemePlatform _from(mcu.Platform specVersion) =>
+      switch (specVersion) {
+        mcu.Platform.phone => phone,
+        mcu.Platform.watch => watch,
+      };
 }
 
 // TODO: migrate these constants into some class and make them public
@@ -57,11 +135,24 @@ mcu.DynamicScheme _buildDynamicScheme({
   required Color sourceColor,
   required Brightness brightness,
   double contrastLevel = _contrastLevelNormal,
-  mcu.SpecVersion? specVersion,
-  mcu.Platform? platform,
+  DynamicSchemeVersion? version,
+  DynamicSchemePlatform? platform,
 }) {
+  if (version != null && !variant.supportsVersion(version)) {
+    _log.warning(
+      "Version `${version.name}` is not supported by variant `${variant.name}`.",
+    );
+  }
+  if (platform != null && !variant.supportsPlatform(platform)) {
+    _log.warning(
+      "Platform `${platform.name}` is not supported by variant `${variant.name}`.",
+    );
+  }
+
   final sourceColorHct = sourceColor._toHct();
   final isDark = brightness == Brightness.dark;
+  version ??= variant.defaultVersion;
+  platform ??= variant.defaultPlatform;
   return switch (variant) {
     DynamicSchemeVariant.monochrome => mcu.SchemeMonochrome(
       sourceColorHct: sourceColorHct,
@@ -72,29 +163,29 @@ mcu.DynamicScheme _buildDynamicScheme({
       sourceColorHct: sourceColorHct,
       isDark: isDark,
       contrastLevel: contrastLevel,
-      specVersion: specVersion ?? mcu.SchemeNeutral.defaultSpecVersion,
-      platform: platform ?? mcu.SchemeNeutral.defaultPlatform,
+      specVersion: version._specVersion,
+      platform: platform._platform,
     ),
     DynamicSchemeVariant.tonalSpot => mcu.SchemeTonalSpot(
       sourceColorHct: sourceColorHct,
       isDark: isDark,
       contrastLevel: contrastLevel,
-      specVersion: specVersion ?? mcu.SchemeTonalSpot.defaultSpecVersion,
-      platform: platform ?? mcu.SchemeTonalSpot.defaultPlatform,
+      specVersion: version._specVersion,
+      platform: platform._platform,
     ),
     DynamicSchemeVariant.vibrant => mcu.SchemeVibrant(
       sourceColorHct: sourceColorHct,
       isDark: isDark,
       contrastLevel: contrastLevel,
-      specVersion: specVersion ?? mcu.SchemeVibrant.defaultSpecVersion,
-      platform: platform ?? mcu.SchemeVibrant.defaultPlatform,
+      specVersion: version._specVersion,
+      platform: platform._platform,
     ),
     DynamicSchemeVariant.expressive => mcu.SchemeExpressive(
       sourceColorHct: sourceColorHct,
       isDark: isDark,
       contrastLevel: contrastLevel,
-      specVersion: specVersion ?? mcu.SchemeExpressive.defaultSpecVersion,
-      platform: platform ?? mcu.SchemeExpressive.defaultPlatform,
+      specVersion: version._specVersion,
+      platform: platform._platform,
     ),
     DynamicSchemeVariant.fidelity => mcu.SchemeFidelity(
       sourceColorHct: sourceColorHct,
@@ -120,7 +211,7 @@ mcu.DynamicScheme _buildDynamicScheme({
 }
 
 ColorThemeData _fromDynamicScheme(mcu.DynamicScheme scheme) {
-  final colors = const mcu.MaterialDynamicColors();
+  const colors = mcu.MaterialDynamicColors();
   return ColorThemeData(
     brightness: scheme.isDark ? Brightness.dark : Brightness.light,
     primaryPaletteKeyColor: colors.primaryPaletteKeyColor()._getColor(scheme),
@@ -208,14 +299,16 @@ ColorThemeData _fromSourceColor({
   required Color sourceColor,
   required Brightness brightness,
   double contrastLevel = _contrastLevelNormal,
+  DynamicSchemeVersion? version,
+  DynamicSchemePlatform? platform,
 }) {
   final scheme = _buildDynamicScheme(
     variant: variant,
     sourceColor: sourceColor,
     brightness: brightness,
     contrastLevel: contrastLevel,
-    specVersion: mcu.SpecVersion.spec2025,
-    platform: mcu.Platform.phone,
+    version: version,
+    platform: platform,
   );
   return ColorThemeData.fromDynamicScheme(scheme);
 }
@@ -224,7 +317,9 @@ Future<ColorThemeData> _fromImageProvider({
   required ImageProvider image,
   required Brightness brightness,
   DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
-  double contrastLevel = 0.0,
+  double contrastLevel = _contrastLevelNormal,
+  DynamicSchemeVersion? version,
+  DynamicSchemePlatform? platform,
 }) async {
   // Extract dominant colors from image.
   final quantizerResult = await _extractColorsFromImageProvider(image);
@@ -240,6 +335,8 @@ Future<ColorThemeData> _fromImageProvider({
     sourceColor: baseColor,
     brightness: brightness,
     contrastLevel: contrastLevel,
+    version: version,
+    platform: platform,
   );
   return ColorThemeData.fromDynamicScheme(scheme);
   // return ColorThemeData.fromSeed(

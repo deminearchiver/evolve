@@ -15,6 +15,7 @@ workspace:
   # Apps
   # - apps/material_theme_builder
   # - packages/material/example
+  - packages/material3_expressive/example
 
 dependency_overrides:
   # Override pinned SDK dependency

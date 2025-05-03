@@ -83,28 +83,32 @@ abstract class ColorThemeData
     required Color sourceColor,
     required Brightness brightness,
     double contrastLevel = _contrastLevelNormal,
+    DynamicSchemeVersion? version,
+    DynamicSchemePlatform? platform,
   }) => _fromSourceColor(
     variant: variant,
     sourceColor: sourceColor,
     brightness: brightness,
     contrastLevel: contrastLevel,
+    version: version,
+    platform: platform,
   );
 
   factory ColorThemeData.baseline({
+    DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
+    Color sourceColor = _baselineSourceColor,
     required Brightness brightness,
-    double contrastLevel = _contrastLevelNormal,
-  }) {
-    const sourceColor = Color(0xFF6750A4);
-    final scheme = _buildDynamicScheme(
-      variant: DynamicSchemeVariant.tonalSpot,
-      sourceColor: sourceColor,
-      brightness: brightness,
-      contrastLevel: contrastLevel,
-      specVersion: mcu.SpecVersion.spec2021,
-      platform: mcu.Platform.phone,
-    );
-    return ColorThemeData.fromDynamicScheme(scheme);
-  }
+    double contrastLevel = 0.0,
+    DynamicSchemeVersion? version,
+    DynamicSchemePlatform? platform,
+  }) => ColorThemeData.fromSourceColor(
+    variant: variant,
+    sourceColor: sourceColor,
+    brightness: brightness,
+    contrastLevel: contrastLevel,
+    version: version,
+    platform: platform,
+  );
 
   @override
   Brightness get brightness;
@@ -391,6 +395,8 @@ abstract class ColorThemeData
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
   }
+
+  static const Color _baselineSourceColor = Color(0xFF6750A4);
 }
 
 mixin ColorThemeDataMixin on Diagnosticable implements ColorThemeData {

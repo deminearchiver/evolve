@@ -30,7 +30,8 @@ class ColorTheme extends InheritedTheme {
 
   static ColorThemeData of(BuildContext context) {
     final result = maybeOf(context);
-    assert(result != null);
-    return result!;
+    if (result != null) return result;
+    final brightness = Theme.brightnessOf(context);
+    return ColorThemeData.baseline(brightness: brightness);
   }
 }
