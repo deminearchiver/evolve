@@ -181,7 +181,7 @@ class _Test3State extends State<Test3> with TickerProviderStateMixin {
     _scale = ImplicitAnimation<double>(
       vsync: this,
       duration: Durations.extralong4,
-      curve: Curves.easeInOutCubicEmphasized,
+      curve: const EasingThemeData.fallback().emphasized,
       initialValue: 0.0,
       builder: (targetValue) => Tween<double>(begin: targetValue),
     );
