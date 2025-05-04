@@ -3,7 +3,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 
 import 'package:material_color_utilities/material_color_utilities.dart'
     as mcu_legacy;
@@ -17,8 +16,6 @@ import 'package:mcu/src/score/score.dart' as mcu;
 part 'color_theme.dart';
 part 'color_theme_data.dart';
 part 'color_theme_data_partial.dart';
-
-final _log = Logger("m3expressive.color");
 
 extension on mcu.Hct {
   Color _toColor() => Color(toInt());
@@ -138,17 +135,6 @@ mcu.DynamicScheme _buildDynamicScheme({
   DynamicSchemeVersion? version,
   DynamicSchemePlatform? platform,
 }) {
-  if (version != null && !variant.supportsVersion(version)) {
-    _log.warning(
-      "Version `${version.name}` is not supported by variant `${variant.name}`.",
-    );
-  }
-  if (platform != null && !variant.supportsPlatform(platform)) {
-    _log.warning(
-      "Platform `${platform.name}` is not supported by variant `${variant.name}`.",
-    );
-  }
-
   final sourceColorHct = sourceColor._toHct();
   final isDark = brightness == Brightness.dark;
   version ??= variant.defaultVersion;

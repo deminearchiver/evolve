@@ -118,7 +118,10 @@ class Corner {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is Corner && other.x == x && other.y == y;
+        other is Corner &&
+            runtimeType == other.runtimeType &&
+            other.x == x &&
+            other.y == y;
   }
 
   @override
@@ -187,6 +190,7 @@ abstract class CornersGeometry {
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is CornersGeometry &&
+            runtimeType == other.runtimeType &&
             _topLeft == other._topLeft &&
             _topRight == other._topRight &&
             _bottomLeft == other._bottomLeft &&
@@ -291,6 +295,7 @@ class _CornersGeometryLerp extends CornersGeometry {
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is _CornersGeometryLerp &&
+            runtimeType == other.runtimeType &&
             a == other.a &&
             b == other.b &&
             t == other.t;
@@ -588,6 +593,7 @@ class Corners extends CornersGeometry {
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is Corners &&
+            runtimeType == other.runtimeType &&
             topLeft == other.topLeft &&
             topRight == other.topRight &&
             bottomLeft == other.bottomLeft &&
@@ -634,7 +640,11 @@ class _CornersLerp extends Corners {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is _CornersLerp && a == other.a && b == other.b && t == other.t;
+        other is _CornersLerp &&
+            runtimeType == other.runtimeType &&
+            a == other.a &&
+            b == other.b &&
+            t == other.t;
   }
 
   @override
@@ -814,6 +824,7 @@ class CornersDirectional extends CornersGeometry {
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is CornersDirectional &&
+            runtimeType == other.runtimeType &&
             topStart == other.topStart &&
             topEnd == other.topEnd &&
             bottomStart == other.bottomStart &&
@@ -861,6 +872,7 @@ class _CornersDirectionalLerp extends CornersDirectional {
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is _CornersDirectionalLerp &&
+            runtimeType == other.runtimeType &&
             a == other.a &&
             b == other.b &&
             t == other.t;

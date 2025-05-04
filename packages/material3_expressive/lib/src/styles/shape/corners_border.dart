@@ -58,6 +58,15 @@ abstract class CornersBorderDelegate {
     final result = b?.lerpFrom(a, t) ?? a?.lerpTo(b, t);
     return result ?? (t < 0.5 ? a : b);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is CornersBorderDelegate && runtimeType == other.runtimeType;
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }
 
 @immutable
@@ -142,25 +151,35 @@ class RoundedCornersBorderDelegate extends CornersBorderDelegate {
   String toString() {
     return objectRuntimeType(this, "RoundedCornersBorderDelegate");
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RoundedCornersBorderDelegate &&
+            runtimeType == other.runtimeType;
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }
 
 class CutCornersBorderDelegate extends CornersBorderDelegate {
   const CutCornersBorderDelegate();
 
   Path _getPath(RRect rrect) {
-    final Offset centerLeft = Offset(rrect.left, rrect.center.dy);
-    final Offset centerRight = Offset(rrect.right, rrect.center.dy);
-    final Offset centerTop = Offset(rrect.center.dx, rrect.top);
-    final Offset centerBottom = Offset(rrect.center.dx, rrect.bottom);
+    final centerLeft = Offset(rrect.left, rrect.center.dy);
+    final centerRight = Offset(rrect.right, rrect.center.dy);
+    final centerTop = Offset(rrect.center.dx, rrect.top);
+    final centerBottom = Offset(rrect.center.dx, rrect.bottom);
 
-    final double tlRadiusX = math.max(0.0, rrect.tlRadiusX);
-    final double tlRadiusY = math.max(0.0, rrect.tlRadiusY);
-    final double trRadiusX = math.max(0.0, rrect.trRadiusX);
-    final double trRadiusY = math.max(0.0, rrect.trRadiusY);
-    final double blRadiusX = math.max(0.0, rrect.blRadiusX);
-    final double blRadiusY = math.max(0.0, rrect.blRadiusY);
-    final double brRadiusX = math.max(0.0, rrect.brRadiusX);
-    final double brRadiusY = math.max(0.0, rrect.brRadiusY);
+    final tlRadiusX = math.max(0.0, rrect.tlRadiusX);
+    final tlRadiusY = math.max(0.0, rrect.tlRadiusY);
+    final trRadiusX = math.max(0.0, rrect.trRadiusX);
+    final trRadiusY = math.max(0.0, rrect.trRadiusY);
+    final blRadiusX = math.max(0.0, rrect.blRadiusX);
+    final blRadiusY = math.max(0.0, rrect.blRadiusY);
+    final brRadiusX = math.max(0.0, rrect.brRadiusX);
+    final brRadiusY = math.max(0.0, rrect.brRadiusY);
 
     final List<Offset> vertices = <Offset>[
       Offset(rrect.left, math.min(centerLeft.dy, rrect.top + tlRadiusY)),
@@ -201,16 +220,14 @@ class CutCornersBorderDelegate extends CornersBorderDelegate {
     required BorderSide side,
     required BorderRadius borderRadius,
   }) {
-    if (rect.isEmpty) {
-      return;
-    }
+    if (rect.isEmpty) return;
     switch (side.style) {
       case BorderStyle.none:
         break;
       case BorderStyle.solid:
-        final RRect borderRect = borderRadius.toRRect(rect);
-        final RRect adjustedRect = borderRect.inflate(side.strokeOutset);
-        final Path path = _getPath(adjustedRect)
+        final borderRect = borderRadius.toRRect(rect);
+        final adjustedRect = borderRect.inflate(side.strokeOutset);
+        final path = _getPath(adjustedRect)
           ..addPath(
             getInnerPath(rect: rect, side: side, borderRadius: borderRadius),
             Offset.zero,
@@ -236,6 +253,15 @@ class CutCornersBorderDelegate extends CornersBorderDelegate {
   String toString() {
     return objectRuntimeType(this, "CutCornersBorderDelegate");
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is CutCornersBorderDelegate && runtimeType == other.runtimeType;
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }
 
 @immutable
@@ -321,6 +347,16 @@ class SuperellipseCornersBorderDelegate extends CornersBorderDelegate {
   String toString() {
     return objectRuntimeType(this, "SuperellipseCornersBorderDelegate");
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is SuperellipseCornersBorderDelegate &&
+            runtimeType == other.runtimeType;
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }
 
 @immutable
@@ -426,9 +462,15 @@ class CornersBorder extends OutlinedBorder {
   );
 
   @override
+  String toString() {
+    return "${objectRuntimeType(this, "CornersBorder")}($side, $delegate, $corners)";
+  }
+
+  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is CornersBorder &&
+            runtimeType == other.runtimeType &&
             side == other.side &&
             delegate == other.delegate &&
             corners == other.corners;
@@ -436,9 +478,4 @@ class CornersBorder extends OutlinedBorder {
 
   @override
   int get hashCode => Object.hash(side, delegate, corners);
-
-  @override
-  String toString() {
-    return "${objectRuntimeType(this, "CornersBorder")}($side, $delegate, $corners)";
-  }
 }
