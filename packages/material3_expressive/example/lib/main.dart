@@ -46,7 +46,7 @@ class MainApp extends StatelessWidget {
     required Brightness brightness,
     double contrastLevel = 0.0,
   }) => ColorThemeData.baseline(
-    variant: DynamicSchemeVariant.monochrome,
+    variant: DynamicSchemeVariant.tonalSpot,
     brightness: brightness,
     contrastLevel: contrastLevel,
     version: DynamicSchemeVersion.spec2025,
@@ -172,20 +172,20 @@ class Test3 extends StatefulWidget {
 }
 
 class _Test3State extends State<Test3> with TickerProviderStateMixin {
-  late ImplicitAnimation<double> _scale;
-  late ImplicitAnimation<Color?> _color;
+  late CurveImplicitAnimation<double> _scale;
+  late CurveImplicitAnimation<Color?> _color;
 
   @override
   void initState() {
     super.initState();
-    _scale = ImplicitAnimation<double>(
+    _scale = CurveImplicitAnimation<double>(
       vsync: this,
       duration: Durations.extralong4,
       curve: const EasingThemeData.fallback().emphasized,
       initialValue: 0.0,
       builder: (targetValue) => Tween<double>(begin: targetValue),
     );
-    _color = ImplicitAnimation(
+    _color = CurveImplicitAnimation(
       vsync: this,
       duration: Durations.short4,
       initialValue: Colors.red,
@@ -206,11 +206,18 @@ class _Test3State extends State<Test3> with TickerProviderStateMixin {
       body: Center(
         child: Column(
           children: [
+            Button(label: Text("Custom button")),
             FilledButton.tonal(
               onPressed: () => setState(() {
                 _scale.targetValue = 1.0 - _scale.targetValue;
               }),
               child: Text("Scale"),
+            ),
+            FilledButton.tonal(
+              onPressed: () => setState(() {
+                _scale.value = 1.0;
+              }),
+              child: Text("Reset"),
             ),
             FilledButton.tonal(
               onPressed: () => setState(() => _color.targetValue = Colors.red),

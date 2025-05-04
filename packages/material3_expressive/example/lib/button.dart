@@ -1,7 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:material3_expressive/material3_expressive.dart';
+import 'package:material3_expressive_example/implicit_animation.dart';
 import 'package:material3_expressive_example/hit_testing.dart';
 
 enum ButtonSize { extraSmall, small, medium, large, extraLarge }
@@ -39,22 +43,26 @@ class _ButtonState extends State<Button> {
   Widget _buildContainer(BuildContext context, Widget child) {
     final colorTheme = ColorTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
+    // return KeyedSubtree(
+    //   key: _targetKey,
+    //   child: ConstrainedBox(
+    //     constraints: BoxConstraints(minWidth: 48.0),
+    //     child: Material(
+    //       animationDuration: Duration.zero,
+    //       clipBehavior: Clip.antiAlias,
+    //       elevation: 0.0,
+    //       shape: CornersBorder(
+    //         delegate: const RoundedCornersBorderDelegate(),
+    //         corners: Corners.all(shapeTheme.full),
+    //       ),
+    //       color: colorTheme.primary,
+    //       child: InkWell(onTap: () {}, child: child),
+    //     ),
+    //   ),
+    // );
     return KeyedSubtree(
       key: _targetKey,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: 48.0),
-        child: Material(
-          animationDuration: Duration.zero,
-          clipBehavior: Clip.antiAlias,
-          elevation: 0.0,
-          shape: CornersBorder(
-            delegate: const RoundedCornersBorderDelegate(),
-            corners: Corners.all(shapeTheme.full),
-          ),
-          color: colorTheme.primary,
-          child: InkWell(onTap: () {}, child: child),
-        ),
-      ),
+      child: _ButtonContainer(child: child),
     );
   }
 
@@ -95,6 +103,125 @@ class _ButtonState extends State<Button> {
     final Widget touchTarget = _buildTouchTarget(container);
     final Widget semantics = _buildSemantics(touchTarget);
     return semantics;
+  }
+}
+
+class _ButtonContainer extends StatefulWidget {
+  const _ButtonContainer({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  State<_ButtonContainer> createState() => _ButtonContainerState();
+}
+
+const _standardSpringFastSpatial = SpringDescription(
+  mass: 1.0,
+  damping: 0.9,
+  stiffness: 1400,
+);
+
+// SpringDescription _makeSpring({
+//   required Duration duration,
+//   required double dampingRatio,
+// }) {
+//   final double durationInSeconds =
+//       duration.inMicroseconds / Duration.microsecondsPerSecond;
+//   const double mass = 1.0;
+//   final double stiffness =
+//       (4.0 * math.pi * math.pi * mass) / math.pow(durationInSeconds, 2.0);
+//   final double damping = dampingRatio * 2.0 * math.sqrt(mass * stiffness);
+//   return SpringDescription(mass: mass, stiffness: stiffness, damping: damping);
+// }
+
+class _ButtonContainerState extends State<_ButtonContainer>
+    with TickerProviderStateMixin {
+  late ShapeThemeData _shapeTheme;
+  late EasingThemeData _easingTheme;
+  late DurationThemeData _durationTheme;
+  late SpringThemeData _springTheme;
+
+  late WidgetStatesController _statesController;
+  Set<WidgetState> get _states => _statesController.value;
+
+  late SpringImplicitAnimation<ShapeBorder?> _shapeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _statesController = WidgetStatesController()..addListener(_statesListener);
+    _shapeAnimation = SpringImplicitAnimation(
+      vsync: this,
+      spring: _standardSpringFastSpatial,
+      initialValue: null,
+      builder: (value) => ShapeBorderTween(begin: value),
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant _ButtonContainer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _shapeTheme = ShapeTheme.of(context);
+    _easingTheme = EasingTheme.of(context);
+    _durationTheme = DurationTheme.of(context);
+    _springTheme = SpringTheme.of(context);
+    _shapeAnimation.spring = _springTheme.fastSpatial.toSpringDescription();
+  }
+
+  @override
+  void dispose() {
+    _shapeAnimation.dispose();
+    _statesController.dispose();
+    super.dispose();
+  }
+
+  void _statesListener() {
+    setState(() {});
+  }
+
+  WidgetStateProperty<ShapeBorder?> get _shape =>
+      WidgetStateProperty.resolveWith((states) {
+        Corner corner;
+        if (states.contains(WidgetState.pressed)) {
+          corner = _shapeTheme.small;
+        } else {
+          corner = _shapeTheme.full;
+        }
+        return CornersBorder(
+          delegate: const RoundedCornersBorderDelegate(),
+          corners: Corners.all(corner),
+        );
+      });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = ColorTheme.of(context);
+    _shapeAnimation.targetValue = _shape.resolve(_states);
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(minWidth: 48.0),
+      child: AnimatedBuilder(
+        animation: _shapeAnimation,
+        child: InkWell(
+          onTap: () {},
+          statesController: _statesController,
+          child: widget.child,
+        ),
+        builder: (context, child) {
+          return Material(
+            clipBehavior: Clip.antiAlias,
+            shape: _shapeAnimation.value,
+            color: colorTheme.primary,
+            child: child!,
+          );
+        },
+      ),
+    );
   }
 }
 
