@@ -1,6 +1,6 @@
 part of 'shape.dart';
 
-// extension _DoubleExtension on double {
+// extension on double {
 //   double? get finiteOrNull => isFinite || isNegative ? this : null;
 // }
 
@@ -24,13 +24,16 @@ double? _clampCorner(double? x, double? min, double? max) {
 }
 
 extension RadiusExtension on Radius {
-  Corner toCorner() => Corner.elliptical(x, y);
+  @Deprecated("Use Corner.fromRadius instead")
+  Corner toCorner() => Corner.fromRadius(this);
 }
 
 @immutable
 class Corner {
   const Corner.circular(double? radius) : this.elliptical(radius, radius);
   const Corner.elliptical(this.x, this.y);
+
+  Corner.fromRadius(Radius radius) : this.elliptical(radius.x, radius.y);
 
   final double? x;
   final double? y;
@@ -130,9 +133,9 @@ class Corner {
   @override
   String toString() {
     return x == y
-        ? 'Corner.circular(${x?.toStringAsFixed(1) ?? "full"})'
-        : 'Corner.elliptical(${x?.toStringAsFixed(1) ?? "full"}, '
-              '${y?.toStringAsFixed(1) ?? "full"})';
+        ? "Corner.circular(${x?.toStringAsFixed(1) ?? "full"})"
+        : "Corner.elliptical(${x?.toStringAsFixed(1) ?? "full"}, "
+              "${y?.toStringAsFixed(1) ?? "full"})";
   }
 
   static const Corner none = Corner.circular(0.0);
@@ -185,6 +188,101 @@ abstract class CornersGeometry {
   CornersGeometry operator /(double other);
   CornersGeometry operator ~/(double other);
   CornersGeometry operator %(double other);
+
+  @override
+  String toString() {
+    String? visual, logical;
+    if (_topLeft == _topRight &&
+        _topRight == _bottomLeft &&
+        _bottomLeft == _bottomRight) {
+      if (_topLeft != Corner.none) {
+        if (_topLeft.x == _topLeft.y) {
+          visual =
+              "Corners.circular(${_topLeft.x?.toStringAsFixed(1) ?? "full"})";
+        } else {
+          visual = "Corners.all($_topLeft)";
+        }
+      }
+    } else {
+      // visuals aren't the same and at least one isn't none
+      final StringBuffer result = StringBuffer();
+      result.write("Corners.only(");
+      bool comma = false;
+      if (_topLeft != Corner.none) {
+        result.write("topLeft: $_topLeft");
+        comma = true;
+      }
+      if (_topRight != Corner.none) {
+        if (comma) {
+          result.write(", ");
+        }
+        result.write("topRight: $_topRight");
+        comma = true;
+      }
+      if (_bottomLeft != Corner.none) {
+        if (comma) {
+          result.write(", ");
+        }
+        result.write("bottomLeft: $_bottomLeft");
+        comma = true;
+      }
+      if (_bottomRight != Corner.none) {
+        if (comma) {
+          result.write(", ");
+        }
+        result.write("bottomRight: $_bottomRight");
+      }
+      result.write(")");
+      visual = result.toString();
+    }
+    if (_topStart == _topEnd &&
+        _topEnd == _bottomEnd &&
+        _bottomEnd == _bottomStart) {
+      if (_topStart != Corner.none) {
+        if (_topStart.x == _topStart.y) {
+          logical =
+              "CornersDirectional.circular(${_topStart.x?.toStringAsFixed(1) ?? "full"})";
+        } else {
+          logical = "CornersDirectional.all($_topStart)";
+        }
+      }
+    } else {
+      // logicals aren't the same and at least one isn't none
+      final StringBuffer result = StringBuffer();
+      result.write("CornersDirectional.only(");
+      bool comma = false;
+      if (_topStart != Corner.none) {
+        result.write("topStart: $_topStart");
+        comma = true;
+      }
+      if (_topEnd != Corner.none) {
+        if (comma) {
+          result.write(", ");
+        }
+        result.write("topEnd: $_topEnd");
+        comma = true;
+      }
+      if (_bottomStart != Corner.none) {
+        if (comma) {
+          result.write(", ");
+        }
+        result.write("bottomStart: $_bottomStart");
+        comma = true;
+      }
+      if (_bottomEnd != Corner.none) {
+        if (comma) {
+          result.write(", ");
+        }
+        result.write("bottomEnd: $_bottomEnd");
+      }
+      result.write(")");
+      logical = result.toString();
+    }
+    if (visual != null && logical != null) {
+      return "$visual + $logical";
+    }
+    return visual ?? logical ?? "Corners.none";
+  }
 
   @override
   bool operator ==(Object other) {
@@ -338,7 +436,7 @@ class Corners extends CornersGeometry {
          bottomRight: right,
        );
 
-  /// Creates a border radius with only the given non-zero values. The other
+  /// Creates corners with only the given non-none values. The other
   /// corners will be right angles.
   const Corners.only({
     this.topLeft = Corner.none,
@@ -347,7 +445,7 @@ class Corners extends CornersGeometry {
     this.bottomRight = Corner.none,
   });
 
-  /// Returns a copy of this BorderCorner with the given fields replaced with
+  /// Returns a copy of this object with the given fields replaced with
   /// the new values.
   Corners copyWith({
     Corner? topLeft,
@@ -417,7 +515,6 @@ class Corners extends CornersGeometry {
         topRightX = shortestSide / 2;
       } else {
         topRightX = topRight.x!;
-        // topLeftX = math.min(shortestSide, width - topRightX);
         topLeftX = ui.clampDouble(width - topRightX, 0.0, shortestSide);
       }
     } else {
@@ -500,6 +597,10 @@ class Corners extends CornersGeometry {
 
   RRect toRRect(Rect rect) {
     return toBorderRadius(rect).toRRect(rect);
+  }
+
+  RSuperellipse toRSuperellipse(Rect rect) {
+    return toBorderRadius(rect).toRSuperellipse(rect);
   }
 
   @override
