@@ -178,12 +178,22 @@ class _SpringThemeData with Diagnosticable, SpringThemeDataMixin {
     required this.slowEffects,
   });
 
-  const _SpringThemeData.fallback()
+  const _SpringThemeData.fallback() : this.standard();
+
+  const _SpringThemeData.standard()
     : fastSpatial = const Spring(stiffness: 1400.0, damping: 0.9),
       fastEffects = const Spring(stiffness: 3800.0, damping: 1.0),
       defaultSpatial = const Spring(stiffness: 700.0, damping: 0.9),
       defaultEffects = const Spring(stiffness: 1600.0, damping: 1.0),
       slowSpatial = const Spring(stiffness: 300.0, damping: 0.9),
+      slowEffects = const Spring(stiffness: 800.0, damping: 1.0);
+
+  const _SpringThemeData.expressive()
+    : fastSpatial = const Spring(stiffness: 800.0, damping: 0.6),
+      fastEffects = const Spring(stiffness: 3800.0, damping: 1.0),
+      defaultSpatial = const Spring(stiffness: 380.0, damping: 0.8),
+      defaultEffects = const Spring(stiffness: 1600.0, damping: 1.0),
+      slowSpatial = const Spring(stiffness: 200.0, damping: 0.8),
       slowEffects = const Spring(stiffness: 800.0, damping: 1.0);
 
   @override
