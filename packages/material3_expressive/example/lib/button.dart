@@ -115,25 +115,6 @@ class _ButtonContainer extends StatefulWidget {
   State<_ButtonContainer> createState() => _ButtonContainerState();
 }
 
-const _standardSpringFastSpatial = SpringDescription(
-  mass: 1.0,
-  damping: 0.9,
-  stiffness: 1400,
-);
-
-// SpringDescription _makeSpring({
-//   required Duration duration,
-//   required double dampingRatio,
-// }) {
-//   final double durationInSeconds =
-//       duration.inMicroseconds / Duration.microsecondsPerSecond;
-//   const double mass = 1.0;
-//   final double stiffness =
-//       (4.0 * math.pi * math.pi * mass) / math.pow(durationInSeconds, 2.0);
-//   final double damping = dampingRatio * 2.0 * math.sqrt(mass * stiffness);
-//   return SpringDescription(mass: mass, stiffness: stiffness, damping: damping);
-// }
-
 class _ButtonContainerState extends State<_ButtonContainer>
     with TickerProviderStateMixin {
   late ShapeThemeData _shapeTheme;
@@ -152,7 +133,7 @@ class _ButtonContainerState extends State<_ButtonContainer>
     _statesController = WidgetStatesController()..addListener(_statesListener);
     _shapeAnimation = SpringImplicitAnimation(
       vsync: this,
-      spring: _standardSpringFastSpatial,
+      spring: const SpringDescription(mass: 1, stiffness: 1, damping: 1),
       initialValue: null,
       builder: (value) => ShapeBorderTween(begin: value),
     );
@@ -210,14 +191,24 @@ class _ButtonContainerState extends State<_ButtonContainer>
         child: InkWell(
           onTap: () {},
           statesController: _statesController,
+          overlayColor: StateLayerColor(
+            color: WidgetStatePropertyAll(colorTheme.onPrimary),
+            opacity: StateLayerOpacity.of(context),
+          ),
           child: widget.child,
         ),
         builder: (context, child) {
           return Material(
+            animationDuration: Duration.zero,
             clipBehavior: Clip.antiAlias,
             shape: _shapeAnimation.value,
             color: colorTheme.primary,
-            child: child!,
+            child: DefaultTextStyle(
+              style: TypescaleTheme.of(
+                context,
+              ).labelLarge.toTextStyle().copyWith(color: colorTheme.onPrimary),
+              child: child!,
+            ),
           );
         },
       ),

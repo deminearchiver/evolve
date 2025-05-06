@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide DynamicSchemeVariant;
@@ -207,43 +208,177 @@ class _Test3State extends State<Test3> with TickerProviderStateMixin {
         child: Column(
           children: [
             Button(label: Text("Custom button")),
-            FilledButton.tonal(
-              onPressed: () => setState(() {
-                _scale.targetValue = 1.0 - _scale.targetValue;
-              }),
-              child: Text("Scale"),
-            ),
-            FilledButton.tonal(
-              onPressed: () => setState(() {
-                _scale.value = 1.0;
-              }),
-              child: Text("Reset"),
-            ),
-            FilledButton.tonal(
-              onPressed: () => setState(() => _color.targetValue = Colors.red),
-              child: Text("Red"),
-            ),
-            FilledButton.tonal(
-              onPressed: () =>
-                  setState(() => _color.targetValue = Colors.green),
-              child: Text("Green"),
-            ),
-            FilledButton.tonal(
-              onPressed: () => setState(() => _color.targetValue = Colors.blue),
-              child: Text("Blue"),
-            ),
-            ScaleTransition(
-              scale: _scale,
-              child: AnimatedBuilder(
-                animation: _color,
-                builder: (context, child) =>
-                    Container(width: 312, height: 312, color: _color.value),
-              ),
-            ),
+
+            // FilledButton.tonal(
+            //   onPressed: () => setState(() {
+            //     _scale.targetValue = 1.0 - _scale.targetValue;
+            //   }),
+            //   child: Text("Scale"),
+            // ),
+            // FilledButton.tonal(
+            //   onPressed: () => setState(() {
+            //     _scale.value = 1.0;
+            //   }),
+            //   child: Text("Reset"),
+            // ),
+            // FilledButton.tonal(
+            //   onPressed: () => setState(() => _color.targetValue = Colors.red),
+            //   child: Text("Red"),
+            // ),
+            // FilledButton.tonal(
+            //   onPressed: () =>
+            //       setState(() => _color.targetValue = Colors.green),
+            //   child: Text("Green"),
+            // ),
+            // FilledButton.tonal(
+            //   onPressed: () => setState(() => _color.targetValue = Colors.blue),
+            //   child: Text("Blue"),
+            // ),
+            // ScaleTransition(
+            //   scale: _scale,
+            //   child: AnimatedBuilder(
+            //     animation: _color,
+            //     builder: (context, child) =>
+            //         Container(width: 312, height: 312, color: _color.value),
+            //   ),
+            // ),
+            // CurveShowcase(),
           ],
         ),
       ),
     );
+  }
+}
+
+class CurveShowcase extends StatefulWidget {
+  const CurveShowcase({super.key});
+
+  @override
+  State<CurveShowcase> createState() => _CurveShowcaseState();
+}
+
+class _CurveShowcaseState extends State<CurveShowcase>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 5),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = ColorTheme.of(context);
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) => CustomPaint(
+        size: Size(500, 500),
+        painter: _CurvePainter(
+          trackColor: colorTheme.secondaryContainer,
+          activeIndicatorColor: colorTheme.primary,
+          value: _controller.value,
+        ),
+      ),
+    );
+  }
+}
+
+class _CurvePainter extends CustomPainter {
+  const _CurvePainter({
+    required this.trackColor,
+    required this.activeIndicatorColor,
+    required this.value,
+  });
+
+  final Color trackColor;
+  final Color activeIndicatorColor;
+  final double value;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Curve curve = Curves.easeInOutCubicEmphasized;
+    final width = size.width;
+    final height = size.height;
+    final trackPath = Path()..moveTo(0.0, 0.0);
+    final activeIndicatorPath = Path()..moveTo(0.0, 0.0);
+    Offset? handleOffset;
+    // double lastAngle = 0.0;
+    double lastX = 0.0;
+    double lastY = 0.0;
+    // const double epsilon = 3;
+    // final List<Offset> points = <Offset>[];
+    double? lastAngle;
+    for (double x = 0.0; x < width; x++) {
+      final t = x / width;
+      final value = curve.transform(t);
+      final y = value * height;
+      // trackPath.quadraticBezierTo(x, y);
+      final deltaX = t - lastX;
+      final deltaY = value - lastY;
+      final theta = deltaY / deltaX;
+      final angle = math.atan(theta);
+      final startAngle = lastAngle ?? angle;
+      final sweepAngle = angle - (lastAngle ?? angle);
+      // trackPath.arcTo(
+      //   Rect.fromLTRB(lastX, lastY, x, y),
+      //   startAngle,
+      //   sweepAngle,
+      //   true,
+      // );
+      if (t <= this.value) {
+        activeIndicatorPath.lineTo(x, y);
+      } else {
+        handleOffset ??= Offset(x, y);
+      }
+      lastX = x;
+      lastY = y;
+    }
+    handleOffset ??= size.bottomRight(Offset.zero);
+    // canvas.rotate(angle!);
+
+    final trackPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = trackColor
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 4.0;
+    final activeIndicatorPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = activeIndicatorColor
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 4.0;
+    canvas.drawPath(trackPath, trackPaint);
+    canvas.drawPath(activeIndicatorPath, activeIndicatorPaint);
+    canvas.drawCircle(
+      size.bottomRight(Offset.zero),
+      2.0,
+      Paint()..color = activeIndicatorColor,
+    );
+    canvas.drawCircle(
+      size.topLeft(Offset.zero),
+      2.0,
+      Paint()..color = activeIndicatorColor,
+    );
+    // canvas.drawCircle(handleOffset, 8.0, Paint()..color = activeIndicatorColor);
+    // for (final point in points) {
+    //   canvas.drawCircle(point, 4.0, Paint()..color = Colors.red);
+    // }
+  }
+
+  @override
+  bool shouldRepaint(covariant _CurvePainter oldDelegate) {
+    return trackColor != oldDelegate.trackColor ||
+        activeIndicatorColor != oldDelegate.activeIndicatorColor ||
+        value != oldDelegate.value;
   }
 }
 

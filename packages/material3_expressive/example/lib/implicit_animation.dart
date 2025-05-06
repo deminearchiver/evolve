@@ -26,6 +26,7 @@ abstract class ImplicitAnimation<T extends Object?> extends Animation<T>
   @protected
   Tween<T>? get tween => _tween;
 
+  @protected
   set tween(Tween<T>? value) {
     if (_tween == value) {
       return;
@@ -35,6 +36,7 @@ abstract class ImplicitAnimation<T extends Object?> extends Animation<T>
 
   TweenBuilder<T> get builder;
   T get targetValue;
+  set value(T value);
 
   @protected
   TickerFuture animate();
@@ -113,6 +115,7 @@ class CurveImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   @override
   T get value => _value;
 
+  @override
   set value(T newValue) {
     if (_value == newValue &&
         _targetValue == newValue &&
@@ -253,9 +256,22 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
       return;
     }
     _targetValue = value;
+    startAnimation();
   }
 
-  set value(T newValue) {}
+  @override
+  set value(T newValue) {
+    if (value == newValue &&
+        _targetValue == newValue &&
+        !controller.isAnimating) {
+      return;
+    }
+    _targetValue = newValue;
+    _tween
+      ?..begin = _targetValue
+      ..end = _targetValue;
+    controller.value = 0.0;
+  }
 
   @override
   void dispose() {
@@ -270,6 +286,7 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   }
 
   Simulation _createSimulation() {
-    return SpringSimulation(_spring, 0.0, 1.0, 1.0, snapToEnd: true);
+    // return SpringSimulation(_spring, 0.0, 1.0, 1.0, snapToEnd: true);
+    return ScrollSpringSimulation(_spring, 0.0, 1.0, 1.0);
   }
 }
