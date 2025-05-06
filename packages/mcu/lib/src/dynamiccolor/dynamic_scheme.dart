@@ -31,8 +31,8 @@ class DynamicScheme {
     required this.variant,
     required this.isDark,
     required this.contrastLevel,
-    this.platform = Platform.phone,
-    this.specVersion = SpecVersion.spec2021,
+    this.platform = defaultPlatform,
+    this.specVersion = defaultSpecVersion,
     required this.primaryPalette,
     required this.secondaryPalette,
     required this.tertiaryPalette,
@@ -96,6 +96,18 @@ class DynamicScheme {
            ) ??
            TonalPalette.fromHueAndChroma(25.0, 84.0);
 
+  Hct getHct(DynamicColor dynamicColor) => dynamicColor.getHct(this);
+
+  int getArgb(DynamicColor dynamicColor) => dynamicColor.getArgb(this);
+
+  @override
+  String toString() {
+    return "Scheme: variant=${variant.name}, mode=${isDark ? "dark" : "light"}, platform=${platform.name}, contrastLevel=${contrastLevel.toStringAsFixed(1)}, seed=$sourceColorHct, specVersion=$specVersion";
+  }
+
+  static const SpecVersion defaultSpecVersion = SpecVersion.spec2021;
+  static const Platform defaultPlatform = Platform.phone;
+
   static DynamicScheme from(DynamicScheme other, bool isDark) {
     return DynamicScheme(
       sourceColorHct: other.sourceColorHct,
@@ -144,14 +156,5 @@ class DynamicScheme {
       rotation = 0;
     }
     return math_utils.sanitizeDegreesDouble(sourceColorHct.hue + rotation);
-  }
-
-  Hct getHct(DynamicColor dynamicColor) => dynamicColor.getHct(this);
-
-  int getArgb(DynamicColor dynamicColor) => dynamicColor.getArgb(this);
-
-  @override
-  String toString() {
-    return "Scheme: variant=${variant.name}, mode=${isDark ? "dark" : "light"}, platform=${platform.name}, contrastLevel=${contrastLevel.toStringAsFixed(1)}, seed=$sourceColorHct, specVersion=$specVersion";
   }
 }

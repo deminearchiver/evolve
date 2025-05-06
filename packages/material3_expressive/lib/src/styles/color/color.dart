@@ -38,41 +38,41 @@ enum DynamicSchemeVariant {
   fidelity,
   content,
   rainbow,
-  fruitSalad;
+  fruitSalad,
 
-  DynamicSchemeVersion get defaultVersion =>
-      DynamicSchemeVersion._from(switch (this) {
-        neutral => mcu.SchemeNeutral.defaultSpecVersion,
-        tonalSpot => mcu.SchemeTonalSpot.defaultSpecVersion,
-        vibrant => mcu.SchemeVibrant.defaultSpecVersion,
-        expressive => mcu.SchemeExpressive.defaultSpecVersion,
-        _ => mcu.SpecVersion.spec2021,
-      });
+  // DynamicSchemeVersion get defaultVersion =>
+  //     DynamicSchemeVersion._from(switch (this) {
+  //       // neutral => mcu.SchemeNeutral.defaultSpecVersion,
+  //       // tonalSpot => mcu.SchemeTonalSpot.defaultSpecVersion,
+  //       // vibrant => mcu.SchemeVibrant.defaultSpecVersion,
+  //       // expressive => mcu.SchemeExpressive.defaultSpecVersion,
+  //       _ => mcu.SpecVersion.spec2021,
+  //     });
 
-  DynamicSchemePlatform get defaultPlatform =>
-      DynamicSchemePlatform._from(switch (this) {
-        neutral => mcu.SchemeNeutral.defaultPlatform,
-        tonalSpot => mcu.SchemeTonalSpot.defaultPlatform,
-        vibrant => mcu.SchemeVibrant.defaultPlatform,
-        expressive => mcu.SchemeExpressive.defaultPlatform,
-        _ => mcu.Platform.phone,
-      });
+  // DynamicSchemePlatform get defaultPlatform =>
+  //     DynamicSchemePlatform._from(switch (this) {
+  //       // neutral => mcu.SchemeNeutral.defaultPlatform,
+  //       // tonalSpot => mcu.SchemeTonalSpot.defaultPlatform,
+  //       // vibrant => mcu.SchemeVibrant.defaultPlatform,
+  //       // expressive => mcu.SchemeExpressive.defaultPlatform,
+  //       _ => mcu.Platform.phone,
+  //     });
 
-  bool get _supportsSpec2025 => switch (this) {
-    neutral || tonalSpot || vibrant || expressive => true,
-    _ => false,
-  };
+  // bool get _supportsSpec2025 => switch (this) {
+  //   neutral || tonalSpot || vibrant || expressive => true,
+  //   _ => false,
+  // };
 
-  bool supportsVersion(DynamicSchemeVersion version) {
-    return switch (version) {
-      DynamicSchemeVersion.spec2021 => true,
-      DynamicSchemeVersion.spec2025 => _supportsSpec2025,
-    };
-  }
+  // bool supportsVersion(DynamicSchemeVersion version) {
+  //   return switch (version) {
+  //     DynamicSchemeVersion.spec2021 => true,
+  //     DynamicSchemeVersion.spec2025 => _supportsSpec2025,
+  //   };
+  // }
 
-  bool supportsPlatform(DynamicSchemePlatform platform) {
-    return supportsVersion(platform._since);
-  }
+  // bool supportsPlatform(DynamicSchemePlatform platform) {
+  //   return supportsVersion(platform._since);
+  // }
 }
 
 enum DynamicSchemeVersion implements Comparable<DynamicSchemeVersion> {
@@ -137,13 +137,15 @@ mcu.DynamicScheme _buildDynamicScheme({
 }) {
   final sourceColorHct = sourceColor._toHct();
   final isDark = brightness == Brightness.dark;
-  version ??= variant.defaultVersion;
-  platform ??= variant.defaultPlatform;
+  version ??= DynamicSchemeVersion._from(mcu.DynamicScheme.defaultSpecVersion);
+  platform ??= DynamicSchemePlatform._from(mcu.DynamicScheme.defaultPlatform);
   return switch (variant) {
     DynamicSchemeVariant.monochrome => mcu.SchemeMonochrome(
       sourceColorHct: sourceColorHct,
       isDark: isDark,
       contrastLevel: contrastLevel,
+      specVersion: version._specVersion,
+      platform: platform._platform,
     ),
     DynamicSchemeVariant.neutral => mcu.SchemeNeutral(
       sourceColorHct: sourceColorHct,
@@ -177,21 +179,29 @@ mcu.DynamicScheme _buildDynamicScheme({
       sourceColorHct: sourceColorHct,
       isDark: isDark,
       contrastLevel: contrastLevel,
+      specVersion: version._specVersion,
+      platform: platform._platform,
     ),
     DynamicSchemeVariant.content => mcu.SchemeContent(
       sourceColorHct: sourceColorHct,
       isDark: isDark,
       contrastLevel: contrastLevel,
+      specVersion: version._specVersion,
+      platform: platform._platform,
     ),
     DynamicSchemeVariant.rainbow => mcu.SchemeRainbow(
       sourceColorHct: sourceColorHct,
       isDark: isDark,
       contrastLevel: contrastLevel,
+      specVersion: version._specVersion,
+      platform: platform._platform,
     ),
     DynamicSchemeVariant.fruitSalad => mcu.SchemeFruitSalad(
       sourceColorHct: sourceColorHct,
       isDark: isDark,
       contrastLevel: contrastLevel,
+      specVersion: version._specVersion,
+      platform: platform._platform,
     ),
   };
 }
