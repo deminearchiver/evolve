@@ -115,6 +115,9 @@ class Spring with Diagnosticable implements SpringPartial {
   @override
   int get hashCode => Object.hash(stiffness, damping);
 
-  SpringDescription toSpringDescription() =>
-      SpringDescription(mass: 1.0, stiffness: stiffness, damping: damping);
+  SpringDescription toSpringDescription() => SpringDescription.withDampingRatio(
+    mass: 1.0,
+    stiffness: stiffness,
+    ratio: damping,
+  );
 }
