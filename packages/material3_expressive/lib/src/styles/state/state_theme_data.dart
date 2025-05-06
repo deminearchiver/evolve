@@ -125,11 +125,21 @@ class _StateThemeData with Diagnosticable, StateThemeDataMixin {
     required this.draggedStateLayerOpacity,
   });
 
+  // TODO: figure out which variant is actually the intended default.
+  //  Current (outdated) spec, MDC and Flutter use 0.1 values
+  //  Figma and Web use 0.12 values
+
   const _StateThemeData.fallback()
     : hoverStateLayerOpacity = 0.08,
       focusStateLayerOpacity = 0.1,
       pressedStateLayerOpacity = 0.1,
       draggedStateLayerOpacity = 0.16;
+
+  // const _StateThemeData.fallback()
+  //   : hoverStateLayerOpacity = 0.08,
+  //     focusStateLayerOpacity = 0.12,
+  //     pressedStateLayerOpacity = 0.12,
+  //     draggedStateLayerOpacity = 0.16;
 
   @override
   final double hoverStateLayerOpacity;
