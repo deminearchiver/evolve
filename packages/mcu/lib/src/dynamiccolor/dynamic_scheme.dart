@@ -49,37 +49,52 @@ class DynamicScheme {
     required this.specVersion,
     required this.platform,
     required this.variant,
+    TonalPalette? primaryPalette,
+    TonalPalette? secondaryPalette,
+    TonalPalette? tertiaryPalette,
+    TonalPalette? neutralPalette,
+    TonalPalette? neutralVariantPalette,
+    TonalPalette? errorPalette,
   }) : sourceColorArgb = sourceColorHct.toInt(),
-       primaryPalette = ColorSpecs.get(specVersion).getPrimaryPalette(
-         variant,
-         sourceColorHct,
-         isDark,
-         platform,
-         contrastLevel,
-       ),
-       secondaryPalette = ColorSpecs.get(specVersion).getSecondaryPalette(
-         variant,
-         sourceColorHct,
-         isDark,
-         platform,
-         contrastLevel,
-       ),
-       tertiaryPalette = ColorSpecs.get(specVersion).getTertiaryPalette(
-         variant,
-         sourceColorHct,
-         isDark,
-         platform,
-         contrastLevel,
-       ),
-       neutralPalette = ColorSpecs.get(specVersion).getNeutralPalette(
-         variant,
-         sourceColorHct,
-         isDark,
-         platform,
-         contrastLevel,
-       ),
-       neutralVariantPalette = ColorSpecs.get(specVersion)
-           .getNeutralVariantPalette(
+       primaryPalette =
+           primaryPalette ??
+           ColorSpecs.get(specVersion).getPrimaryPalette(
+             variant,
+             sourceColorHct,
+             isDark,
+             platform,
+             contrastLevel,
+           ),
+       secondaryPalette =
+           secondaryPalette ??
+           ColorSpecs.get(specVersion).getSecondaryPalette(
+             variant,
+             sourceColorHct,
+             isDark,
+             platform,
+             contrastLevel,
+           ),
+       tertiaryPalette =
+           tertiaryPalette ??
+           ColorSpecs.get(specVersion).getTertiaryPalette(
+             variant,
+             sourceColorHct,
+             isDark,
+             platform,
+             contrastLevel,
+           ),
+       neutralPalette =
+           neutralPalette ??
+           ColorSpecs.get(specVersion).getNeutralPalette(
+             variant,
+             sourceColorHct,
+             isDark,
+             platform,
+             contrastLevel,
+           ),
+       neutralVariantPalette =
+           neutralVariantPalette ??
+           ColorSpecs.get(specVersion).getNeutralVariantPalette(
              variant,
              sourceColorHct,
              isDark,
@@ -87,6 +102,7 @@ class DynamicScheme {
              contrastLevel,
            ),
        errorPalette =
+           errorPalette ??
            ColorSpecs.get(specVersion).getErrorPalette(
              variant,
              sourceColorHct,
