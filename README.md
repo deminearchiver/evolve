@@ -7,27 +7,36 @@
 > [!NOTE]
 > For now, workspace member packages do not have README files of their own, so kindly refer to this one for any information.
 
-# Material for Flutter
+<div align="center">
+  <img src="./.github/images/banner.png">
+  <h3>Material for Flutter</h3>
+  <p>
+    <i>
+      A Material Design components library which does it just right.
+    </i>
+  </p>
+</div>
+
+---
 
 <details>
   <summary>
     <h3>Table of contents</h3>
   </summary>
 
-- [Material for Flutter](#material-for-flutter)
-  - [Packages](#packages)
-    - [`mcu`](#mcu)
-      - [Installation](#installation)
-    - [`material3`](#material3)
-    - [`material3_expressive`](#material3_expressive)
-      - [Installation](#installation-1)
-  - [Apps](#apps)
-    - [mtb](#mtb)
-      - [Installation](#installation-2)
-        - [Building from source](#building-from-source)
-        - [Installing globally](#installing-globally)
-        - [Download a prebuilt binary](#download-a-prebuilt-binary)
-      - [Usage](#usage)
+- [Packages](#packages)
+  - [`mcu`](#mcu)
+    - [Installation](#installation)
+  - [`material3`](#material3)
+  - [`material3_expressive`](#material3_expressive)
+    - [Installation](#installation-1)
+- [Apps](#apps)
+  - [mtb](#mtb)
+    - [Installation](#installation-2)
+      - [Building from source](#building-from-source)
+      - [Installing globally](#installing-globally)
+      - [Download a prebuilt binary](#download-a-prebuilt-binary)
+    - [Usage](#usage)
 
 </details>
 
