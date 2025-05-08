@@ -112,6 +112,66 @@ class DynamicScheme {
            ) ??
            TonalPalette.fromHueAndChroma(25.0, 84.0);
 
+  DynamicScheme.fromKeyColors({
+    required this.sourceColorHct,
+    required this.isDark,
+    required this.contrastLevel,
+    required this.specVersion,
+    required this.platform,
+    required this.variant,
+    Hct? primaryPaletteKeyColor,
+    Hct? secondaryPaletteKeyColor,
+    Hct? tertiaryPaletteKeyColor,
+    Hct? neutralPaletteKeyColor,
+    Hct? neutralVariantPaletteKeyColor,
+    Hct? errorPaletteKeyColor,
+  }) : sourceColorArgb = sourceColorHct.toInt(),
+       primaryPalette = ColorSpecs.get(specVersion).getPrimaryPalette(
+         variant,
+         primaryPaletteKeyColor ?? sourceColorHct,
+         isDark,
+         platform,
+         contrastLevel,
+       ),
+       secondaryPalette = ColorSpecs.get(specVersion).getSecondaryPalette(
+         variant,
+         secondaryPaletteKeyColor ?? sourceColorHct,
+         isDark,
+         platform,
+         contrastLevel,
+       ),
+       tertiaryPalette = ColorSpecs.get(specVersion).getTertiaryPalette(
+         variant,
+         tertiaryPaletteKeyColor ?? sourceColorHct,
+         isDark,
+         platform,
+         contrastLevel,
+       ),
+       neutralPalette = ColorSpecs.get(specVersion).getNeutralPalette(
+         variant,
+         neutralPaletteKeyColor ?? sourceColorHct,
+         isDark,
+         platform,
+         contrastLevel,
+       ),
+       neutralVariantPalette = ColorSpecs.get(specVersion)
+           .getNeutralVariantPalette(
+             variant,
+             neutralVariantPaletteKeyColor ?? sourceColorHct,
+             isDark,
+             platform,
+             contrastLevel,
+           ),
+       errorPalette =
+           ColorSpecs.get(specVersion).getErrorPalette(
+             variant,
+             errorPaletteKeyColor ?? sourceColorHct,
+             isDark,
+             platform,
+             contrastLevel,
+           ) ??
+           TonalPalette.fromHueAndChroma(25.0, 84.0);
+
   Hct getHct(DynamicColor dynamicColor) => dynamicColor.getHct(this);
 
   int getArgb(DynamicColor dynamicColor) => dynamicColor.getArgb(this);
