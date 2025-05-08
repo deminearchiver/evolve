@@ -3,7 +3,7 @@ publish_to: none
 
 environment:
   sdk: 3.9.0-76.0.dev
-  flutter: 3.32.0-1.0.pre.396
+  flutter: ">=3.32.0-1.0.pre.396"
 
 workspace:
 
