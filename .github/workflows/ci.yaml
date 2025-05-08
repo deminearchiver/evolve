@@ -1,0 +1,27 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubumtu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: master
+          flutter-version: 619c02f2a02f1834939df67728bfa1eb0dd939ff
+      - run: flutter pub get
+      - run: cd apps/mtb
+      - run: dart pub get
+      - run: dart compile exe bin/mtb.dart
+      - uses: actions/upload-artifact@v4
+        with:
+          path: bin/
+
+
