@@ -1,8 +1,11 @@
-> [!WARNING] This branch, `next`, is a working draft of the next major version of this library. Breaking changes are to be expected with each new commit.
+> [!WARNING]
+> This branch, `next`, is a working draft of the next major version of this library. Breaking changes are to be expected with each new commit.
 
-> [!IMPORTANT] Below are (mostly) up-to-date instructions on how to properly set up this library, as well as some basic information. Both the guides and the info may be inaccurate or outdated.
+> [!IMPORTANT]
+> Below are (mostly) up-to-date instructions on how to properly set up this library, as well as some basic information. Both the guides and the info may be inaccurate or outdated.
 
-> [!NOTE] For now, workspace member packages do not have README files of their own, so kindly refer to this one for any information.
+> [!NOTE]
+> For now, workspace member packages do not have README files of their own, so kindly refer to this one for any information.
 
 # Material for Flutter
 
@@ -33,7 +36,8 @@
 
 ### `mcu`
 
-> [!CAUTION] Package name may change in the near future.
+> [!CAUTION]
+> Package name may change in the near future.
 
 This package is a Dart port of the recently updated [Material Color Utilities] (the Dart version of which is now outdated).
 
