@@ -29,11 +29,11 @@ final class Hct {
   late int _argb;
   int toInt() => _argb;
 
-  bool get isBlue => hue >= 250 && hue < 270;
+  static bool isBlue(double hue) => hue >= 250 && hue < 270;
 
-  bool get isYellow => hue >= 105 && hue < 125;
+  static bool isYellow(double hue) => hue >= 105 && hue < 125;
 
-  bool get isCyan => hue >= 170 && hue < 207;
+  static bool isCyan(double hue) => hue >= 170 && hue < 207;
 
   Hct inViewingConditions(ViewingConditions vc) {
     // 1. Use CAM16 to find XYZ coordinates of color in specified VC.

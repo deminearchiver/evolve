@@ -43,11 +43,12 @@ class ColorSpec2025 extends ColorSpec2021 {
     TonalPalette palette, [
     double lowerBound = 0.0,
     double upperBound = 100.0,
+    double chromaMultiplier = 1.0,
   ]) {
     double answer = _findBestToneForChroma(
       palette.hue,
-      palette.chroma,
-      100,
+      palette.chroma * chromaMultiplier,
+      100.0,
       true,
     );
     return math_utils.clampDouble(lowerBound, upperBound, answer);
@@ -103,10 +104,9 @@ class ColorSpec2025 extends ColorSpec2021 {
     bool isDark,
     Platform platform,
   ) {
-    double neutralHue = _getExpressiveNeutralHue(sourceColorHct);
-    bool neutralHueIsYellow = neutralHue >= 105 && neutralHue < 125;
+    final neutralHue = _getExpressiveNeutralHue(sourceColorHct);
     return platform == Platform.phone
-        ? (isDark ? (neutralHueIsYellow ? 6 : 14) : 18)
+        ? (isDark ? (Hct.isYellow(neutralHue) ? 6 : 14) : 18)
         : 12;
   }
 
@@ -123,8 +123,7 @@ class ColorSpec2025 extends ColorSpec2021 {
     Platform platform,
   ) {
     final neutralHue = _getVibrantNeutralHue(sourceColorHct);
-    final neutralHueIsBlue = neutralHue >= 250 && neutralHue < 270;
-    return platform == Platform.phone ? 28 : (neutralHueIsBlue ? 28 : 20);
+    return platform == Platform.phone ? 28 : (Hct.isBlue(neutralHue) ? 28 : 20);
   }
 
   @override
@@ -155,7 +154,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           if (s.isDark) {
             return 4.0;
           } else {
-            if (s.neutralPalette.keyColor.isYellow) {
+            if (Hct.isYellow(s.neutralPalette.hue)) {
               return 99.0;
             } else if (s.variant == Variant.vibrant) {
               return 97.0;
@@ -181,7 +180,7 @@ class ColorSpec2025 extends ColorSpec2021 {
         if (s.isDark) {
           return 4.0;
         } else {
-          if (s.neutralPalette.keyColor.isYellow) {
+          if (Hct.isYellow(s.neutralPalette.hue)) {
             return 90.0;
           } else if (s.variant == Variant.vibrant) {
             return 85.0;
@@ -198,7 +197,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           } else if (s.variant == Variant.tonalSpot) {
             return 1.7;
           } else if (s.variant == Variant.expressive) {
-            return s.neutralPalette.keyColor.isYellow ? 2.7 : 1.75;
+            return Hct.isYellow(s.neutralPalette.hue) ? 2.7 : 1.75;
           } else if (s.variant == Variant.vibrant) {
             return 1.36;
           }
@@ -221,7 +220,7 @@ class ColorSpec2025 extends ColorSpec2021 {
         if (s.isDark) {
           return 18.0;
         } else {
-          if (s.neutralPalette.keyColor.isYellow) {
+          if (Hct.isYellow(s.neutralPalette.hue)) {
             return 99.0;
           } else if (s.variant == Variant.vibrant) {
             return 97.0;
@@ -238,7 +237,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           } else if (s.variant == Variant.tonalSpot) {
             return 1.7;
           } else if (s.variant == Variant.expressive) {
-            return s.neutralPalette.keyColor.isYellow ? 2.7 : 1.75;
+            return Hct.isYellow(s.neutralPalette.hue) ? 2.7 : 1.75;
           } else if (s.variant == Variant.vibrant) {
             return 1.36;
           }
@@ -276,7 +275,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           if (s.isDark) {
             return 6.0;
           } else {
-            if (s.neutralPalette.keyColor.isYellow) {
+            if (Hct.isYellow(s.neutralPalette.hue)) {
               return 98.0;
             } else if (s.variant == Variant.vibrant) {
               return 95.0;
@@ -296,7 +295,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           } else if (s.variant == Variant.tonalSpot) {
             return 1.25;
           } else if (s.variant == Variant.expressive) {
-            return s.neutralPalette.keyColor.isYellow ? 1.3 : 1.15;
+            return Hct.isYellow(s.neutralPalette.hue) ? 1.3 : 1.15;
           } else if (s.variant == Variant.vibrant) {
             return 1.08;
           }
@@ -320,7 +319,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           if (s.isDark) {
             return 9.0;
           } else {
-            if (s.neutralPalette.keyColor.isYellow) {
+            if (Hct.isYellow(s.neutralPalette.hue)) {
               return 96.0;
             } else if (s.variant == Variant.vibrant) {
               return 92.0;
@@ -340,7 +339,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           } else if (s.variant == Variant.tonalSpot) {
             return 1.4;
           } else if (s.variant == Variant.expressive) {
-            return s.neutralPalette.keyColor.isYellow ? 1.6 : 1.3;
+            return Hct.isYellow(s.neutralPalette.hue) ? 1.6 : 1.3;
           } else if (s.variant == Variant.vibrant) {
             return 1.15;
           }
@@ -364,7 +363,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           if (s.isDark) {
             return 12.0;
           } else {
-            if (s.neutralPalette.keyColor.isYellow) {
+            if (Hct.isYellow(s.neutralPalette.hue)) {
               return 94.0;
             } else if (s.variant == Variant.vibrant) {
               return 90.0;
@@ -384,7 +383,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           } else if (s.variant == Variant.tonalSpot) {
             return 1.5;
           } else if (s.variant == Variant.expressive) {
-            return s.neutralPalette.keyColor.isYellow ? 1.95 : 1.45;
+            return Hct.isYellow(s.neutralPalette.hue) ? 1.95 : 1.45;
           } else if (s.variant == Variant.vibrant) {
             return 1.22;
           }
@@ -408,7 +407,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           if (s.isDark) {
             return 15.0;
           } else {
-            if (s.neutralPalette.keyColor.isYellow) {
+            if (Hct.isYellow(s.neutralPalette.hue)) {
               return 92.0;
             } else if (s.variant == Variant.vibrant) {
               return 88.0;
@@ -427,7 +426,7 @@ class ColorSpec2025 extends ColorSpec2021 {
         } else if (s.variant == Variant.tonalSpot) {
           return 1.7;
         } else if (s.variant == Variant.expressive) {
-          return s.neutralPalette.keyColor.isYellow ? 2.3 : 1.6;
+          return Hct.isYellow(s.neutralPalette.hue) ? 2.3 : 1.6;
         } else if (s.variant == Variant.vibrant) {
           return 1.29;
         }
@@ -445,15 +444,28 @@ class ColorSpec2025 extends ColorSpec2021 {
     final color2025 = DynamicColor.fromPalette(
       name: "on_surface",
       palette: (s) => s.neutralPalette,
+      tone: (s) {
+        if (s.variant == Variant.vibrant) {
+          return _tMaxC(s.neutralPalette, 0, 100, 1.1);
+        } else {
+          return DynamicColor.getInitialToneFromBackground((scheme) {
+            if (scheme.platform == Platform.phone) {
+              return scheme.isDark ? surfaceBright() : surfaceDim();
+            } else {
+              return surfaceContainerHigh();
+            }
+          })(s);
+        }
+      },
       chromaMultiplier: (s) {
         if (s.variant == Variant.neutral) {
           return 2.2;
         } else if (s.variant == Variant.tonalSpot) {
           return 1.7;
         } else if (s.variant == Variant.expressive) {
-          return s.neutralPalette.keyColor.isYellow ? 2.3 : 1.6;
-        } else if (s.variant == Variant.vibrant) {
-          return 1.29;
+          return Hct.isYellow(s.neutralPalette.hue)
+              ? (s.isDark ? 3.0 : 2.3)
+              : 1.6;
         }
         return 1.0;
       },
@@ -464,7 +476,8 @@ class ColorSpec2025 extends ColorSpec2021 {
           return surfaceContainerHigh();
         }
       },
-      contrastCurve: (s) => _getContrastCurve(9),
+      contrastCurve: (s) =>
+          s.isDark ? _getContrastCurve(11) : _getContrastCurve(9),
     );
     return super.onSurface().extendSpecVersion(SpecVersion.spec2025, color2025);
   }
@@ -491,9 +504,9 @@ class ColorSpec2025 extends ColorSpec2021 {
         } else if (s.variant == Variant.tonalSpot) {
           return 1.7;
         } else if (s.variant == Variant.expressive) {
-          return s.neutralPalette.keyColor.isYellow ? 2.3 : 1.6;
-        } else if (s.variant == Variant.vibrant) {
-          return 1.29;
+          return Hct.isYellow(s.neutralPalette.hue)
+              ? (s.isDark ? 3.0 : 2.3)
+              : 1.6;
         }
         return 1.0;
       },
@@ -554,9 +567,9 @@ class ColorSpec2025 extends ColorSpec2021 {
           } else if (s.variant == Variant.tonalSpot) {
             return 1.7;
           } else if (s.variant == Variant.expressive) {
-            return s.neutralPalette.keyColor.isYellow ? 2.3 : 1.6;
-          } else if (s.variant == Variant.vibrant) {
-            return 1.29;
+            return Hct.isYellow(s.neutralPalette.hue)
+                ? (s.isDark ? 3.0 : 2.3)
+                : 1.6;
           }
         }
         return 1.0;
@@ -587,9 +600,9 @@ class ColorSpec2025 extends ColorSpec2021 {
           } else if (s.variant == Variant.tonalSpot) {
             return 1.7;
           } else if (s.variant == Variant.expressive) {
-            return s.neutralPalette.keyColor.isYellow ? 2.3 : 1.6;
-          } else if (s.variant == Variant.vibrant) {
-            return 1.29;
+            return Hct.isYellow(s.neutralPalette.hue)
+                ? (s.isDark ? 3.0 : 2.3)
+                : 1.6;
           }
         }
         return 1.0;
@@ -646,9 +659,9 @@ class ColorSpec2025 extends ColorSpec2021 {
           return _tMaxC(
             s.primaryPalette,
             0,
-            s.primaryPalette.keyColor.isYellow
+            Hct.isYellow(s.primaryPalette.hue)
                 ? 25
-                : s.primaryPalette.keyColor.isCyan
+                : Hct.isCyan(s.primaryPalette.hue)
                 ? 88
                 : 98,
           );
@@ -657,7 +670,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           return _tMaxC(
             s.primaryPalette,
             0,
-            s.primaryPalette.keyColor.isCyan ? 88 : 98,
+            Hct.isCyan(s.primaryPalette.hue) ? 88 : 98,
           );
         }
       },
@@ -748,7 +761,7 @@ class ColorSpec2025 extends ColorSpec2021 {
               : _tMaxC(
                   s.primaryPalette,
                   78,
-                  s.primaryPalette.keyColor.isCyan ? 88 : 90,
+                  Hct.isCyan(s.primaryPalette.hue) ? 88 : 90,
                 );
         } else {
           // VIBRANT
@@ -757,7 +770,7 @@ class ColorSpec2025 extends ColorSpec2021 {
               : _tMaxC(
                   s.primaryPalette,
                   66,
-                  s.primaryPalette.keyColor.isCyan ? 88 : 93,
+                  Hct.isCyan(s.primaryPalette.hue) ? 88 : 93,
                 );
         }
       },
@@ -982,7 +995,7 @@ class ColorSpec2025 extends ColorSpec2021 {
           return _tMaxC(
             s.tertiaryPalette,
             /* lowerBound= */ 0,
-            /* upperBound= */ s.tertiaryPalette.keyColor.isCyan
+            /* upperBound= */ Hct.isCyan(s.tertiaryPalette.hue)
                 ? 88
                 : (s.isDark ? 98 : 100),
           );
@@ -1080,7 +1093,7 @@ class ColorSpec2025 extends ColorSpec2021 {
             return _tMaxC(
               s.tertiaryPalette,
               /* lowerBound= */ 75,
-              /* upperBound= */ s.tertiaryPalette.keyColor.isCyan
+              /* upperBound= */ Hct.isCyan(s.tertiaryPalette.hue)
                   ? 88
                   : (s.isDark ? 93 : 100),
             );
@@ -1691,8 +1704,8 @@ class ColorSpec2025 extends ColorSpec2021 {
       Variant.neutral => TonalPalette.fromHueAndChroma(
         sourceColorHct.hue,
         platform == Platform.phone
-            ? (sourceColorHct.isBlue ? 12 : 8)
-            : (sourceColorHct.isBlue ? 16 : 12),
+            ? (Hct.isBlue(sourceColorHct.hue) ? 12 : 8)
+            : (Hct.isBlue(sourceColorHct.hue) ? 16 : 12),
       ),
       Variant.tonalSpot => TonalPalette.fromHueAndChroma(
         sourceColorHct.hue,
@@ -1728,8 +1741,8 @@ class ColorSpec2025 extends ColorSpec2021 {
       Variant.neutral => TonalPalette.fromHueAndChroma(
         sourceColorHct.hue,
         platform == Platform.phone
-            ? (sourceColorHct.isBlue ? 6 : 4)
-            : (sourceColorHct.isBlue ? 10 : 6),
+            ? (Hct.isBlue(sourceColorHct.hue) ? 6 : 4)
+            : (Hct.isBlue(sourceColorHct.hue) ? 10 : 6),
       ),
       Variant.tonalSpot => TonalPalette.fromHueAndChroma(
         sourceColorHct.hue,
