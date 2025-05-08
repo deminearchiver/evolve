@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:change_case/change_case.dart';
 import 'package:intl/intl.dart';
 import 'package:promptly/promptly.dart';
 import 'package:csslib/parser.dart' as css;
@@ -310,7 +311,7 @@ class CreateCommand extends Command<int> {
     final formats = selectAny(
       "Formats",
       choices: PromptFormat.values,
-      defaultValues: [PromptFormat.materialTheme],
+      defaultValues: [PromptFormat.materialThemeJson],
       display: PromptFormat.display,
     );
     line();
@@ -324,7 +325,7 @@ class CreateCommand extends Command<int> {
 
     for (final format in formats) {
       switch (format) {
-        case PromptFormat.materialTheme:
+        case PromptFormat.materialThemeJson:
           // line();
           // section(
           //   "Material Theme (JSON)",
@@ -351,35 +352,82 @@ class CreateCommand extends Command<int> {
             palettes: FigmaPalettes(),
           );
           final json = data.toJson();
-          // Object? addColors(Object? json) {
-          //   if (json == null) return null;
-          //   final data = <String, Object?>{};
-          //   if (json is String) {
-          //     final color = Color.tryParse(json);
-          //     if (color == null) return json;
-          //     return json.rgb(r: 255, g: 255, b: 255);
-          //   }
-          //   if (json is List) {
-          //     return json.map((element) => addColors(element));
-          //   }
-          //   if (json is Map) {
-          //     return json.map((key, value) => MapEntry(key, addColors(value)));
-          //   }
-          //   return json;
-          //   // for (final entry in json.entries) {
-          //   //   final key = entry.key;
-          //   //   final value = entry.value;
-          //   //   if (entry.value is String) {
-          //   //     final color = Color.tryParse();
-          //   //   }
-          //   // }
-          // }
-          // final colored = addColors(json);
           final encoder = JsonEncoder.withIndent(" " * 2);
           final encoded = encoder.convert(json);
           success("Successfully encoded into Material Theme (JSON) format");
           line();
           message(encoded);
+        case PromptFormat.webCss:
+          line();
+          section(
+            "Web (CSS)",
+            message: "Configuration for the Web (CSS) format",
+          );
+          final modes = selectAny(
+            "Modes",
+            choices: PromptMode.values,
+            defaultValues: [PromptMode.light, PromptMode.dark],
+            display: PromptMode.display,
+          );
+          line();
+          final contrastLevels = selectAny(
+            "Contrast levels",
+            choices: PromptContrastLevel.values,
+            defaultValues: [PromptContrastLevel.normal],
+            display: PromptContrastLevel.display,
+          );
+          line();
+          final buffer = StringBuffer();
+          bool firstIteration = true;
+          final dynamicColors =
+              const mcu.MaterialDynamicColors().allDynamicColors;
+          for (final mode in modes) {
+            final modePrefix = switch (mode) {
+              PromptMode.light => "light",
+              PromptMode.dark => "dark",
+            };
+            for (final contrastLevel in contrastLevels) {
+              final contrastLevelSuffix = switch (contrastLevel) {
+                PromptContrastLevel.normal => null,
+                PromptContrastLevel.medium => "medium-contrast",
+                PromptContrastLevel.high => "high-contrast",
+              };
+              final className = [modePrefix, ?contrastLevelSuffix].join("-");
+              final selector = ".$className";
+              final scheme = mcu.DynamicScheme.fromKeyColors(
+                sourceColorHct: sourceColor.hct,
+                isDark: mode.isDark,
+                contrastLevel: contrastLevel.value,
+                variant: variant.value,
+                specVersion: specVersion.value,
+                platform: platform.value,
+                primaryPaletteKeyColor: primaryPaletteKeyColor?.hct,
+                secondaryPaletteKeyColor: secondaryPaletteKeyColor?.hct,
+                tertiaryPaletteKeyColor: tertiaryPaletteKeyColor?.hct,
+                neutralPaletteKeyColor: neutralPaletteKeyColor?.hct,
+                neutralVariantPaletteKeyColor:
+                    neutralVariantPaletteKeyColor?.hct,
+                errorPaletteKeyColor: errorPaletteKeyColor?.hct,
+              );
+              if (!firstIteration) {
+                buffer.write("\n");
+              }
+              buffer.writeln("$selector {");
+              for (final dynamicColor in dynamicColors) {
+                final color = Color.argb(dynamicColor.getArgb(scheme));
+                final name = dynamicColor.name.toKebabCase();
+                final prefix = "md-sys-color";
+                final fullName = "$prefix-$name";
+                final propertyName = "--$fullName";
+                final propertyDeclaration = "$propertyName: #${color.hex};";
+                final line = " " * 2 + propertyDeclaration;
+                buffer.writeln(line);
+              }
+              buffer.writeln("}");
+              firstIteration = false;
+            }
+          }
+          message(buffer.toString());
         default:
           break;
       }
@@ -408,6 +456,37 @@ enum PromptTemplate {
   };
 }
 
+enum PromptMode {
+  light,
+  dark;
+
+  bool get isDark => switch (this) {
+    PromptMode.light => false,
+    PromptMode.dark => true,
+  };
+
+  static String display(PromptMode value) => switch (value) {
+    PromptMode.light => "Light",
+    PromptMode.dark => "Dark",
+  };
+}
+
+enum PromptContrastLevel {
+  normal(0.0),
+  medium(0.5),
+  high(1.0);
+
+  const PromptContrastLevel(this.value);
+
+  final double value;
+
+  static String display(PromptContrastLevel value) => switch (value) {
+    PromptContrastLevel.normal => "Normal",
+    PromptContrastLevel.medium => "Medium",
+    PromptContrastLevel.high => "High",
+  };
+}
+
 enum PromptSource {
   color,
   image;
@@ -429,18 +508,20 @@ enum PromptOutput {
 }
 
 enum PromptFormat {
-  materialTheme,
-  web,
-  flutter,
-  jetpackCompose,
-  androidViews;
+  materialThemeJson,
+  webCss,
+  webSass,
+  flutterDart,
+  jetpackComposeKotlin,
+  androidViewsXml;
 
   static String display(PromptFormat value) => switch (value) {
-    materialTheme => "Material Theme (JSON)",
-    web => "Web (CSS)",
-    flutter => "Flutter (Dart)",
-    jetpackCompose => "Jetpack Compose (Kotlin)",
-    androidViews => "Android Views (XML)",
+    materialThemeJson => "Material Theme (JSON)",
+    webCss => "Web (CSS)",
+    webSass => "Web (Sass)",
+    flutterDart => "Flutter (Dart)",
+    jetpackComposeKotlin => "Jetpack Compose (Kotlin)",
+    androidViewsXml => "Android Views (XML)",
   };
 }
 
