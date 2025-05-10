@@ -75,8 +75,95 @@ abstract class ColorThemeData
     required Color textHintInverse,
   }) = _ColorThemeData;
 
-  factory ColorThemeData.fromDynamicScheme(mcu.DynamicScheme scheme) =>
-      _fromDynamicScheme(scheme);
+  factory ColorThemeData.fromDynamicScheme(mcu.DynamicScheme scheme) {
+    const colors = mcu.MaterialDynamicColors();
+    return ColorThemeData(
+      brightness: scheme.isDark ? Brightness.dark : Brightness.light,
+      primaryPaletteKeyColor: colors.primaryPaletteKeyColor()._getColor(scheme),
+      secondaryPaletteKeyColor: colors.secondaryPaletteKeyColor()._getColor(
+        scheme,
+      ),
+      tertiaryPaletteKeyColor: colors.tertiaryPaletteKeyColor()._getColor(
+        scheme,
+      ),
+      neutralPaletteKeyColor: colors.neutralPaletteKeyColor()._getColor(scheme),
+      neutralVariantPaletteKeyColor: colors
+          .neutralVariantPaletteKeyColor()
+          ._getColor(scheme),
+      errorPaletteKeyColor: colors.errorPaletteKeyColor()._getColor(scheme),
+      background: colors.background()._getColor(scheme),
+      onBackground: colors.onBackground()._getColor(scheme),
+      surface: colors.surface()._getColor(scheme),
+      surfaceDim: colors.surfaceDim()._getColor(scheme),
+      surfaceBright: colors.surfaceBright()._getColor(scheme),
+      surfaceContainerLowest: colors.surfaceContainerLowest()._getColor(scheme),
+      surfaceContainerLow: colors.surfaceContainerLow()._getColor(scheme),
+      surfaceContainer: colors.surfaceContainer()._getColor(scheme),
+      surfaceContainerHigh: colors.surfaceContainerHigh()._getColor(scheme),
+      surfaceContainerHighest: colors.surfaceContainerHighest()._getColor(
+        scheme,
+      ),
+      onSurface: colors.onSurface()._getColor(scheme),
+      surfaceVariant: colors.surfaceVariant()._getColor(scheme),
+      onSurfaceVariant: colors.onSurfaceVariant()._getColor(scheme),
+      outline: colors.outline()._getColor(scheme),
+      outlineVariant: colors.outlineVariant()._getColor(scheme),
+      inverseSurface: colors.inverseSurface()._getColor(scheme),
+      inverseOnSurface: colors.inverseOnSurface()._getColor(scheme),
+      shadow: colors.shadow()._getColor(scheme),
+      scrim: colors.scrim()._getColor(scheme),
+      surfaceTint: colors.surfaceTint()._getColor(scheme),
+      primary: colors.primary()._getColor(scheme),
+      primaryDim: colors.primaryDim()._getColor(scheme),
+      onPrimary: colors.onPrimary()._getColor(scheme),
+      primaryContainer: colors.primaryContainer()._getColor(scheme),
+      onPrimaryContainer: colors.onPrimaryContainer()._getColor(scheme),
+      primaryFixed: colors.primaryFixed()._getColor(scheme),
+      primaryFixedDim: colors.primaryFixedDim()._getColor(scheme),
+      onPrimaryFixed: colors.onPrimaryFixed()._getColor(scheme),
+      onPrimaryFixedVariant: colors.onPrimaryFixedVariant()._getColor(scheme),
+      inversePrimary: colors.inversePrimary()._getColor(scheme),
+      secondary: colors.secondary()._getColor(scheme),
+      secondaryDim: colors.secondaryDim()._getColor(scheme),
+      onSecondary: colors.onSecondary()._getColor(scheme),
+      secondaryContainer: colors.secondaryContainer()._getColor(scheme),
+      onSecondaryContainer: colors.onSecondaryContainer()._getColor(scheme),
+      secondaryFixed: colors.secondaryFixed()._getColor(scheme),
+      secondaryFixedDim: colors.secondaryFixedDim()._getColor(scheme),
+      onSecondaryFixed: colors.onSecondaryFixed()._getColor(scheme),
+      onSecondaryFixedVariant: colors.onSecondaryFixedVariant()._getColor(
+        scheme,
+      ),
+      tertiary: colors.tertiary()._getColor(scheme),
+      tertiaryDim: colors.tertiaryDim()._getColor(scheme),
+      onTertiary: colors.onTertiary()._getColor(scheme),
+      tertiaryContainer: colors.tertiaryContainer()._getColor(scheme),
+      onTertiaryContainer: colors.onTertiaryContainer()._getColor(scheme),
+      tertiaryFixed: colors.tertiaryFixed()._getColor(scheme),
+      tertiaryFixedDim: colors.tertiaryFixedDim()._getColor(scheme),
+      onTertiaryFixed: colors.onTertiaryFixed()._getColor(scheme),
+      onTertiaryFixedVariant: colors.onTertiaryFixedVariant()._getColor(scheme),
+      error: colors.error()._getColor(scheme),
+      errorDim: colors.errorDim()._getColor(scheme),
+      onError: colors.onError()._getColor(scheme),
+      errorContainer: colors.errorContainer()._getColor(scheme),
+      onErrorContainer: colors.onErrorContainer()._getColor(scheme),
+      controlActivated: colors.controlActivated()._getColor(scheme),
+      controlNormal: colors.controlNormal()._getColor(scheme),
+      controlHighlight: colors.controlHighlight()._getColor(scheme),
+      textPrimaryInverse: colors.textPrimaryInverse()._getColor(scheme),
+      textSecondaryAndTertiaryInverse: colors
+          .textSecondaryAndTertiaryInverse()
+          ._getColor(scheme),
+      textPrimaryInverseDisableOnly: colors
+          .textPrimaryInverseDisableOnly()
+          ._getColor(scheme),
+      textSecondaryAndTertiaryInverseDisabled: colors
+          .textSecondaryAndTertiaryInverseDisabled()
+          ._getColor(scheme),
+      textHintInverse: colors.textHintInverse()._getColor(scheme),
+    );
+  }
 
   factory ColorThemeData.fromSourceColor({
     required DynamicSchemeVariant variant,
@@ -85,14 +172,17 @@ abstract class ColorThemeData
     double contrastLevel = _contrastLevelNormal,
     DynamicSchemeVersion? version,
     DynamicSchemePlatform? platform,
-  }) => _fromSourceColor(
-    variant: variant,
-    sourceColor: sourceColor,
-    brightness: brightness,
-    contrastLevel: contrastLevel,
-    version: version,
-    platform: platform,
-  );
+  }) {
+    final scheme = _buildDynamicScheme(
+      variant: variant,
+      sourceColor: sourceColor,
+      brightness: brightness,
+      contrastLevel: contrastLevel,
+      version: version,
+      platform: platform,
+    );
+    return ColorThemeData.fromDynamicScheme(scheme);
+  }
 
   factory ColorThemeData.baseline({
     DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
