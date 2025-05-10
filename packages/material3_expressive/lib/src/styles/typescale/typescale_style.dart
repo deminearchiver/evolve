@@ -51,6 +51,21 @@ extension FontWeightExtension on FontWeight {
   double toDouble() => value.toDouble();
 }
 
+extension on TextStyle {
+  Map<String, double>? get _variableFontAxesOrNull => fontVariations != null
+      ? Map.fromEntries(
+          fontVariations!.map(
+            (fontVariation) =>
+                MapEntry(fontVariation.axis, fontVariation.value),
+          ),
+        )
+      : null;
+
+  // Map<String, double> get _variableFontAxes => _variableFontAxesOrNull ?? {};
+
+  double? _variableFontAxis(String axis) => _variableFontAxesOrNull?[axis];
+}
+
 @immutable
 class TypescaleStylePartial with Diagnosticable {
   const TypescaleStylePartial({
@@ -59,6 +74,15 @@ class TypescaleStylePartial with Diagnosticable {
     this.size,
     this.lineHeight,
     this.tracking,
+    this.wght,
+    this.grad,
+    this.wdth,
+    this.rond,
+    this.opsz,
+    this.crsv,
+    this.slnt,
+    this.fill,
+    this.hexp,
   });
 
   factory TypescaleStylePartial.fromTextStyle(TextStyle? style) {
@@ -85,6 +109,15 @@ class TypescaleStylePartial with Diagnosticable {
       size: size,
       lineHeight: lineHeight,
       tracking: tracking,
+      wght: style._variableFontAxis(_VariableFontAxes.wght),
+      grad: style._variableFontAxis(_VariableFontAxes.grad),
+      wdth: style._variableFontAxis(_VariableFontAxes.wdth),
+      rond: style._variableFontAxis(_VariableFontAxes.rond),
+      opsz: style._variableFontAxis(_VariableFontAxes.opsz),
+      crsv: style._variableFontAxis(_VariableFontAxes.crsv),
+      slnt: style._variableFontAxis(_VariableFontAxes.slnt),
+      fill: style._variableFontAxis(_VariableFontAxes.fill),
+      hexp: style._variableFontAxis(_VariableFontAxes.hexp),
     );
   }
 
@@ -98,18 +131,46 @@ class TypescaleStylePartial with Diagnosticable {
 
   final double? tracking;
 
+  final double? wght;
+  final double? grad;
+  final double? wdth;
+  final double? rond;
+  final double? opsz;
+  final double? crsv;
+  final double? slnt;
+  final double? fill;
+  final double? hexp;
+
   TypescaleStylePartial copyWith({
-    covariant List<String>? font,
-    covariant double? weight,
-    covariant double? size,
-    covariant double? lineHeight,
-    covariant double? tracking,
+    List<String>? font,
+    double? weight,
+    double? size,
+    double? lineHeight,
+    double? tracking,
+    double? wght,
+    double? grad,
+    double? wdth,
+    double? rond,
+    double? opsz,
+    double? crsv,
+    double? slnt,
+    double? fill,
+    double? hexp,
   }) {
     if (font == null &&
         weight == null &&
         size == null &&
         lineHeight == null &&
-        tracking == null) {
+        tracking == null &&
+        wght == null &&
+        grad == null &&
+        wdth == null &&
+        rond == null &&
+        opsz == null &&
+        crsv == null &&
+        slnt == null &&
+        fill == null &&
+        hexp == null) {
       return this;
     }
     return TypescaleStylePartial(
@@ -118,6 +179,15 @@ class TypescaleStylePartial with Diagnosticable {
       size: size ?? this.size,
       lineHeight: lineHeight ?? this.lineHeight,
       tracking: tracking ?? this.tracking,
+      wght: wght ?? this.wght,
+      grad: grad ?? this.grad,
+      wdth: wdth ?? this.wdth,
+      rond: rond ?? this.rond,
+      opsz: opsz ?? this.opsz,
+      crsv: crsv ?? this.crsv,
+      slnt: slnt ?? this.slnt,
+      fill: fill ?? this.fill,
+      hexp: hexp ?? this.hexp,
     );
   }
 
@@ -127,12 +197,30 @@ class TypescaleStylePartial with Diagnosticable {
     double? size,
     double? lineHeight,
     double? tracking,
+    double? wght,
+    double? grad,
+    double? wdth,
+    double? rond,
+    double? opsz,
+    double? crsv,
+    double? slnt,
+    double? fill,
+    double? hexp,
   }) {
     if (font == null &&
         weight == null &&
         size == null &&
         lineHeight == null &&
-        tracking == null) {
+        tracking == null &&
+        wght == null &&
+        grad == null &&
+        wdth == null &&
+        rond == null &&
+        opsz == null &&
+        crsv == null &&
+        slnt == null &&
+        fill == null &&
+        hexp == null) {
       return this;
     }
     return TypescaleStylePartial(
@@ -141,6 +229,15 @@ class TypescaleStylePartial with Diagnosticable {
       size: size ?? this.size,
       lineHeight: lineHeight ?? this.lineHeight,
       tracking: tracking ?? this.tracking,
+      wght: wght ?? this.wght,
+      grad: grad ?? this.grad,
+      wdth: wdth ?? this.wdth,
+      rond: rond ?? this.rond,
+      opsz: opsz ?? this.opsz,
+      crsv: crsv ?? this.crsv,
+      slnt: slnt ?? this.slnt,
+      fill: fill ?? this.fill,
+      hexp: hexp ?? this.hexp,
     );
   }
 
@@ -152,8 +249,41 @@ class TypescaleStylePartial with Diagnosticable {
       size: other.size,
       lineHeight: other.lineHeight,
       tracking: other.tracking,
+      wght: other.wght,
+      grad: other.grad,
+      wdth: other.wdth,
+      rond: other.rond,
+      opsz: other.opsz,
+      crsv: other.crsv,
+      slnt: other.slnt,
+      fill: other.fill,
+      hexp: other.hexp,
     );
   }
+
+  Map<String, double> get variableFontAxes => {
+    if (wght case final wght?) _VariableFontAxes.wght: wght,
+    if (grad case final grad?) _VariableFontAxes.grad: grad,
+    if (wdth case final wdth?) _VariableFontAxes.wdth: wdth,
+    if (rond case final rond?) _VariableFontAxes.rond: rond,
+    if (opsz case final opsz?) _VariableFontAxes.opsz: opsz,
+    if (crsv case final crsv?) _VariableFontAxes.crsv: crsv,
+    if (slnt case final slnt?) _VariableFontAxes.slnt: slnt,
+    if (fill case final fill?) _VariableFontAxes.fill: fill,
+    if (hexp case final hexp?) _VariableFontAxes.hexp: hexp,
+  };
+
+  List<FontVariation> get fontVariations => [
+    if (wght case final wght?) FontVariation(_VariableFontAxes.wght, wght),
+    if (grad case final grad?) FontVariation(_VariableFontAxes.grad, grad),
+    if (wdth case final wdth?) FontVariation(_VariableFontAxes.wdth, wdth),
+    if (rond case final rond?) FontVariation(_VariableFontAxes.rond, rond),
+    if (opsz case final opsz?) FontVariation(_VariableFontAxes.opsz, opsz),
+    if (crsv case final crsv?) FontVariation(_VariableFontAxes.crsv, crsv),
+    if (slnt case final slnt?) FontVariation(_VariableFontAxes.slnt, slnt),
+    if (fill case final fill?) FontVariation(_VariableFontAxes.fill, fill),
+    if (hexp case final hexp?) FontVariation(_VariableFontAxes.hexp, hexp),
+  ];
 
   TextStyle toTextStyle({bool snapFontWeight = true}) {
     // TODO: implement snapFontWeight and useFontVariation (names are not final)
@@ -164,7 +294,7 @@ class TypescaleStylePartial with Diagnosticable {
       fontSize: size,
       height: size != null && lineHeight != null ? lineHeight! / size! : null,
       letterSpacing: tracking,
-      fontVariations: [if (weight != null) FontVariation.weight(weight!)],
+      fontVariations: fontVariations,
     );
   }
 
@@ -174,18 +304,21 @@ class TypescaleStylePartial with Diagnosticable {
     properties.add(
       DiagnosticsProperty<List<String>>("font", font, defaultValue: null),
     );
+    properties.add(DoubleProperty("weight", weight, defaultValue: null));
+    properties.add(DoubleProperty("size", size, defaultValue: null));
     properties.add(
-      DiagnosticsProperty<double>("weight", weight, defaultValue: null),
+      DoubleProperty("lineHeight", lineHeight, defaultValue: null),
     );
-    properties.add(
-      DiagnosticsProperty<double>("size", size, defaultValue: null),
-    );
-    properties.add(
-      DiagnosticsProperty<double>("lineHeight", lineHeight, defaultValue: null),
-    );
-    properties.add(
-      DiagnosticsProperty<double>("tracking", tracking, defaultValue: null),
-    );
+    properties.add(DoubleProperty("tracking", tracking, defaultValue: null));
+    properties.add(DoubleProperty("wght", wght, defaultValue: null));
+    properties.add(DoubleProperty("grad", grad, defaultValue: null));
+    properties.add(DoubleProperty("wdth", wdth, defaultValue: null));
+    properties.add(DoubleProperty("rond", rond, defaultValue: null));
+    properties.add(DoubleProperty("opsz", opsz, defaultValue: null));
+    properties.add(DoubleProperty("crsv", crsv, defaultValue: null));
+    properties.add(DoubleProperty("slnt", slnt, defaultValue: null));
+    properties.add(DoubleProperty("fill", fill, defaultValue: null));
+    properties.add(DoubleProperty("hexp", hexp, defaultValue: null));
   }
 
   @override
@@ -197,16 +330,35 @@ class TypescaleStylePartial with Diagnosticable {
             weight == other.weight &&
             size == other.size &&
             lineHeight == other.lineHeight &&
-            tracking == other.tracking;
+            tracking == other.tracking &&
+            wght == other.wght &&
+            grad == other.grad &&
+            wdth == other.wdth &&
+            rond == other.rond &&
+            opsz == other.opsz &&
+            crsv == other.crsv &&
+            slnt == other.slnt &&
+            fill == other.fill &&
+            hexp == other.hexp;
   }
 
   @override
   int get hashCode => Object.hash(
+    runtimeType,
     font != null ? Object.hashAll(font!) : null,
     weight,
     size,
     lineHeight,
     tracking,
+    wght,
+    grad,
+    wdth,
+    rond,
+    opsz,
+    crsv,
+    slnt,
+    fill,
+    hexp,
   );
 }
 
@@ -218,8 +370,41 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
     required this.size,
     required this.lineHeight,
     required this.tracking,
+    required this.wght,
+    required this.grad,
+    required this.wdth,
+    required this.rond,
+    required this.opsz,
+    required this.crsv,
+    required this.slnt,
+    required this.fill,
+    required this.hexp,
   });
-  // : assert(font.length >= 1, "At least one font family is required");
+
+  const TypescaleStyle.withDefaults({
+    required this.font,
+    required this.weight,
+    required this.size,
+    required this.lineHeight,
+    required this.tracking,
+    double? wght,
+    double? grad,
+    double? wdth,
+    double? rond,
+    double? opsz,
+    double? crsv,
+    double? slnt,
+    double? fill,
+    double? hexp,
+  }) : wght = wght ?? weight,
+       grad = grad ?? 0.0,
+       wdth = wdth ?? 100.0,
+       rond = rond ?? 0.0,
+       opsz = opsz ?? size,
+       crsv = crsv ?? 0.0,
+       slnt = slnt ?? 0.0,
+       fill = fill ?? 0.0,
+       hexp = hexp ?? 0.0;
 
   factory TypescaleStyle.fromTextStyle(TextStyle style) {
     assert(_debugTextStyleHasFont(style), "TextStyle has no font families");
@@ -240,12 +425,21 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
     final size = style.fontSize!;
     final lineHeight = size * style.height!;
     final tracking = style.letterSpacing!;
-    return TypescaleStyle(
+    return TypescaleStyle.withDefaults(
       font: font,
       weight: weight,
       size: size,
       lineHeight: lineHeight,
       tracking: tracking,
+      wght: style._variableFontAxis(_VariableFontAxes.wght),
+      grad: style._variableFontAxis(_VariableFontAxes.grad),
+      wdth: style._variableFontAxis(_VariableFontAxes.wdth),
+      rond: style._variableFontAxis(_VariableFontAxes.rond),
+      opsz: style._variableFontAxis(_VariableFontAxes.opsz),
+      crsv: style._variableFontAxis(_VariableFontAxes.crsv),
+      slnt: style._variableFontAxis(_VariableFontAxes.slnt),
+      fill: style._variableFontAxis(_VariableFontAxes.fill),
+      hexp: style._variableFontAxis(_VariableFontAxes.hexp),
     );
   }
 
@@ -265,18 +459,63 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
   final double tracking;
 
   @override
+  final double wght;
+
+  @override
+  final double grad;
+
+  @override
+  final double wdth;
+
+  @override
+  final double rond;
+
+  @override
+  final double opsz;
+
+  @override
+  final double crsv;
+
+  @override
+  final double slnt;
+
+  @override
+  final double fill;
+
+  @override
+  final double hexp;
+
+  @override
   TypescaleStyle copyWith({
-    covariant List<String>? font,
-    covariant double? weight,
-    covariant double? size,
-    covariant double? lineHeight,
-    covariant double? tracking,
+    List<String>? font,
+    double? weight,
+    double? size,
+    double? lineHeight,
+    double? tracking,
+    double? wght,
+    double? grad,
+    double? wdth,
+    double? rond,
+    double? opsz,
+    double? crsv,
+    double? slnt,
+    double? fill,
+    double? hexp,
   }) {
     if (font == null &&
         weight == null &&
         size == null &&
         lineHeight == null &&
-        tracking == null) {
+        tracking == null &&
+        wght == null &&
+        grad == null &&
+        wdth == null &&
+        rond == null &&
+        opsz == null &&
+        crsv == null &&
+        slnt == null &&
+        fill == null &&
+        hexp == null) {
       return this;
     }
     return TypescaleStyle(
@@ -285,6 +524,15 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
       size: size ?? this.size,
       lineHeight: lineHeight ?? this.lineHeight,
       tracking: tracking ?? this.tracking,
+      wght: wght ?? this.wght,
+      grad: grad ?? this.grad,
+      wdth: wdth ?? this.wdth,
+      rond: rond ?? this.rond,
+      opsz: opsz ?? this.opsz,
+      crsv: crsv ?? this.crsv,
+      slnt: slnt ?? this.slnt,
+      fill: fill ?? this.fill,
+      hexp: hexp ?? this.hexp,
     );
   }
 
@@ -295,12 +543,30 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
     double? size,
     double? lineHeight,
     double? tracking,
+    double? wght,
+    double? grad,
+    double? wdth,
+    double? rond,
+    double? opsz,
+    double? crsv,
+    double? slnt,
+    double? fill,
+    double? hexp,
   }) {
     if (font == null &&
         weight == null &&
         size == null &&
         lineHeight == null &&
-        tracking == null) {
+        tracking == null &&
+        wght == null &&
+        grad == null &&
+        wdth == null &&
+        rond == null &&
+        opsz == null &&
+        crsv == null &&
+        slnt == null &&
+        fill == null &&
+        hexp == null) {
       return this;
     }
     return TypescaleStyle(
@@ -309,6 +575,15 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
       size: size ?? this.size,
       lineHeight: lineHeight ?? this.lineHeight,
       tracking: tracking ?? this.tracking,
+      wght: wght ?? this.wght,
+      grad: grad ?? this.grad,
+      wdth: wdth ?? this.wdth,
+      rond: rond ?? this.rond,
+      opsz: opsz ?? this.opsz,
+      crsv: crsv ?? this.crsv,
+      slnt: slnt ?? this.slnt,
+      fill: fill ?? this.fill,
+      hexp: hexp ?? this.hexp,
     );
   }
 
@@ -321,8 +596,43 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
       size: other.size,
       lineHeight: other.lineHeight,
       tracking: other.tracking,
+      wght: other.wght,
+      grad: other.grad,
+      wdth: other.wdth,
+      rond: other.rond,
+      opsz: other.opsz,
+      crsv: other.crsv,
+      slnt: other.slnt,
+      fill: other.fill,
+      hexp: other.hexp,
     );
   }
+
+  @override
+  Map<String, double> get variableFontAxes => {
+    _VariableFontAxes.wght: wght,
+    _VariableFontAxes.grad: grad,
+    _VariableFontAxes.wdth: wdth,
+    _VariableFontAxes.rond: rond,
+    _VariableFontAxes.opsz: opsz,
+    _VariableFontAxes.crsv: crsv,
+    _VariableFontAxes.slnt: slnt,
+    _VariableFontAxes.fill: fill,
+    _VariableFontAxes.hexp: hexp,
+  };
+
+  @override
+  List<FontVariation> get fontVariations => [
+    FontVariation(_VariableFontAxes.wght, wght),
+    FontVariation(_VariableFontAxes.grad, grad),
+    FontVariation(_VariableFontAxes.wdth, wdth),
+    FontVariation(_VariableFontAxes.rond, rond),
+    FontVariation(_VariableFontAxes.opsz, opsz),
+    FontVariation(_VariableFontAxes.crsv, crsv),
+    FontVariation(_VariableFontAxes.slnt, slnt),
+    FontVariation(_VariableFontAxes.fill, fill),
+    FontVariation(_VariableFontAxes.hexp, hexp),
+  ];
 
   @override
   TextStyle toTextStyle({bool snapFontWeight = true}) {
@@ -341,7 +651,7 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
       fontSize: size,
       height: lineHeight / size,
       letterSpacing: tracking,
-      fontVariations: [FontVariation.weight(weight)],
+      fontVariations: fontVariations,
     );
   }
 
@@ -349,10 +659,19 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<List<String>>("font", font));
-    properties.add(DiagnosticsProperty<double>("weight", weight));
-    properties.add(DiagnosticsProperty<double>("size", size));
-    properties.add(DiagnosticsProperty<double>("lineHeight", lineHeight));
-    properties.add(DiagnosticsProperty<double>("tracking", tracking));
+    properties.add(DoubleProperty("weight", weight));
+    properties.add(DoubleProperty("size", size));
+    properties.add(DoubleProperty("lineHeight", lineHeight));
+    properties.add(DoubleProperty("tracking", tracking));
+    properties.add(DoubleProperty("wght", wght));
+    properties.add(DoubleProperty("grad", grad));
+    properties.add(DoubleProperty("wdth", wdth));
+    properties.add(DoubleProperty("rond", rond));
+    properties.add(DoubleProperty("opsz", opsz));
+    properties.add(DoubleProperty("crsv", crsv));
+    properties.add(DoubleProperty("slnt", slnt));
+    properties.add(DoubleProperty("fill", fill));
+    properties.add(DoubleProperty("hexp", hexp));
   }
 
   @override
@@ -364,12 +683,36 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
             weight == other.weight &&
             size == other.size &&
             lineHeight == other.lineHeight &&
-            tracking == other.tracking;
+            tracking == other.tracking &&
+            wght == other.wght &&
+            grad == other.grad &&
+            wdth == other.wdth &&
+            rond == other.rond &&
+            opsz == other.opsz &&
+            crsv == other.crsv &&
+            slnt == other.slnt &&
+            fill == other.fill &&
+            hexp == other.hexp;
   }
 
   @override
-  int get hashCode =>
-      Object.hash(Object.hashAll(font), weight, size, lineHeight, tracking);
+  int get hashCode => Object.hash(
+    runtimeType,
+    Object.hashAll(font),
+    weight,
+    size,
+    lineHeight,
+    tracking,
+    wght,
+    grad,
+    wdth,
+    rond,
+    opsz,
+    crsv,
+    slnt,
+    fill,
+    hexp,
+  );
 
   static TypescaleStyle lerp(TypescaleStyle a, TypescaleStyle b, double t) {
     if (identical(a, b)) return a;
@@ -379,6 +722,27 @@ class TypescaleStyle with Diagnosticable implements TypescaleStylePartial {
       size: lerpDouble(a.size, b.size, t)!,
       lineHeight: lerpDouble(a.lineHeight, b.lineHeight, t)!,
       tracking: lerpDouble(a.tracking, b.tracking, t)!,
+      wght: lerpDouble(a.wght, b.wght, t)!,
+      grad: lerpDouble(a.grad, b.grad, t)!,
+      wdth: lerpDouble(a.wdth, b.wdth, t)!,
+      rond: lerpDouble(a.rond, b.rond, t)!,
+      opsz: lerpDouble(a.opsz, b.opsz, t)!,
+      crsv: lerpDouble(a.crsv, b.crsv, t)!,
+      slnt: lerpDouble(a.slnt, b.slnt, t)!,
+      fill: lerpDouble(a.fill, b.fill, t)!,
+      hexp: lerpDouble(a.hexp, b.hexp, t)!,
     );
   }
+}
+
+abstract final class _VariableFontAxes {
+  static const String wght = "wght";
+  static const String grad = "GRAD";
+  static const String wdth = "wdth";
+  static const String rond = "ROND";
+  static const String opsz = "opsz";
+  static const String crsv = "CRSV";
+  static const String slnt = "slnt";
+  static const String fill = "FILL";
+  static const String hexp = "HEXP";
 }

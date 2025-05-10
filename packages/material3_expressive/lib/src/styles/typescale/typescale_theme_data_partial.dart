@@ -185,6 +185,8 @@ abstract class TypescaleThemeDataPartial with Diagnosticable {
 
   TypescaleThemeDataPartial merge(TypescaleThemeDataPartial? other);
 
+  TextTheme toTextTheme();
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -193,6 +195,7 @@ abstract class TypescaleThemeDataPartial with Diagnosticable {
 
 mixin TypescaleThemeDataPartialMixin on Diagnosticable
     implements TypescaleThemeDataPartial {
+  @override
   TypescaleThemeDataPartial copyWith({
     covariant TypescaleStylePartial? displayLarge,
     covariant TypescaleStylePartial? displayMedium,
@@ -299,6 +302,7 @@ mixin TypescaleThemeDataPartialMixin on Diagnosticable
     );
   }
 
+  @override
   TypescaleThemeDataPartial apply({
     TypescaleStylePartial? displayLarge,
     TypescaleStylePartial? displayMedium,
@@ -428,6 +432,7 @@ mixin TypescaleThemeDataPartialMixin on Diagnosticable
     );
   }
 
+  @override
   TypescaleThemeDataPartial merge(TypescaleThemeDataPartial? other) {
     if (other == null) return this;
     return apply(
@@ -463,6 +468,25 @@ mixin TypescaleThemeDataPartialMixin on Diagnosticable
       labelSmallEmphasized: other.labelSmallEmphasized,
     );
   }
+
+  @override
+  TextTheme toTextTheme() => TextTheme(
+    displayLarge: displayLarge?.toTextStyle(),
+    displayMedium: displayMedium?.toTextStyle(),
+    displaySmall: displaySmall?.toTextStyle(),
+    headlineLarge: headlineLarge?.toTextStyle(),
+    headlineMedium: headlineMedium?.toTextStyle(),
+    headlineSmall: headlineSmall?.toTextStyle(),
+    titleLarge: titleLarge?.toTextStyle(),
+    titleMedium: titleMedium?.toTextStyle(),
+    titleSmall: titleSmall?.toTextStyle(),
+    bodyLarge: bodyLarge?.toTextStyle(),
+    bodyMedium: bodyMedium?.toTextStyle(),
+    bodySmall: bodySmall?.toTextStyle(),
+    labelLarge: labelLarge?.toTextStyle(),
+    labelMedium: labelMedium?.toTextStyle(),
+    labelSmall: labelSmall?.toTextStyle(),
+  );
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

@@ -12,5 +12,5 @@ part 'typescale_theme.dart';
 extension on TextStyle {
   TypescaleStylePartial _toTypescaleStylePartial() =>
       TypescaleStylePartial.fromTextStyle(this);
-  TypescaleStyle _toTypescaleStyle() => TypescaleStyle.fromTextStyle(this);
+  // TypescaleStyle _toTypescaleStyle() => TypescaleStyle.fromTextStyle(this);
 }

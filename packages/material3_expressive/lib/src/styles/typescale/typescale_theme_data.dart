@@ -202,6 +202,9 @@ abstract class TypescaleThemeData
   TypescaleThemeData merge(TypescaleThemeDataPartial? other);
 
   @override
+  TextTheme toTextTheme();
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
   }
@@ -476,6 +479,25 @@ mixin TypescaleThemeDataMixin on Diagnosticable implements TypescaleThemeData {
       labelSmallEmphasized: other.labelSmallEmphasized,
     );
   }
+
+  @override
+  TextTheme toTextTheme() => TextTheme(
+    displayLarge: displayLarge.toTextStyle(),
+    displayMedium: displayMedium.toTextStyle(),
+    displaySmall: displaySmall.toTextStyle(),
+    headlineLarge: headlineLarge.toTextStyle(),
+    headlineMedium: headlineMedium.toTextStyle(),
+    headlineSmall: headlineSmall.toTextStyle(),
+    titleLarge: titleLarge.toTextStyle(),
+    titleMedium: titleMedium.toTextStyle(),
+    titleSmall: titleSmall.toTextStyle(),
+    bodyLarge: bodyLarge.toTextStyle(),
+    bodyMedium: bodyMedium.toTextStyle(),
+    bodySmall: bodySmall.toTextStyle(),
+    labelLarge: labelLarge.toTextStyle(),
+    labelMedium: labelMedium.toTextStyle(),
+    labelSmall: labelSmall.toTextStyle(),
+  );
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -834,8 +856,31 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   final BuildContext _context;
   late final TypefaceThemeData _typeface = TypefaceTheme.of(_context);
 
+  TypescaleStyle _buildTypescale({
+    required List<String> font,
+    required double weight,
+    required double size,
+    required double lineHeight,
+    required double tracking,
+  }) => TypescaleStyle(
+    font: font,
+    weight: weight,
+    size: size,
+    lineHeight: lineHeight,
+    tracking: tracking,
+    wght: weight,
+    grad: 0.0,
+    wdth: 100.0,
+    rond: 0.0,
+    opsz: size,
+    crsv: 0.0,
+    slnt: 0.0,
+    fill: 0.0,
+    hexp: 0.0,
+  );
+
   @override
-  TypescaleStyle get displayLarge => TypescaleStyle(
+  TypescaleStyle get displayLarge => _buildTypescale(
     font: _typeface.brand,
     weight: _typeface.weightRegular,
     size: 57.0,
@@ -844,7 +889,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get displayMedium => TypescaleStyle(
+  TypescaleStyle get displayMedium => _buildTypescale(
     font: _typeface.brand,
     weight: _typeface.weightRegular,
     size: 45.0,
@@ -853,7 +898,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get displaySmall => TypescaleStyle(
+  TypescaleStyle get displaySmall => _buildTypescale(
     font: _typeface.brand,
     weight: _typeface.weightRegular,
     size: 36.0,
@@ -862,7 +907,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get headlineLarge => TypescaleStyle(
+  TypescaleStyle get headlineLarge => _buildTypescale(
     font: _typeface.brand,
     weight: _typeface.weightRegular,
     size: 32.0,
@@ -871,7 +916,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get headlineMedium => TypescaleStyle(
+  TypescaleStyle get headlineMedium => _buildTypescale(
     font: _typeface.brand,
     weight: _typeface.weightRegular,
     size: 28.0,
@@ -880,7 +925,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get headlineSmall => TypescaleStyle(
+  TypescaleStyle get headlineSmall => _buildTypescale(
     font: _typeface.brand,
     weight: _typeface.weightRegular,
     size: 24.0,
@@ -889,7 +934,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get titleLarge => TypescaleStyle(
+  TypescaleStyle get titleLarge => _buildTypescale(
     font: _typeface.brand,
     weight: _typeface.weightRegular,
     size: 22.0,
@@ -898,7 +943,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get titleMedium => TypescaleStyle(
+  TypescaleStyle get titleMedium => _buildTypescale(
     font: _typeface.plain,
     weight: _typeface.weightMedium,
     size: 16.0,
@@ -907,7 +952,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get titleSmall => TypescaleStyle(
+  TypescaleStyle get titleSmall => _buildTypescale(
     font: _typeface.plain,
     weight: _typeface.weightMedium,
     size: 14.0,
@@ -916,7 +961,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get bodyLarge => TypescaleStyle(
+  TypescaleStyle get bodyLarge => _buildTypescale(
     font: _typeface.plain,
     weight: _typeface.weightRegular,
     size: 16.0,
@@ -925,7 +970,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get bodyMedium => TypescaleStyle(
+  TypescaleStyle get bodyMedium => _buildTypescale(
     font: _typeface.plain,
     weight: _typeface.weightRegular,
     size: 14.0,
@@ -934,7 +979,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get bodySmall => TypescaleStyle(
+  TypescaleStyle get bodySmall => _buildTypescale(
     font: _typeface.plain,
     weight: _typeface.weightRegular,
     size: 12.0,
@@ -943,7 +988,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get labelLarge => TypescaleStyle(
+  TypescaleStyle get labelLarge => _buildTypescale(
     font: _typeface.plain,
     weight: _typeface.weightMedium,
     size: 14.0,
@@ -952,7 +997,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get labelMedium => TypescaleStyle(
+  TypescaleStyle get labelMedium => _buildTypescale(
     font: _typeface.plain,
     weight: _typeface.weightMedium,
     size: 12.0,
@@ -961,7 +1006,7 @@ class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
   );
 
   @override
-  TypescaleStyle get labelSmall => TypescaleStyle(
+  TypescaleStyle get labelSmall => _buildTypescale(
     font: _typeface.plain,
     weight: _typeface.weightMedium,
     size: 11.0,
