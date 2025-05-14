@@ -13,6 +13,8 @@ abstract class SpringThemeData
   }) = _SpringThemeData;
 
   const factory SpringThemeData.fallback() = _SpringThemeData.fallback;
+  const factory SpringThemeData.standard() = _SpringThemeData.standard;
+  const factory SpringThemeData.expressive() = _SpringThemeData.expressive;
 
   @override
   Spring get fastSpatial;

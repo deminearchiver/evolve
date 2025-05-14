@@ -37,8 +37,9 @@ abstract class TypescaleThemeData
     required TypescaleStyle labelSmallEmphasized,
   }) = _TypescaleThemeData;
 
-  factory TypescaleThemeData.fallback(BuildContext context) =
-      _TypescaleThemeDataFallback;
+  factory TypescaleThemeData.fallback({
+    required TypefaceThemeData typefaceTheme,
+  }) = _TypescaleThemeDataFallback;
 
   @override
   TypescaleStyle get displayLarge;
@@ -851,10 +852,10 @@ class _TypescaleThemeData with Diagnosticable, TypescaleThemeDataMixin {
 
 @immutable
 class _TypescaleThemeDataFallback with Diagnosticable, TypescaleThemeDataMixin {
-  _TypescaleThemeDataFallback(this._context);
+  _TypescaleThemeDataFallback({required TypefaceThemeData typefaceTheme})
+    : _typeface = typefaceTheme;
 
-  final BuildContext _context;
-  late final TypefaceThemeData _typeface = TypefaceTheme.of(_context);
+  final TypefaceThemeData _typeface;
 
   TypescaleStyle _buildTypescale({
     required List<String> font,

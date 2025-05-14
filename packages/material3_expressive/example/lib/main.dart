@@ -4,9 +4,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide DynamicSchemeVariant;
 import 'package:logging/logging.dart';
 import 'package:material3_expressive/material3_expressive.dart';
-import 'package:material3_expressive_example/animation.dart';
+import 'package:material3_expressive_example/implicit_animation.dart';
 import 'package:material3_expressive_example/button.dart';
 import 'package:material3_expressive_example/hit_testing.dart';
+import 'package:material3_expressive_example/size_change.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 void main() {
@@ -38,16 +39,21 @@ final highContrastDarkColorTheme = ColorThemeData.baseline(
   contrastLevel: 1.0,
 );
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
-  final ThemeMode themeMode = ThemeMode.system;
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  ThemeMode themeMode = ThemeMode.light;
 
   ColorThemeData _buildColorTheme({
     required Brightness brightness,
     double contrastLevel = 0.0,
   }) => ColorThemeData.baseline(
-    variant: DynamicSchemeVariant.tonalSpot,
+    variant: DynamicSchemeVariant.fidelity,
     brightness: brightness,
     contrastLevel: contrastLevel,
     version: DynamicSchemeVersion.spec2025,
@@ -57,7 +63,11 @@ class MainApp extends StatelessWidget {
   Widget _builder(BuildContext context, Widget? child) {
     if (child == null) return const SizedBox.shrink();
     final highContrast = MediaQuery.highContrastOf(context);
-    final brightness = MediaQuery.platformBrightnessOf(context);
+    final brightness = switch (themeMode) {
+      ThemeMode.system => MediaQuery.platformBrightnessOf(context),
+      ThemeMode.light => Brightness.light,
+      ThemeMode.dark => Brightness.dark,
+    };
     return ColorTheme(
       data: _buildColorTheme(
         brightness: brightness,
@@ -79,7 +89,7 @@ class MainApp extends StatelessWidget {
             )
           : null,
       // Color
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       theme: ThemeDataFactory.fromColorTheme(
         _buildColorTheme(brightness: Brightness.light),
       ),
@@ -173,31 +183,35 @@ class Test3 extends StatefulWidget {
 }
 
 class _Test3State extends State<Test3> with TickerProviderStateMixin {
-  late CurveImplicitAnimation<double> _scale;
-  late CurveImplicitAnimation<Color?> _color;
+  late SpringImplicitAnimation<double> _widthFactor;
 
   @override
   void initState() {
     super.initState();
-    _scale = CurveImplicitAnimation<double>(
+    _widthFactor = SpringImplicitAnimation<double>(
       vsync: this,
-      duration: Durations.extralong4,
-      curve: const EasingThemeData.fallback().emphasized,
-      initialValue: 0.0,
+      // spring: SpringDescription.withDampingRatio(
+      //   mass: 1,
+      //   stiffness: 100,
+      //   ratio: 0.1,
+      // ),
+      spring: const SpringThemeData.expressive().fastSpatial
+          .toSpringDescription(),
+      initialValue: 1.0,
       builder: (targetValue) => Tween<double>(begin: targetValue),
     );
-    _color = CurveImplicitAnimation(
-      vsync: this,
-      duration: Durations.short4,
-      initialValue: Colors.red,
-      builder: (targetValue) => ColorTween(begin: targetValue),
-    );
+    // _widthFactor = CurveImplicitAnimation<double>(
+    //   vsync: this,
+    //   duration: Durations.extralong4,
+    //   curve: Curves.easeInOutCubicEmphasized,
+    //   initialValue: 1.0,
+    //   builder: (targetValue) => Tween<double>(begin: targetValue),
+    // );
   }
 
   @override
   void dispose() {
-    _color.dispose();
-    _scale.dispose();
+    _widthFactor.dispose();
     super.dispose();
   }
 
@@ -206,9 +220,59 @@ class _Test3State extends State<Test3> with TickerProviderStateMixin {
     return Scaffold(
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 16.0,
           children: [
-            Button(label: Text("Custom button")),
-
+            // Button(label: Text("Custom button")),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   spacing: 8.0,
+            //   children: [
+            //     FilledButton(
+            //       onPressed: () => _widthFactor.targetValue = 1.0,
+            //       child: const Text("0%"),
+            //     ),
+            //     FilledButton(
+            //       onPressed: () => _widthFactor.targetValue = 1.15,
+            //       child: const Text("+15%"),
+            //     ),
+            //     FilledButton(
+            //       onPressed: () => _widthFactor.targetValue = 1.3,
+            //       child: const Text("+30%"),
+            //     ),
+            //   ],
+            // ),
+            Material(
+              // color: Colors.red.shade100,
+              child: SizeChangeGroup.horizontal(
+                children: [
+                  ButtonTest(
+                    icon: const Icon(Symbols.arrow_back),
+                    label: Text("Back"),
+                  ),
+                  ButtonTest(
+                    icon: const Icon(Symbols.bug_report),
+                    label: Text("Report a bug"),
+                  ),
+                  ButtonTest(
+                    icon: const Icon(Symbols.mail),
+                    label: Text("Contact us"),
+                  ),
+                  ButtonTest(
+                    icon: const Icon(Symbols.settings),
+                    label: Text("Settings"),
+                  ),
+                  // ButtonTest(
+                  //   icon: const Icon(Symbols.settings),
+                  //   label: Text("Настройки"),
+                  // ),
+                  // ButtonTest(
+                  //   icon: const Icon(Symbols.settings),
+                  //   label: Text("Настройки"),
+                  // ),
+                ],
+              ),
+            ),
             // FilledButton.tonal(
             //   onPressed: () => setState(() {
             //     _scale.targetValue = 1.0 - _scale.targetValue;
@@ -246,6 +310,126 @@ class _Test3State extends State<Test3> with TickerProviderStateMixin {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ButtonTest extends StatefulWidget {
+  const ButtonTest({super.key, this.icon, required this.label});
+
+  final Widget? icon;
+  final Widget label;
+
+  @override
+  State<ButtonTest> createState() => _ButtonTestState();
+}
+
+class _ButtonTestState extends State<ButtonTest> with TickerProviderStateMixin {
+  late WidgetStatesController _statesController;
+  late SpringImplicitAnimation<double> _widthFactor;
+  late SpringImplicitAnimation<ShapeBorder?> _shape;
+
+  @override
+  void initState() {
+    super.initState();
+    _statesController = WidgetStatesController()..addListener(_statesListener);
+    _widthFactor = SpringImplicitAnimation<double>(
+      vsync: this,
+      spring: const SpringThemeData.expressive().fastSpatial
+          .toSpringDescription(),
+      initialValue: 1.0,
+      builder: (value) => Tween<double>(begin: value),
+    );
+    _shape = SpringImplicitAnimation<ShapeBorder?>(
+      vsync: this,
+      spring: const SpringThemeData.expressive().fastSpatial
+          .toSpringDescription(),
+      initialValue: null,
+      builder: (value) => ShapeBorderTween(begin: value),
+    );
+  }
+
+  @override
+  void dispose() {
+    _shape.dispose();
+    _widthFactor.dispose();
+    _statesController.dispose();
+    super.dispose();
+  }
+
+  void _statesListener() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = ColorTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+    final stateTheme = StateTheme.of(context);
+    final typescaleTheme = TypescaleTheme.of(context);
+    final backgroundColor = colorTheme.primary;
+    final foregroundColor = colorTheme.onPrimary;
+    final corner = _statesController.value.contains(WidgetState.pressed)
+        ? shapeTheme.small
+        : shapeTheme.full;
+    _shape.targetValue = CornersBorder(
+      delegate: const RoundedCornersBorderDelegate(),
+      corners: Corners.all(corner),
+    );
+
+    return AnimatedBuilder(
+      animation: _shape,
+      child: InkWell(
+        statesController: _statesController,
+        onTapDown: (_) => _widthFactor.targetValue = 1.15,
+        onTapUp: (_) => _widthFactor.targetValue = 1.0,
+        onTapCancel: () => _widthFactor.targetValue = 1.0,
+        overlayColor: StateLayerColor(
+          color: WidgetStatePropertyAll(foregroundColor),
+          opacity: StateLayerOpacity.fromStateTheme(stateTheme),
+        ),
+        child: AnimatedBuilder(
+          animation: _widthFactor,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: 48.0),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 8.0,
+                children: [
+                  if (widget.icon case final icon?)
+                    IconTheme.merge(
+                      data: IconThemeData(
+                        size: 20.0,
+                        opticalSize: 20.0,
+                        color: foregroundColor,
+                      ),
+                      child: icon,
+                    ),
+                  DefaultTextStyle(
+                    style: typescaleTheme.labelLarge.toTextStyle().copyWith(
+                      color: foregroundColor,
+                    ),
+                    child: widget.label,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          builder: (context, child) =>
+              SizeChange.width(widthFactor: _widthFactor.value, child: child!),
+        ),
+      ),
+      builder: (context, child) {
+        return Material(
+          animationDuration: Duration.zero,
+          clipBehavior: Clip.antiAlias,
+          color: backgroundColor,
+          shape: _shape.value,
+          child: child!,
+        );
+      },
     );
   }
 }

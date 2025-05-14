@@ -210,7 +210,10 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   }) : _spring = spring,
        _targetValue = initialValue,
        _builder = builder,
-       controller = AnimationController(vsync: vsync, debugLabel: debugLabel),
+       controller = AnimationController.unbounded(
+         vsync: vsync,
+         debugLabel: debugLabel,
+       ),
        super();
 
   @override
@@ -286,7 +289,7 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   }
 
   Simulation _createSimulation() {
-    // return SpringSimulation(_spring, 0.0, 1.0, 1.0, snapToEnd: true);
-    return ScrollSpringSimulation(_spring, 0.0, 1.0, 1.0);
+    return SpringSimulation(_spring, 0.0, 1.0, 1.0, snapToEnd: true);
+    // return ScrollSpringSimulation(_spring, 0.0, 1.0, 1.0);
   }
 }

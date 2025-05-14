@@ -37,6 +37,8 @@ class TypescaleTheme extends InheritedTheme {
   static TypescaleThemeData of(BuildContext context) {
     final result = maybeOf(context);
     if (result != null) return result;
-    return TypescaleThemeData.fallback(context);
+    return TypescaleThemeData.fallback(
+      typefaceTheme: TypefaceTheme.of(context),
+    );
   }
 }
