@@ -1,28 +1,50 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "material3_expressive/example",
-            "cwd": "packages/material3_expressive/example",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "material3_expressive/example (profile mode)",
-            "cwd": "packages/material3_expressive/example",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "material3_expressive/example (release mode)",
-            "cwd": "packages/material3_expressive/example",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        },
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "material_theme_builder",
+      "cwd": "apps/material_theme_builder",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+    },
+    {
+      "name": "material_theme_builder (profile mode)",
+      "cwd": "apps/material_theme_builder",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+    },
+    {
+      "name": "material_theme_builder (release mode)",
+      "cwd": "apps/material_theme_builder",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+    },
+    {
+      "name": "material3_expressive/example",
+      "cwd": "packages/material3_expressive/example",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+    },
+    {
+      "name": "material3_expressive/example (profile mode)",
+      "cwd": "packages/material3_expressive/example",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+    },
+    {
+      "name": "material3_expressive/example (release mode)",
+      "cwd": "packages/material3_expressive/example",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+    }
+  ]
 }

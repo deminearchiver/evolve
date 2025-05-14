@@ -12,12 +12,12 @@ workspace:
   - packages/material
   - packages/mcu
   - packages/material3_expressive
+  - packages/rounded_polygon
+  - packages/shapes_dart
 
   # Apps
-  # - apps/material_theme_builder
-  # - packages/material/example
+  - apps/material_theme_builder
   - packages/material3_expressive/example
-  # - apps/mtb
 
 dependency_overrides:
   # Override pinned SDK dependency
