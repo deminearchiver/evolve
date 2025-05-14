@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:change_case/change_case.dart';
 import 'package:intl/intl.dart';
 import 'package:promptly/promptly.dart';
-import 'package:csslib/parser.dart' as css;
 import 'package:mtb/src/json.dart';
 
 import 'package:mcu/mcu.dart' as mcu;
@@ -18,13 +16,6 @@ const contrastLevelMedium = 0.5;
 const contrastLevelHigh = 1.0;
 
 Future<void> run(List<String> args) async {
-  // CommandRunner("mtb", "Material Theme Builder")
-  //   ..addCommand(CreateCommand())
-  //   ..run(args).catchError((error) {
-  //     if (error is! UsageException) throw error;
-  //     print(error);
-  //     exit(64); // Exit code 64 indicates a usage error.
-  //   });
   await Runner().safeRun(args);
 }
 
@@ -40,105 +31,30 @@ class Runner extends CommandRunner {
   }
 }
 
-class CreateCommand extends Command<int> {
-  CreateCommand() : super("create", "Create a new Material Theme") {
-    // argParser
-    //   ..addOption(
-    //     "template",
-    //     abbr: "t",
-    //     help: "Specify a template to be used",
-    //     allowed: ["b", "baseline", "nia", "now_in_android"],
-    //     allowedHelp: {
-    //       "b, baseline": "Baseline color scheme",
-    //       "nia, now_in_android": "Now in Android case study color scheme",
-    //     },
-    //   )
-    //   ..addOption(
-    //     "source-color",
-    //     help: "Seed color for dynamic",
-    //     valueHelp: "COLOR",
-    //   )
-    //   ..addOption(
-    //     "primary-palette-key-color",
-    //     aliases: ["primary"],
-    //     help: "Primary palette key color",
-    //     valueHelp: "COLOR",
-    //   )
-    //   ..addOption(
-    //     "secondary-palette-key-color",
-    //     aliases: ["secondary"],
-    //     help: "Secondary palette key color",
-    //     valueHelp: "COLOR",
-    //   )
-    //   ..addOption(
-    //     "tertiary-palette-key-color",
-    //     aliases: ["tertiary"],
-    //     help: "Tertiary palette key color",
-    //     valueHelp: "COLOR",
-    //   )
-    //   ..addOption(
-    //     "neutral-palette-key-color",
-    //     aliases: ["neutral"],
-    //     help: "Neutral palette key color",
-    //     valueHelp: "COLOR",
-    //   )
-    //   ..addOption(
-    //     "neutral-variant-palette-key-color",
-    //     aliases: ["neutral-variant"],
-    //     help: "Neutral variant palette key color",
-    //     valueHelp: "COLOR",
-    //   )
-    //   ..addOption(
-    //     "error-palette-key-color",
-    //     aliases: ["error"],
-    //     help: "Error palette key color",
-    //     valueHelp: "COLOR",
-    //   )
-    //   ..addOption(
-    //     "mode",
-    //     help: "Brightness mode",
-    //     allowed: ["l", "light", "d", "dark"],
-    //     allowedHelp: {"light": "Light", "dark": "Dark"},
-    //     defaultsTo: "light",
-    //   )
-    //   ..addOption(
-    //     "contrast-level",
-    //     abbr: "c",
-    //     aliases: ["contrast"],
-    //     help: "Contrast level",
-    //     defaultsTo: "0",
-    //   )
-    //   ..addOption(
-    //     "variant",
-    //     help: "Themes for Dynamic Color.",
-    //     allowed: [
-    //       "monochrome",
-    //       "neutral",
-    //       "tonal-spot",
-    //       "vibrant",
-    //       "expressive",
-    //       "fidelity",
-    //       "content",
-    //       "rainbow",
-    //       "fruit-salad",
-    //     ],
-    //     defaultsTo: "tonal-spot",
-    //   )
-    //   ..addOption(
-    //     "spec-version",
-    //     abbr: "s",
-    //     aliases: ["spec"],
-    //     allowedHelp: {"2021": "Spec 2021", "2025": "Spec 2025"},
-    //     defaultsTo: "2021",
-    //   )
-    //   ..addOption(
-    //     "platform",
-    //     abbr: "p",
-    //     allowed: ["p", "phone", "w", "watch"],
-    //     allowedHelp: {"p, phone": "Phone", "w, watch": "Watch"},
-    //     defaultsTo: "phone",
-    //   );
+class MessageValidator<T extends Object?> implements Validator<T> {
+  const MessageValidator(this.validator);
+
+  final String? Function(T value) validator;
+
+  @override
+  RegExp? get pattern => null;
+
+  @override
+  set pattern(RegExp? _) {}
+
+  @override
+  String get message => "Value is not allowed";
+
+  @override
+  void call(T value) {
+    if (validator(value) case final message?) {
+      throw ValidationError(message);
+    }
   }
+}
+
+class CreateCommand extends Command<int> {
+  CreateCommand() : super("create", "Create a new Material Theme");
 
   @override
   Future<int> run() async {
@@ -256,6 +172,13 @@ class CreateCommand extends Command<int> {
     success("Core colors chosen");
     line();
     line();
+    // info("Extended colors");
+    // message(
+    //   "Input a custom color that automatically gets assigned a set of complementary tones. Edit the source custom color to rename or delete. Harmonizing shifts the extended color towards the source color.",
+    // );
+    // line();
+    // line();
+    // selectOne("Edit extended colors", choices: ["Skip", "Add a color"]);
     final variant = selectOne(
       "Variant",
       choices: PromptVariant.values,
@@ -280,12 +203,7 @@ class CreateCommand extends Command<int> {
     success("Parameters chosen");
     line();
     line();
-    // info("Extended colors");
-    // message(
-    //   "Input a custom color that automatically gets assigned a set of complementary tones. edit the source custom color to rename or delete.",
-    // );
-    // line();
-    // line();
+
     final schemes = DynamicSchemes.fromKeyColors(
       sourceColor: sourceColor,
       variant: variant.value,
