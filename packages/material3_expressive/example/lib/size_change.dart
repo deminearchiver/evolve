@@ -8,16 +8,32 @@ class SizeChangeGroup extends StatefulWidget {
   const SizeChangeGroup({
     super.key,
     required this.direction,
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.spacing = 0.0,
     this.children = const [],
   });
 
-  const SizeChangeGroup.horizontal({super.key, this.children = const []})
-    : direction = Axis.horizontal;
+  const SizeChangeGroup.horizontal({
+    super.key,
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.spacing = 0.0,
+    this.children = const [],
+  }) : direction = Axis.horizontal;
 
-  const SizeChangeGroup.vertical({super.key, this.children = const []})
-    : direction = Axis.vertical;
+  const SizeChangeGroup.vertical({
+    super.key,
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.spacing = 0.0,
+    this.children = const [],
+  }) : direction = Axis.vertical;
 
   final Axis direction;
+  final MainAxisAlignment mainAxisAlignment;
+  final CrossAxisAlignment crossAxisAlignment;
+  final double spacing;
   final List<Widget> children;
 
   @override
@@ -28,21 +44,6 @@ class _SizeChangeGroupState extends State<SizeChangeGroup> {
   final Map<int, _SizeChangeState> _clients = <int, _SizeChangeState>{};
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(covariant SizeChangeGroup oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   void dispose() {
     _clients.clear();
     super.dispose();
@@ -51,10 +52,14 @@ class _SizeChangeGroupState extends State<SizeChangeGroup> {
   @override
   Widget build(BuildContext context) {
     return Flex(
-      direction: widget.direction,
+      // Constant value
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 8.0,
+
+      // Passed through from widget
+      direction: widget.direction,
+      mainAxisAlignment: widget.mainAxisAlignment,
+      crossAxisAlignment: widget.crossAxisAlignment,
+      spacing: widget.spacing,
       children: widget.children
           .mapIndexed<Widget>(
             (index, child) =>
@@ -83,6 +88,7 @@ class _SizeChangeGroupScope extends InheritedWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<_SizeChangeGroupState>("state", state));
     properties.add(IntProperty("index", index));
   }
 
@@ -92,7 +98,7 @@ class _SizeChangeGroupScope extends InheritedWidget {
 
   static _SizeChangeGroupScope _of(BuildContext context) {
     final result = _maybeOf(context);
-    assert(result != null);
+    assert(result != null, "Missing an ancestor SizeChangeGroup widget");
     return result!;
   }
 }
@@ -201,6 +207,8 @@ class _SizeChangeState extends State<SizeChange> {
       final next = scope.state._clients[scope.index + 1];
       previous?.sizeFactorAdjustmentFromNext = 0.0;
       next?.sizeFactorAdjustmentFromPrevious = 0.0;
+      previous?.nextSize = Size.zero;
+      next?.previousSize = Size.zero;
     }
   }
 
