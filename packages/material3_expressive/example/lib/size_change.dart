@@ -44,6 +44,14 @@ class _SizeChangeGroupState extends State<SizeChangeGroup> {
   final Map<int, _SizeChangeState> _clients = <int, _SizeChangeState>{};
 
   @override
+  void didUpdateWidget(covariant SizeChangeGroup oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    for (final client in _clients.values) {
+      client._updateSizeAdjustments();
+    }
+  }
+
+  @override
   void dispose() {
     _clients.clear();
     super.dispose();
@@ -173,7 +181,7 @@ class _SizeChangeState extends State<SizeChange> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    scope = _SizeChangeGroupScope._of(context);
+    scope = _SizeChangeGroupScope._maybeOf(context);
   }
 
   @override
@@ -185,31 +193,31 @@ class _SizeChangeState extends State<SizeChange> {
   }
 
   void _updateSizeAdjustments() {
-    if (scope case final scope?) {
-      final previous = scope.state._clients[scope.index - 1];
-      final next = scope.state._clients[scope.index + 1];
-      double adjacentSizeAdjustment = 0.0;
-      if (previous != null && next != null) {
-        adjacentSizeAdjustment = -ownSizeFactorAdjustment / 2.0;
-      } else if (previous != null || next != null) {
-        adjacentSizeAdjustment = -ownSizeFactorAdjustment;
-      }
-      previous?.sizeFactorAdjustmentFromNext = adjacentSizeAdjustment;
-      next?.sizeFactorAdjustmentFromPrevious = adjacentSizeAdjustment;
-      previous?.nextSize = size;
-      next?.previousSize = size;
+    final group = scope;
+    if (group == null) return;
+    final previous = group.state._clients[group.index - 1];
+    final next = group.state._clients[group.index + 1];
+    double adjacentSizeAdjustment = 0.0;
+    if (previous != null && next != null) {
+      adjacentSizeAdjustment = -ownSizeFactorAdjustment / 2.0;
+    } else if (previous != null || next != null) {
+      adjacentSizeAdjustment = -ownSizeFactorAdjustment;
     }
+    previous?.sizeFactorAdjustmentFromNext = adjacentSizeAdjustment;
+    next?.sizeFactorAdjustmentFromPrevious = adjacentSizeAdjustment;
+    previous?.nextSize = size;
+    next?.previousSize = size;
   }
 
   void _resetSizeAdjustments() {
-    if (scope case final scope?) {
-      final previous = scope.state._clients[scope.index - 1];
-      final next = scope.state._clients[scope.index + 1];
-      previous?.sizeFactorAdjustmentFromNext = 0.0;
-      next?.sizeFactorAdjustmentFromPrevious = 0.0;
-      previous?.nextSize = Size.zero;
-      next?.previousSize = Size.zero;
-    }
+    final group = scope;
+    if (group == null) return;
+    final previous = group.state._clients[group.index - 1];
+    final next = group.state._clients[group.index + 1];
+    previous?.sizeFactorAdjustmentFromNext = 0.0;
+    next?.sizeFactorAdjustmentFromPrevious = 0.0;
+    previous?.nextSize = Size.zero;
+    next?.previousSize = Size.zero;
   }
 
   @override
@@ -231,7 +239,7 @@ class _SizeChangeState extends State<SizeChange> {
 
   @override
   Widget build(BuildContext context) {
-    if (_SizeChangeGroupScope._maybeOf(context) == null) {
+    if (scope == null) {
       return widget.child;
     }
     return _SizeAdjustment(

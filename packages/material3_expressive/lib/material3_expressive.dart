@@ -11,3 +11,6 @@ export 'src/styles/state/state.dart';
 // TODO: completely refactor motion fater migrating to treelike theme structure
 export 'src/styles/motion/motion.dart';
 export 'src/styles/motion/spring.dart';
+
+export 'src/components/icon/icon.dart';
+export 'src/components/icon/icon_theme.dart';

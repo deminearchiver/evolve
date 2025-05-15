@@ -1,7 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' hide DynamicSchemeVariant;
+import 'package:flutter/material.dart'
+    hide DynamicSchemeVariant, Icon, IconTheme, IconThemeData;
 import 'package:logging/logging.dart';
 import 'package:material3_expressive/material3_expressive.dart';
 import 'package:material3_expressive_example/implicit_animation.dart';
@@ -9,6 +10,9 @@ import 'package:material3_expressive_example/button.dart';
 import 'package:material3_expressive_example/hit_testing.dart';
 import 'package:material3_expressive_example/size_change.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+import 'ripple.dart';
 
 void main() {
   Logger.root.level = Level.ALL; // defaults to Level.INFO
@@ -18,27 +22,6 @@ void main() {
   runApp(const MainApp());
 }
 
-final lightColorTheme = ColorThemeData.baseline(
-  // variant: DynamicSchemeVariant.tonalSpot,
-  brightness: Brightness.light,
-  version: DynamicSchemeVersion.spec2025,
-  platform: DynamicSchemePlatform.watch,
-);
-final darkColorTheme = ColorThemeData.baseline(
-  // variant: DynamicSchemeVariant.expressive,
-  brightness: Brightness.dark,
-  version: DynamicSchemeVersion.spec2025,
-  platform: DynamicSchemePlatform.watch,
-);
-final highContrastLightColorTheme = ColorThemeData.baseline(
-  brightness: Brightness.light,
-  contrastLevel: 1.0,
-);
-final highContrastDarkColorTheme = ColorThemeData.baseline(
-  brightness: Brightness.dark,
-  contrastLevel: 1.0,
-);
-
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
@@ -47,7 +30,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  ThemeMode themeMode = ThemeMode.light;
+  ThemeMode themeMode = ThemeMode.system;
 
   ColorThemeData _buildColorTheme({
     required Brightness brightness,
@@ -223,90 +206,67 @@ class _Test3State extends State<Test3> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 16.0,
           children: [
-            // Button(label: Text("Custom button")),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   spacing: 8.0,
-            //   children: [
-            //     FilledButton(
-            //       onPressed: () => _widthFactor.targetValue = 1.0,
-            //       child: const Text("0%"),
-            //     ),
-            //     FilledButton(
-            //       onPressed: () => _widthFactor.targetValue = 1.15,
-            //       child: const Text("+15%"),
-            //     ),
-            //     FilledButton(
-            //       onPressed: () => _widthFactor.targetValue = 1.3,
-            //       child: const Text("+30%"),
-            //     ),
-            //   ],
+            // ButtonTest(
+            //   variant: ButtonVariant.filled,
+            //   icon: const Icon(Symbols.arrow_back),
             // ),
-            Material(
-              // color: Colors.red.shade100,
-              child: SizeChangeGroup.horizontal(
-                children: [
-                  ButtonTest(
-                    icon: const Icon(Symbols.arrow_back),
-                    label: Text("Back"),
-                  ),
-                  ButtonTest(
-                    icon: const Icon(Symbols.bug_report),
-                    label: Text("Report a bug"),
-                  ),
-                  ButtonTest(
-                    icon: const Icon(Symbols.mail),
-                    label: Text("Contact us"),
-                  ),
-                  ButtonTest(
-                    icon: const Icon(Symbols.settings),
-                    label: Text("Settings"),
-                  ),
-                  // ButtonTest(
-                  //   icon: const Icon(Symbols.settings),
-                  //   label: Text("Настройки"),
-                  // ),
-                  // ButtonTest(
-                  //   icon: const Icon(Symbols.settings),
-                  //   label: Text("Настройки"),
-                  // ),
-                ],
+            Skeletonizer(
+              enabled: false,
+              ignorePointers: false,
+              child: Material(
+                child: SizeChangeGroup.horizontal(
+                  spacing: 8.0,
+                  children: [
+                    ButtonTest(
+                      variant: ButtonVariant.tonal,
+                      icon: const Icon(Symbols.arrow_back),
+                    ),
+                    ...Iterable.generate(
+                      3,
+                      (index) => ButtonTest(
+                        variant: ButtonVariant.filled,
+                        label: Text("${index + 1}"),
+                      ),
+                    ),
+                    ButtonTest(
+                      variant: ButtonVariant.tonal,
+                      // icon: const Icon(Symbols.arrow_forward),
+                      label: Text("1"),
+                    ),
+                    // ButtonTest(
+                    //   variant: ButtonVariant.tonal,
+                    //   icon: const Icon(Symbols.arrow_back),
+                    // ),
+                    // ButtonTest(
+                    //   variant: ButtonVariant.tonal,
+                    //   icon: const Icon(Symbols.mic_off),
+                    //   label: Text("Microphone"),
+                    // ),
+                    // ButtonTest(
+                    //   variant: ButtonVariant.tonal,
+                    //   icon: const Icon(Symbols.videocam_off),
+                    //   label: Text("Camera"),
+                    // ),
+                    // ButtonTest(
+                    //   variant: ButtonVariant.tonal,
+                    //   icon: const Icon(Symbols.mic_off),
+                    // ),
+                    // ButtonTest(
+                    //   variant: ButtonVariant.tonal,
+                    //   icon: const Icon(Symbols.videocam_off),
+                    // ),
+                    // ButtonTest(
+                    //   variant: ButtonVariant.tonal,
+                    //   icon: const Icon(Symbols.call_end),
+                    // ),
+                    // ButtonTest(
+                    //   variant: ButtonVariant.tonal,
+                    //   icon: const Icon(Symbols.more_vert),
+                    // ),
+                  ],
+                ),
               ),
             ),
-            // FilledButton.tonal(
-            //   onPressed: () => setState(() {
-            //     _scale.targetValue = 1.0 - _scale.targetValue;
-            //   }),
-            //   child: Text("Scale"),
-            // ),
-            // FilledButton.tonal(
-            //   onPressed: () => setState(() {
-            //     _scale.value = 1.0;
-            //   }),
-            //   child: Text("Reset"),
-            // ),
-            // FilledButton.tonal(
-            //   onPressed: () => setState(() => _color.targetValue = Colors.red),
-            //   child: Text("Red"),
-            // ),
-            // FilledButton.tonal(
-            //   onPressed: () =>
-            //       setState(() => _color.targetValue = Colors.green),
-            //   child: Text("Green"),
-            // ),
-            // FilledButton.tonal(
-            //   onPressed: () => setState(() => _color.targetValue = Colors.blue),
-            //   child: Text("Blue"),
-            // ),
-            // ScaleTransition(
-            //   scale: _scale,
-            //   child: AnimatedBuilder(
-            //     animation: _color,
-            //     builder: (context, child) =>
-            //         Container(width: 312, height: 312, color: _color.value),
-            //   ),
-            // ),
-            // CurveShowcase(),
           ],
         ),
       ),
@@ -315,19 +275,26 @@ class _Test3State extends State<Test3> with TickerProviderStateMixin {
 }
 
 class ButtonTest extends StatefulWidget {
-  const ButtonTest({super.key, this.icon, required this.label});
+  const ButtonTest({super.key, required this.variant, this.icon, this.label})
+    : assert(icon != null || label != null);
 
+  final ButtonVariant variant;
   final Widget? icon;
-  final Widget label;
+  final Widget? label;
 
   @override
   State<ButtonTest> createState() => _ButtonTestState();
 }
 
 class _ButtonTestState extends State<ButtonTest> with TickerProviderStateMixin {
+  late ColorThemeData _color;
+  late ShapeThemeData _shapeTheme;
+
   late WidgetStatesController _statesController;
   late SpringImplicitAnimation<double> _widthFactor;
   late SpringImplicitAnimation<ShapeBorder?> _shape;
+
+  bool _selected = false;
 
   @override
   void initState() {
@@ -335,18 +302,25 @@ class _ButtonTestState extends State<ButtonTest> with TickerProviderStateMixin {
     _statesController = WidgetStatesController()..addListener(_statesListener);
     _widthFactor = SpringImplicitAnimation<double>(
       vsync: this,
-      spring: const SpringThemeData.expressive().fastSpatial
+      spring: const SpringThemeData.standard().fastSpatial
           .toSpringDescription(),
       initialValue: 1.0,
       builder: (value) => Tween<double>(begin: value),
     );
     _shape = SpringImplicitAnimation<ShapeBorder?>(
       vsync: this,
-      spring: const SpringThemeData.expressive().fastSpatial
+      spring: const SpringThemeData.standard().fastSpatial
           .toSpringDescription(),
       initialValue: null,
       builder: (value) => ShapeBorderTween(begin: value),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _color = ColorTheme.of(context);
+    _shapeTheme = ShapeTheme.of(context);
   }
 
   @override
@@ -358,61 +332,151 @@ class _ButtonTestState extends State<ButtonTest> with TickerProviderStateMixin {
   }
 
   void _statesListener() {
+    if (_statesController.value.contains(WidgetState.pressed)) {
+      _widthFactor.targetValue = 1.15;
+    } else {
+      _widthFactor.targetValue = 1.0;
+    }
     setState(() {});
   }
 
+  Color get _backgroundColor {
+    if (_selected) {
+      return switch (widget.variant) {
+        ButtonVariant.elevated => _color.primary,
+        ButtonVariant.filled => _color.primary,
+        ButtonVariant.tonal => _color.secondary,
+        ButtonVariant.outlined => _color.inverseSurface,
+        ButtonVariant.text => Colors.transparent,
+      };
+    }
+    return switch (widget.variant) {
+      ButtonVariant.elevated => _color.surfaceContainerLow,
+      ButtonVariant.filled => _color.surfaceContainer,
+      ButtonVariant.tonal => _color.secondaryContainer,
+      ButtonVariant.outlined => Colors.transparent,
+      ButtonVariant.text => Colors.transparent,
+    };
+  }
+
+  Color get _foregroundColor {
+    if (_selected) {
+      return switch (widget.variant) {
+        ButtonVariant.elevated => _color.onPrimary,
+        ButtonVariant.filled => _color.onPrimary,
+        ButtonVariant.tonal => _color.onSecondary,
+        ButtonVariant.outlined => _color.inverseOnSurface,
+        ButtonVariant.text => _color.primary,
+      };
+    }
+    return switch (widget.variant) {
+      ButtonVariant.elevated => _color.primary,
+      ButtonVariant.filled => _color.onSurfaceVariant,
+      ButtonVariant.tonal => _color.onSecondaryContainer,
+      ButtonVariant.outlined => _color.onSurfaceVariant,
+      ButtonVariant.text => _color.primary,
+    };
+  }
+
+  Corner get _corner {
+    if (_statesController.value.contains(WidgetState.pressed)) {
+      return _shapeTheme.large;
+    }
+    return _selected ? _shapeTheme.extraLarge : _shapeTheme.full;
+  }
+
+  BorderSide get _side {
+    return switch (widget.variant) {
+      ButtonVariant.outlined when !_selected => BorderSide(
+        width: 1.0,
+        color: _color.outlineVariant,
+      ),
+      _ => BorderSide.none,
+    };
+  }
+
+  IconThemeDataPartial get _iconTheme {
+    if (widget.label == null) {
+      return IconThemeDataPartial(
+        color: _foregroundColor,
+        size: 24.0,
+        opsz: 24.0,
+        fill: _selected ? 1.0 : 0.0,
+      );
+    }
+    return IconThemeDataPartial(
+      color: _foregroundColor,
+      size: 24.0,
+      opsz: 24.0,
+      fill: _selected ? 1.0 : 0.0,
+    );
+  }
+
+  EdgeInsetsGeometry get _padding {
+    if (widget.label == null) {
+      return const EdgeInsetsDirectional.symmetric(
+        horizontal: 16.0,
+        vertical: 16.0,
+      );
+    }
+    return const EdgeInsetsDirectional.symmetric(
+      horizontal: 24.0,
+      vertical: 16.0,
+    );
+  }
+
+  Color get _shadowColor => switch (widget.variant) {
+    ButtonVariant.elevated => _color.shadow,
+    _ => Colors.transparent,
+  };
+  WidgetStateProperty<double> get _elevation =>
+      WidgetStateProperty.resolveWith((states) {
+        final hovered = states.contains(WidgetState.hovered);
+        return switch (widget.variant) {
+          ButtonVariant.elevated => hovered ? 2.0 : 1.0,
+          _ => 0.0,
+        };
+      });
+
   @override
   Widget build(BuildContext context) {
-    final colorTheme = ColorTheme.of(context);
-    final shapeTheme = ShapeTheme.of(context);
-    final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
-    final backgroundColor = colorTheme.primary;
-    final foregroundColor = colorTheme.onPrimary;
-    final corner = _statesController.value.contains(WidgetState.pressed)
-        ? shapeTheme.small
-        : shapeTheme.full;
     _shape.targetValue = CornersBorder(
       delegate: const RoundedCornersBorderDelegate(),
-      corners: Corners.all(corner),
+      corners: Corners.all(_corner),
+      side: _side,
     );
 
     return AnimatedBuilder(
       animation: _shape,
-      child: InkWell(
+      child: Ripple(
         statesController: _statesController,
-        onTapDown: (_) => _widthFactor.targetValue = 1.15,
-        onTapUp: (_) => _widthFactor.targetValue = 1.0,
-        onTapCancel: () => _widthFactor.targetValue = 1.0,
-        overlayColor: StateLayerColor(
-          color: WidgetStatePropertyAll(foregroundColor),
-          opacity: StateLayerOpacity.fromStateTheme(stateTheme),
-        ),
+        color: WidgetStatePropertyAll(_foregroundColor),
+        onTap: () => setState(() => _selected = !_selected),
         child: AnimatedBuilder(
           animation: _widthFactor,
           child: ConstrainedBox(
-            constraints: BoxConstraints(minWidth: 48.0),
+            constraints: widget.label != null
+                ? const BoxConstraints(minWidth: 48.0)
+                : const BoxConstraints(),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: _padding,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 8.0,
                 children: [
                   if (widget.icon case final icon?)
-                    IconTheme.merge(
-                      data: IconThemeData(
-                        size: 20.0,
-                        opticalSize: 20.0,
-                        color: foregroundColor,
-                      ),
-                      child: icon,
+                    IconTheme.merge(data: _iconTheme, child: icon),
+                  if (widget.label case final label?)
+                    DefaultTextStyle(
+                      style:
+                          (_selected
+                                  ? typescaleTheme.titleMediumEmphasized
+                                  : typescaleTheme.titleMedium)
+                              .toTextStyle()
+                              .copyWith(color: _foregroundColor),
+                      child: label,
                     ),
-                  DefaultTextStyle(
-                    style: typescaleTheme.labelLarge.toTextStyle().copyWith(
-                      color: foregroundColor,
-                    ),
-                    child: widget.label,
-                  ),
                 ],
               ),
             ),
@@ -425,7 +489,9 @@ class _ButtonTestState extends State<ButtonTest> with TickerProviderStateMixin {
         return Material(
           animationDuration: Duration.zero,
           clipBehavior: Clip.antiAlias,
-          color: backgroundColor,
+          shadowColor: _shadowColor,
+          elevation: _elevation.resolve(_statesController.value),
+          color: _backgroundColor,
           shape: _shape.value,
           child: child!,
         );
@@ -599,7 +665,7 @@ class _Test1State extends State<Test1> {
                       ),
                       child: Icon(
                         Symbols.arrow_back,
-                        opticalSize: 24,
+                        opsz: 24,
                         color: colorTheme.onSurfaceVariant,
                       ),
                     ),
@@ -642,7 +708,7 @@ class _Test1State extends State<Test1> {
                               Symbols.restart_alt,
                               color: colorTheme.onSurfaceVariant,
                               size: 20,
-                              opticalSize: 20,
+                              opsz: 20,
                             ),
                             Text(
                               "Reset settings",
