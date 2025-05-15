@@ -1,0 +1,65 @@
+library;
+
+// New exports
+export './src/dynamiccolor/color_spec.dart' show SpecVersion;
+
+// Old exports
+export './src/blend/blend.dart';
+export './src/contrast/contrast.dart';
+export './src/dislike/dislike_analyzer.dart';
+export './src/dynamiccolor/dynamic_color.dart';
+export './src/dynamiccolor/dynamic_scheme.dart';
+export './src/dynamiccolor/material_dynamic_colors.dart';
+export './src/dynamiccolor/variant.dart';
+export './src/hct/cam16.dart';
+export './src/hct/hct.dart';
+export './src/hct/viewing_conditions.dart';
+export './src/palettes/tonal_palette.dart';
+export './src/scheme/scheme_content.dart';
+export './src/scheme/scheme_expressive.dart';
+export './src/scheme/scheme_fidelity.dart';
+export './src/scheme/scheme_fruit_salad.dart';
+export './src/scheme/scheme_monochrome.dart';
+export './src/scheme/scheme_neutral.dart';
+export './src/scheme/scheme_rainbow.dart';
+export './src/scheme/scheme_tonal_spot.dart';
+export './src/scheme/scheme_vibrant.dart';
+export './src/temperature/temperature_cache.dart';
+// export './src/utils/color_utils.dart';
+// export './src/utils/math_utils.dart';
+export './src/utils/string_utils.dart';
+
+// export './src/blend/blend.js';
+// export './src/contrast/contrast.js';
+// export './src/dislike/dislike_analyzer.js';
+// export './src/dynamiccolor/dynamic_color.js';
+// export './src/dynamiccolor/dynamic_scheme.js';
+// export './src/dynamiccolor/material_dynamic_colors.js';
+// export './src/dynamiccolor/variant.js';
+// export './src/hct/cam16.js';
+// export './src/hct/hct.js';
+// export './src/hct/viewing_conditions.js';
+// export './src/palettes/core_palette.js';
+// export './src/palettes/tonal_palette.js';
+// export './src/quantize/quantizer_celebi.js';
+// export './src/quantize/quantizer_map.js';
+// export './src/quantize/quantizer_wsmeans.js';
+// export './src/quantize/quantizer_wu.js';
+// export './src/scheme/scheme.js';
+// export './src/scheme/scheme_android.js';
+// export './src/scheme/scheme_content.js';
+// export './src/scheme/scheme_expressive.js';
+// export './src/scheme/scheme_fidelity.js';
+// export './src/scheme/scheme_fruit_salad.js';
+// export './src/scheme/scheme_monochrome.js';
+// export './src/scheme/scheme_neutral.js';
+// export './src/scheme/scheme_rainbow.js';
+// export './src/scheme/scheme_tonal_spot.js';
+// export './src/scheme/scheme_vibrant.js';
+// export './src/score/score.js';
+// export './src/temperature/temperature_cache.js';
+// export './src/utils/color_utils.js';
+// export './src/utils/math_utils.js';
+// export './src/utils/string_utils.js';
+// export './src/utils/image_utils.js';
+// export './src/utils/theme_utils.js';
