@@ -10,6 +10,9 @@ workspace:
   # Packages
   - packages/widgets
   - packages/material
+
+  - packages/layout
+
   - packages/mcu
   # - packages/material3_baseline
   - packages/material3_expressive
