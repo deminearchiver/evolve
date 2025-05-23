@@ -3,8 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
     hide DynamicSchemeVariant, Icon, IconTheme, IconThemeData;
+import 'package:flutter/rendering.dart';
 import 'package:logging/logging.dart';
 import 'package:material3_expressive/material3_expressive.dart';
+import 'package:material3_expressive_example/follower.dart';
 import 'package:material3_expressive_example/implicit_animation.dart';
 import 'package:material3_expressive_example/button.dart';
 import 'package:material3_expressive_example/hit_testing.dart';
@@ -166,50 +168,81 @@ class Test3 extends StatefulWidget {
 }
 
 class _Test3State extends State<Test3> with TickerProviderStateMixin {
-  late SpringImplicitAnimation<double> _widthFactor;
+  final OverlayPortalController _controller = OverlayPortalController();
+
+  Rect _rect = Rect.zero;
 
   @override
   void initState() {
     super.initState();
-    _widthFactor = SpringImplicitAnimation<double>(
-      vsync: this,
-      // spring: SpringDescription.withDampingRatio(
-      //   mass: 1,
-      //   stiffness: 100,
-      //   ratio: 0.1,
-      // ),
-      spring: const SpringThemeData.expressive().fastSpatial
-          .toSpringDescription(),
-      initialValue: 1.0,
-      builder: (targetValue) => Tween<double>(begin: targetValue),
-    );
-    // _widthFactor = CurveImplicitAnimation<double>(
-    //   vsync: this,
-    //   duration: Durations.extralong4,
-    //   curve: Curves.easeInOutCubicEmphasized,
-    //   initialValue: 1.0,
-    //   builder: (targetValue) => Tween<double>(begin: targetValue),
-    // );
   }
 
   @override
   void dispose() {
-    _widthFactor.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorTheme = ColorTheme.of(context);
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 16.0,
           children: [
-            // ButtonTest(
-            //   variant: ButtonVariant.filled,
-            //   icon: const Icon(Symbols.arrow_back),
-            // ),
+            OverlayPortal.overlayChildLayoutBuilder(
+              controller: _controller,
+              overlayChildBuilder: (context, info) => Align(
+                alignment: Alignment.topLeft,
+                child: Transform(
+                  transform: info.childPaintTransform,
+                  child: SizedBox(
+                    width: info.childSize.width,
+                    height: info.childSize.height,
+                    child: Material(color: Colors.red),
+                  ),
+                ),
+              ),
+              child: Material(
+                color: colorTheme.surfaceDim,
+                child: InkWell(
+                  onTap: () => _controller.toggle(),
+                  child: SizedBox(width: 100, height: 100),
+                ),
+              ),
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: colorTheme.surfaceDim,
+              child: Follower(
+                anchorGlobalRect: () => _rect,
+                child: Container(color: Colors.red),
+              ),
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: colorTheme.surfaceContainerLowest,
+              child: Follower(
+                anchorGlobalRect: () => _rect,
+                child: Container(color: Colors.red),
+              ),
+            ),
+            SizeChangeGroup.horizontal(
+              children: [
+                Anchor(
+                  onGlobalRectChanged: (value) => _rect = value,
+                  child: ButtonTest(
+                    variant: ButtonVariant.outlined,
+                    icon: const Icon(Symbols.anchor),
+                    label: Text("Anchor"),
+                  ),
+                ),
+              ],
+            ),
+
             Skeletonizer(
               enabled: false,
               ignorePointers: false,

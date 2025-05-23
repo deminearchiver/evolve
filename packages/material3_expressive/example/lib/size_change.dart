@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:material3_expressive_example/scheduler_utils.dart';
 
 class SizeChangeGroup extends StatefulWidget {
   const SizeChangeGroup({
@@ -103,11 +103,24 @@ class _SizeChangeGroupScope extends InheritedWidget {
   static _SizeChangeGroupScope? _maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_SizeChangeGroupScope>();
   }
+}
 
-  static _SizeChangeGroupScope _of(BuildContext context) {
-    final result = _maybeOf(context);
-    assert(result != null, "Missing an ancestor SizeChangeGroup widget");
-    return result!;
+class _SizeChangeItemScope extends InheritedWidget {
+  const _SizeChangeItemScope({required this.index, required super.child});
+
+  final int index;
+
+  @override
+  bool updateShouldNotify(_SizeChangeItemScope oldWidget) {
+    return index != oldWidget.index;
+  }
+
+  static _SizeChangeItemScope? _maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_SizeChangeItemScope>();
+  }
+
+  static int? _maybeIndexOf(BuildContext context) {
+    return _maybeOf(context)?.index;
   }
 }
 
@@ -175,7 +188,7 @@ class _SizeChangeState extends State<SizeChange> {
   void initState() {
     super.initState();
     _relayout = _ChangeNotifier();
-    _addPersistentFrameCallback(_persistentFrameCallback);
+    PersistentFrameCallbacks.add(_persistentFrameCallback);
   }
 
   @override
@@ -223,7 +236,7 @@ class _SizeChangeState extends State<SizeChange> {
   @override
   void dispose() {
     _resetSizeAdjustments();
-    _removePersistentFrameCallback(_persistentFrameCallback);
+    PersistentFrameCallbacks.remove(_persistentFrameCallback);
     _relayout.dispose();
     scope = null;
     super.dispose();
@@ -313,7 +326,8 @@ class _SizeAdjustment extends SingleChildRenderObjectWidget {
   }
 }
 
-class _RenderSizeAdjustment extends RenderAligningShiftedBox {
+class _RenderSizeAdjustment extends RenderAligningShiftedBox
+    with RenderObjectRelayoutMixin {
   _RenderSizeAdjustment({
     Listenable? relayout,
     required this.previousSize,
@@ -324,21 +338,9 @@ class _RenderSizeAdjustment extends RenderAligningShiftedBox {
     required Axis direction,
     super.alignment,
     super.textDirection,
-  }) : _relayout = relayout,
-       _ownSizeFactorAdjustment = ownSizeFactorAdjustment,
-       _direction = direction;
-
-  Listenable? _relayout;
-  Listenable? get relayout => _relayout;
-  set relayout(Listenable? value) {
-    if (_relayout == value) {
-      return;
-    }
-    if (attached) {
-      _relayout?.removeListener(markNeedsLayout);
-      value?.addListener(markNeedsLayout);
-    }
-    _relayout = value;
+  }) : _ownSizeFactorAdjustment = ownSizeFactorAdjustment,
+       _direction = direction {
+    this.relayout = relayout;
   }
 
   ValueGetter<Size> previousSize;
@@ -379,18 +381,6 @@ class _RenderSizeAdjustment extends RenderAligningShiftedBox {
     return height * (1.0 + ownSizeFactorAdjustment) +
         previousSize().height * sizeFactorAdjustmentFromPrevious() +
         nextSize().height * sizeFactorAdjustmentFromNext();
-  }
-
-  @override
-  void attach(PipelineOwner owner) {
-    super.attach(owner);
-    relayout?.addListener(markNeedsLayout);
-  }
-
-  @override
-  void detach() {
-    relayout?.addListener(markNeedsLayout);
-    super.detach();
   }
 
   @override
@@ -460,7 +450,7 @@ class _SizeObserver extends SingleChildRenderObjectWidget {
   @override
   void updateRenderObject(
     BuildContext context,
-    covariant _RenderSizeObserver renderObject,
+    _RenderSizeObserver renderObject,
   ) {
     renderObject.onSizeChanged = onSizeChanged;
   }
@@ -494,25 +484,4 @@ class _ChangeNotifier with ChangeNotifier {
   void notify() {
     notifyListeners();
   }
-}
-
-bool _frameCallbackScheduled = false;
-final Set<FrameCallback> _persistentFrameCallbacks = <FrameCallback>{};
-
-bool _addPersistentFrameCallback(FrameCallback callback) {
-  if (!_frameCallbackScheduled) {
-    Future.microtask(() {
-      SchedulerBinding.instance.addPersistentFrameCallback((timeStamp) {
-        for (final callback in _persistentFrameCallbacks) {
-          callback(timeStamp);
-        }
-      });
-    });
-    _frameCallbackScheduled = true;
-  }
-  return _persistentFrameCallbacks.add(callback);
-}
-
-bool _removePersistentFrameCallback(FrameCallback callback) {
-  return _persistentFrameCallbacks.remove(callback);
 }

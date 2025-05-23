@@ -11,8 +11,9 @@ workspace:
   - packages/widgets
   - packages/material
   - packages/mcu
+  # - packages/material3_baseline
   - packages/material3_expressive
-  - packages/rounded_polygon
+  # - packages/rounded_polygon
   - packages/shapes_dart
 
   # Apps
