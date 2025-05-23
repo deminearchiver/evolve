@@ -9,7 +9,7 @@ executables:
   mtb:
 
 environment:
-  sdk: ^3.9.0-129.0.dev
+  sdk: ^3.8.0
 
 # Add regular dependencies here.
 dependencies:
