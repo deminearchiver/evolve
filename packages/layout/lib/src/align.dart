@@ -1,3 +1,8 @@
+// Copyright 2025 deminearchiver.
+// Portions copyright 2014 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/widgets.dart' hide Align, Center;
 import 'package:flutter/widgets.dart' as flutter show Align;
 
