@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item name="m3_sys_motion_standard_spring_fast_spatial_damping" format="float" type="dimen">0.9</item>
+  <item name="m3_sys_motion_standard_spring_fast_spatial_stiffness" format="float" type="dimen">1400</item>
+  <item name="m3_sys_motion_standard_spring_fast_effects_damping" format="float" type="dimen">1</item>
+  <item name="m3_sys_motion_standard_spring_fast_effects_stiffness" format="float" type="dimen">3800</item>
+  <item name="m3_sys_motion_standard_spring_default_spatial_damping" format="float" type="dimen">0.9</item>
+  <item name="m3_sys_motion_standard_spring_default_spatial_stiffness" format="float" type="dimen">700</item>
+  <item name="m3_sys_motion_standard_spring_default_effects_damping" format="float" type="dimen">1</item>
+  <item name="m3_sys_motion_standard_spring_default_effects_stiffness" format="float" type="dimen">1600</item>
+  <item name="m3_sys_motion_standard_spring_slow_spatial_damping" format="float" type="dimen">0.9</item>
+  <item name="m3_sys_motion_standard_spring_slow_spatial_stiffness" format="float" type="dimen">300</item>
+  <item name="m3_sys_motion_standard_spring_slow_effects_damping" format="float" type="dimen">1</item>
+  <item name="m3_sys_motion_standard_spring_slow_effects_stiffness" format="float" type="dimen">800</item>
+</resources>

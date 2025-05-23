@@ -2,18 +2,26 @@ name: _
 publish_to: none
 
 environment:
-  sdk: ^3.8.0-219.0.dev
+  sdk: ^3.8.0
+  flutter: ">=3.32.0"
 
 workspace:
 
   # Packages
   - packages/widgets
   - packages/material
-  - packages/material_rfw
-  - packages/dynamic_color
+
+  - packages/layout
+
+  - packages/mcu
+  # - packages/material3_baseline
+  - packages/material3_expressive
+  # - packages/rounded_polygon
+  - packages/shapes_dart
 
   # Apps
-  - packages/material/example
+  - apps/material_theme_builder
+  - packages/material3_expressive/example
 
 dependency_overrides:
   # Override pinned SDK dependency
