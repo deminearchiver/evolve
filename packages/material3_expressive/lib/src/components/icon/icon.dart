@@ -16,6 +16,7 @@ class Icon extends StatelessWidget {
     this.grad,
     this.opsz,
     this.fill,
+    this.semanticLabel,
   });
 
   final IconData? icon;
@@ -27,6 +28,8 @@ class Icon extends StatelessWidget {
   final double? grad;
   final double? opsz;
   final double? fill;
+
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +88,7 @@ class Icon extends StatelessWidget {
     }
 
     return Semantics(
-      label: "",
+      label: semanticLabel,
       child: ExcludeSemantics(
         child: SizedBox.square(
           dimension: iconSize,
