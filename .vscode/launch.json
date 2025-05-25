@@ -9,42 +9,50 @@
       "cwd": "apps/material_theme_builder",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "debug",
+      "flutterMode": "debug"
     },
     {
       "name": "material_theme_builder (profile mode)",
       "cwd": "apps/material_theme_builder",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile",
+      "flutterMode": "profile"
     },
     {
       "name": "material_theme_builder (release mode)",
       "cwd": "apps/material_theme_builder",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release",
+      "flutterMode": "release"
     },
     {
       "name": "material3_expressive/example",
       "cwd": "packages/material3_expressive/example",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "debug",
+      "flutterMode": "debug"
     },
     {
       "name": "material3_expressive/example (profile mode)",
       "cwd": "packages/material3_expressive/example",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile",
+      "flutterMode": "profile"
     },
     {
       "name": "material3_expressive/example (release mode)",
       "cwd": "packages/material3_expressive/example",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release",
+      "flutterMode": "release"
+    },
+    {
+      "name": "material3_expressive/example web",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "packages/material3_expressive/example",
+      "flutterMode": "debug",
+      "args": ["-d", "chrome", "--web-experimental-hot-reload"]
     }
   ]
 }
