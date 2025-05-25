@@ -6,7 +6,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/rendering.dart' hide RenderFlex, FlexParentData;
+import 'package:flutter/rendering.dart' as flutter show FlexParentData;
+import 'package:flutter/widgets.dart'
+    hide Flex, Row, Column, Flexible, Expanded;
 import 'package:flutter/widgets.dart';
 
 /// A widget that displays its children in a one-dimensional array.
