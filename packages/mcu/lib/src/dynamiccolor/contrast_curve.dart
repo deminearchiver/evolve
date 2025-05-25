@@ -23,6 +23,9 @@ final class ContrastCurve {
   }
 
   @override
+  String toString() => "ContrastCurve($low, $normal, $medium, $high)";
+
+  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         runtimeType == other.runtimeType &&

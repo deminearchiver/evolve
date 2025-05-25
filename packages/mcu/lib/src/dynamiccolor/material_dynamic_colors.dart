@@ -288,15 +288,13 @@ final class MaterialDynamicColors {
   // Android-only colors                                        //
   ////////////////////////////////////////////////////////////////
 
-  /**
-   * These colors were present in Android framework before Android U, and used by MDC controls. They
-   * should be avoided, if possible. It's unclear if they're used on multiple backgrounds, and if
-   * they are, they can't be adjusted for contrast.* For now, they will be set with no background,
-   * and those won't adjust for contrast, avoiding issues.
-   *
-   * <p>* For example, if the same color is on a white background _and_ black background, there's no
-   * way to increase contrast with either without losing contrast with the other.
-   */
+  // These colors were present in Android framework before Android U, and used by MDC controls. They
+  // should be avoided, if possible. It's unclear if they're used on multiple backgrounds, and if
+  // they are, they can't be adjusted for contrast.* For now, they will be set with no background,
+  // and those won't adjust for contrast, avoiding issues.
+  //
+  // <p>* For example, if the same color is on a white background _and_ black background, there's no
+  // way to increase contrast with either without losing contrast with the other.
 
   // colorControlActivated documented as colorAccent in M3 & GM3.
   // colorAccent documented as colorSecondary in M3 and colorPrimary in GM3.

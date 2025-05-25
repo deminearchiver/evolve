@@ -27,6 +27,21 @@ final class ViewingConditions {
   final double z;
 
   @override
+  String toString() =>
+      "ViewingConditions("
+      "aw: $aw, "
+      "nbb: $nbb, "
+      "ncb: $ncb, "
+      "c: $c, "
+      "nc: $nc, "
+      "n: $n, "
+      "rgbD: $rgbD, "
+      "fl: $fl, "
+      "flRoot: $flRoot, "
+      "z: $z"
+      ")";
+
+  @override
   bool operator ==(Object other) {
     return identical(this, other) &&
         runtimeType == other.runtimeType &&

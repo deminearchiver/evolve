@@ -140,6 +140,20 @@ final class Cam16 {
   }
 
   @override
+  String toString() =>
+      "Cam16("
+      "hue: $hue, "
+      "chroma: $chroma, "
+      "j: $j, "
+      "q: $q, "
+      "m: $m, "
+      "s: $s, "
+      "jstar: $jstar, "
+      "astar: $astar, "
+      "bstar: $bstar"
+      ")";
+
+  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         runtimeType == other.runtimeType &&

@@ -177,9 +177,13 @@ class DynamicScheme {
   int getArgb(DynamicColor dynamicColor) => dynamicColor.getArgb(this);
 
   @override
-  String toString() {
-    return "Scheme: variant=${variant.name}, mode=${isDark ? "dark" : "light"}, platform=${platform.name}, contrastLevel=${contrastLevel.toStringAsFixed(1)}, seed=$sourceColorHct, specVersion=$specVersion";
-  }
+  String toString() =>
+      "Scheme: variant=${variant.name}, "
+      "mode=${isDark ? "dark" : "light"}, "
+      "platform=${platform.name}, "
+      "contrastLevel=${contrastLevel.toStringAsFixed(1)}, "
+      "seed=$sourceColorHct, "
+      "specVersion=$specVersion";
 
   @override
   bool operator ==(Object other) {
