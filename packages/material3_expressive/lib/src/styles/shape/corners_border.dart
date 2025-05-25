@@ -62,7 +62,7 @@ abstract class CornersBorderDelegate {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is CornersBorderDelegate && runtimeType == other.runtimeType;
+        runtimeType == other.runtimeType && other is CornersBorderDelegate;
   }
 
   @override
@@ -155,8 +155,8 @@ class RoundedCornersBorderDelegate extends CornersBorderDelegate {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is RoundedCornersBorderDelegate &&
-            runtimeType == other.runtimeType;
+        runtimeType == other.runtimeType &&
+            other is RoundedCornersBorderDelegate;
   }
 
   @override
@@ -257,7 +257,7 @@ class CutCornersBorderDelegate extends CornersBorderDelegate {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is CutCornersBorderDelegate && runtimeType == other.runtimeType;
+        runtimeType == other.runtimeType && other is CutCornersBorderDelegate;
   }
 
   @override
@@ -351,8 +351,8 @@ class SuperellipseCornersBorderDelegate extends CornersBorderDelegate {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is SuperellipseCornersBorderDelegate &&
-            runtimeType == other.runtimeType;
+        runtimeType == other.runtimeType &&
+            other is SuperellipseCornersBorderDelegate;
   }
 
   @override
@@ -366,6 +366,15 @@ class CornersBorder extends OutlinedBorder {
     required this.delegate,
     this.corners = Corners.none,
   });
+
+  const CornersBorder.rounded({super.side, this.corners = Corners.none})
+    : delegate = const RoundedCornersBorderDelegate();
+
+  const CornersBorder.cut({super.side, this.corners = Corners.none})
+    : delegate = const CutCornersBorderDelegate();
+
+  const CornersBorder.superellipse({super.side, this.corners = Corners.none})
+    : delegate = const SuperellipseCornersBorderDelegate();
 
   final CornersBorderDelegate delegate;
   final CornersGeometry corners;
@@ -469,13 +478,13 @@ class CornersBorder extends OutlinedBorder {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is CornersBorder &&
-            runtimeType == other.runtimeType &&
+        runtimeType == other.runtimeType &&
+            other is CornersBorder &&
             side == other.side &&
             delegate == other.delegate &&
             corners == other.corners;
   }
 
   @override
-  int get hashCode => Object.hash(side, delegate, corners);
+  int get hashCode => Object.hash(runtimeType, side, delegate, corners);
 }

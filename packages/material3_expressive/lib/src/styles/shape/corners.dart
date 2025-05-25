@@ -121,14 +121,14 @@ class Corner {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is Corner &&
-            runtimeType == other.runtimeType &&
+        runtimeType == other.runtimeType &&
+            other is Corner &&
             other.x == x &&
             other.y == y;
   }
 
   @override
-  int get hashCode => Object.hash(x, y);
+  int get hashCode => Object.hash(runtimeType, x, y);
 
   @override
   String toString() {
@@ -287,8 +287,8 @@ abstract class CornersGeometry {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is CornersGeometry &&
-            runtimeType == other.runtimeType &&
+        runtimeType == other.runtimeType &&
+            other is CornersGeometry &&
             _topLeft == other._topLeft &&
             _topRight == other._topRight &&
             _bottomLeft == other._bottomLeft &&
@@ -301,6 +301,7 @@ abstract class CornersGeometry {
 
   @override
   int get hashCode => Object.hash(
+    runtimeType,
     _topLeft,
     _topRight,
     _bottomLeft,
@@ -392,15 +393,15 @@ class _CornersGeometryLerp extends CornersGeometry {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is _CornersGeometryLerp &&
-            runtimeType == other.runtimeType &&
+        runtimeType == other.runtimeType &&
+            other is _CornersGeometryLerp &&
             a == other.a &&
             b == other.b &&
             t == other.t;
   }
 
   @override
-  int get hashCode => Object.hash(a, b, t);
+  int get hashCode => Object.hash(runtimeType, a, b, t);
 }
 
 @immutable
@@ -693,8 +694,8 @@ class Corners extends CornersGeometry {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is Corners &&
-            runtimeType == other.runtimeType &&
+        runtimeType == other.runtimeType &&
+            other is Corners &&
             topLeft == other.topLeft &&
             topRight == other.topRight &&
             bottomLeft == other.bottomLeft &&
@@ -702,7 +703,8 @@ class Corners extends CornersGeometry {
   }
 
   @override
-  int get hashCode => Object.hash(topLeft, topRight, bottomLeft, bottomRight);
+  int get hashCode =>
+      Object.hash(runtimeType, topLeft, topRight, bottomLeft, bottomRight);
 
   static const Corners none = Corners.all(Corner.none);
   static const Corners full = Corners.all(Corner.full);
@@ -741,15 +743,15 @@ class _CornersLerp extends Corners {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is _CornersLerp &&
-            runtimeType == other.runtimeType &&
+        runtimeType == other.runtimeType &&
+            other is _CornersLerp &&
             a == other.a &&
             b == other.b &&
             t == other.t;
   }
 
   @override
-  int get hashCode => Object.hash(a, b, t);
+  int get hashCode => Object.hash(runtimeType, a, b, t);
 }
 
 @immutable
@@ -924,8 +926,8 @@ class CornersDirectional extends CornersGeometry {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is CornersDirectional &&
-            runtimeType == other.runtimeType &&
+        runtimeType == other.runtimeType &&
+            other is CornersDirectional &&
             topStart == other.topStart &&
             topEnd == other.topEnd &&
             bottomStart == other.bottomStart &&
@@ -933,7 +935,8 @@ class CornersDirectional extends CornersGeometry {
   }
 
   @override
-  int get hashCode => Object.hash(topStart, topEnd, bottomStart, bottomEnd);
+  int get hashCode =>
+      Object.hash(runtimeType, topStart, topEnd, bottomStart, bottomEnd);
 
   static const CornersDirectional none = CornersDirectional.all(Corner.none);
   static const CornersDirectional full = CornersDirectional.all(Corner.full);
@@ -972,15 +975,15 @@ class _CornersDirectionalLerp extends CornersDirectional {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is _CornersDirectionalLerp &&
-            runtimeType == other.runtimeType &&
+        runtimeType == other.runtimeType &&
+            other is _CornersDirectionalLerp &&
             a == other.a &&
             b == other.b &&
             t == other.t;
   }
 
   @override
-  int get hashCode => Object.hash(a, b, t);
+  int get hashCode => Object.hash(runtimeType, a, b, t);
 }
 
 @immutable
