@@ -12,20 +12,6 @@ import 'dynamic_color.dart';
 enum Platform { phone, watch }
 
 class DynamicScheme {
-  final int sourceColorArgb;
-  final Hct sourceColorHct;
-  final Variant variant;
-  final bool isDark;
-  final Platform platform;
-  final double contrastLevel;
-  final SpecVersion specVersion;
-  final TonalPalette primaryPalette;
-  final TonalPalette secondaryPalette;
-  final TonalPalette tertiaryPalette;
-  final TonalPalette neutralPalette;
-  final TonalPalette neutralVariantPalette;
-  final TonalPalette errorPalette;
-
   DynamicScheme({
     required this.sourceColorHct,
     required this.variant,
@@ -172,6 +158,20 @@ class DynamicScheme {
            ) ??
            TonalPalette.fromHueAndChroma(25.0, 84.0);
 
+  final int sourceColorArgb;
+  final Hct sourceColorHct;
+  final Variant variant;
+  final bool isDark;
+  final Platform platform;
+  final double contrastLevel;
+  final SpecVersion specVersion;
+  final TonalPalette primaryPalette;
+  final TonalPalette secondaryPalette;
+  final TonalPalette tertiaryPalette;
+  final TonalPalette neutralPalette;
+  final TonalPalette neutralVariantPalette;
+  final TonalPalette errorPalette;
+
   Hct getHct(DynamicColor dynamicColor) => dynamicColor.getHct(this);
 
   int getArgb(DynamicColor dynamicColor) => dynamicColor.getArgb(this);
@@ -180,6 +180,44 @@ class DynamicScheme {
   String toString() {
     return "Scheme: variant=${variant.name}, mode=${isDark ? "dark" : "light"}, platform=${platform.name}, contrastLevel=${contrastLevel.toStringAsFixed(1)}, seed=$sourceColorHct, specVersion=$specVersion";
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is DynamicScheme &&
+            sourceColorArgb == other.sourceColorArgb &&
+            sourceColorHct == other.sourceColorHct &&
+            variant == other.variant &&
+            isDark == other.isDark &&
+            platform == other.platform &&
+            contrastLevel == other.contrastLevel &&
+            specVersion == other.specVersion &&
+            primaryPalette == other.primaryPalette &&
+            secondaryPalette == other.secondaryPalette &&
+            tertiaryPalette == other.tertiaryPalette &&
+            neutralPalette == other.neutralPalette &&
+            neutralVariantPalette == other.neutralVariantPalette &&
+            errorPalette == other.errorPalette;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    sourceColorArgb,
+    sourceColorHct,
+    variant,
+    isDark,
+    platform,
+    contrastLevel,
+    specVersion,
+    primaryPalette,
+    secondaryPalette,
+    tertiaryPalette,
+    neutralPalette,
+    neutralVariantPalette,
+    errorPalette,
+  );
 
   static const SpecVersion defaultSpecVersion = SpecVersion.spec2021;
   static const Platform defaultPlatform = Platform.phone;

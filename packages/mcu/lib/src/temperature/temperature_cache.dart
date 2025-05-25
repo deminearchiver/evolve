@@ -217,6 +217,20 @@ final class TemperatureCache {
     return _getHctsByTemp().last;
   }
 
+  @override
+  String toString() => "TemperatureCache($_input)";
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is TemperatureCache &&
+            _input == other._input;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, _input);
+
   static double rawTemperature(Hct color) {
     final lab = color_utils.labFromArgb(color.toInt());
     final hue = math_utils.sanitizeDegreesDouble(

@@ -1,13 +1,10 @@
 import '../hct/hct.dart';
 
 final class TonalPalette {
-  final double hue;
-  final double chroma;
-  final Hct keyColor;
-  final Map<int, int> _cache;
-
   TonalPalette._(this.hue, this.chroma, this.keyColor) : _cache = <int, int>{};
+
   TonalPalette.fromInt(int argb) : this.fromHct(Hct.fromInt(argb));
+
   TonalPalette.fromHct(Hct hct) : this._(hct.hue, hct.chroma, hct);
 
   factory TonalPalette.fromHueAndChroma(double hue, double chroma) {
@@ -15,12 +12,30 @@ final class TonalPalette {
     return TonalPalette._(hue, chroma, keyColor);
   }
 
+  final double hue;
+  final double chroma;
+  final Hct keyColor;
+  final Map<int, int> _cache;
+
   int tone(int tone) => _cache.putIfAbsent(
     tone,
     () => Hct.from(hue, chroma, tone.toDouble()).toInt(),
   );
 
   Hct getHct(double tone) => Hct.from(hue, chroma, tone);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is TonalPalette &&
+            hue == other.hue &&
+            chroma == other.chroma &&
+            keyColor == other.keyColor;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, hue, chroma, keyColor);
 }
 
 final class KeyColor {
@@ -80,4 +95,16 @@ final class KeyColor {
     tone,
     () => Hct.from(hue, _maxChromaValue, tone.toDouble()).chroma,
   );
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is KeyColor &&
+            hue == other.hue &&
+            requestedChroma == other.requestedChroma;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, hue, requestedChroma);
 }

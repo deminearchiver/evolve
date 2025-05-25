@@ -8,6 +8,13 @@ final class Hct {
     _setInternalState(argb);
   }
 
+  Hct.fromInt(int argb) : this._(argb);
+
+  factory Hct.from(double hue, double chroma, double tone) {
+    int argb = HctSolver.solveToInt(hue, chroma, tone);
+    return Hct._(argb);
+  }
+
   late double _hue;
   double get hue => _hue;
   set hue(double newHue) {
@@ -71,12 +78,17 @@ final class Hct {
     return "HCT(${hue.round()}, ${chroma.round()}, ${tone.round()})";
   }
 
-  static Hct from(double hue, double chroma, double tone) {
-    int argb = HctSolver.solveToInt(hue, chroma, tone);
-    return Hct._(argb);
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is Hct &&
+            _hue == other.hue &&
+            _chroma == other._chroma &&
+            _tone == other._tone &&
+            _argb == other._argb;
   }
 
-  static Hct fromInt(int argb) {
-    return Hct._(argb);
-  }
+  @override
+  int get hashCode => Object.hash(runtimeType, _hue, _chroma, _tone, _argb);
 }

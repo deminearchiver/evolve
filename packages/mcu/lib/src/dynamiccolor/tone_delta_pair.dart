@@ -27,4 +27,28 @@ class ToneDeltaPair {
   final TonePolarity polarity;
   final bool stayTogether;
   final DeltaConstraint constraint;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is ToneDeltaPair &&
+            roleA == other.roleA &&
+            roleB == other.roleB &&
+            delta == other.delta &&
+            polarity == other.polarity &&
+            stayTogether == other.stayTogether &&
+            constraint == other.constraint;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    roleA,
+    roleB,
+    delta,
+    polarity,
+    stayTogether,
+    constraint,
+  );
 }

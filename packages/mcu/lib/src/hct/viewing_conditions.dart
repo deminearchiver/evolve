@@ -15,7 +15,6 @@ final class ViewingConditions {
     this.flRoot,
     this.z,
   );
-
   final double aw;
   final double nbb;
   final double ncb;
@@ -26,6 +25,27 @@ final class ViewingConditions {
   final double fl;
   final double flRoot;
   final double z;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) &&
+        runtimeType == other.runtimeType &&
+        other is ViewingConditions &&
+        n == other.n &&
+        aw == other.aw &&
+        nbb == other.nbb &&
+        ncb == other.ncb &&
+        c == other.c &&
+        nc == other.nc &&
+        rgbD == other.rgbD &&
+        fl == other.fl &&
+        flRoot == other.flRoot &&
+        z == other.z;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, n, aw, nbb, ncb, c, nc, rgbD, fl, flRoot, z);
 
   static ViewingConditions make(
     List<double> whitePoint,

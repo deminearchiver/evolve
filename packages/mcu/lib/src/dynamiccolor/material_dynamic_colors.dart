@@ -1,6 +1,5 @@
 import 'package:mcu/src/dynamiccolor/dynamic_color.dart';
 
-import 'color_spec.dart';
 import 'color_spec_2025.dart';
 import 'dynamic_scheme.dart';
 

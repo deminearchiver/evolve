@@ -21,4 +21,18 @@ final class ContrastCurve {
       return high;
     }
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is ContrastCurve &&
+            low == other.low &&
+            normal == other.normal &&
+            medium == other.medium &&
+            high == other.high;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, low, normal, medium, high);
 }

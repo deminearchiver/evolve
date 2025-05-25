@@ -17,7 +17,7 @@ import 'viewing_conditions.dart';
 /// <p>For example, white under the traditional assumption of a midday sun white point is accurately
 /// measured as a slightly chromatic blue by CAM16. (roughly, hue 203, chroma 3, lightness 100)
 final class Cam16 {
-  Cam16(
+  const Cam16(
     this.hue,
     this.chroma,
     this.j,
@@ -42,7 +42,7 @@ final class Cam16 {
   final double astar;
   final double bstar;
 
-  final List<double> _tempArray = [0.0, 0.0, 0.0];
+  // final List<double> _tempArray = [0.0, 0.0, 0.0];
 
   double distance(Cam16 other) {
     final dJ = jstar - other.jstar;
@@ -58,7 +58,8 @@ final class Cam16 {
   }
 
   int viewed(ViewingConditions viewingConditions) {
-    final xyz = xyzInViewingConditions(viewingConditions, _tempArray);
+    // final xyz = xyzInViewingConditions(viewingConditions, _tempArray);
+    final xyz = xyzInViewingConditions(viewingConditions, null);
     return color_utils.argbFromXyz(xyz[0], xyz[1], xyz[2]);
   }
 
@@ -128,15 +129,35 @@ final class Cam16 {
     final y = (rF * matrix[1][0]) + (gF * matrix[1][1]) + (bF * matrix[1][2]);
     final z = (rF * matrix[2][0]) + (gF * matrix[2][1]) + (bF * matrix[2][2]);
 
-    if (returnArray != null) {
-      returnArray[0] = x;
-      returnArray[1] = y;
-      returnArray[2] = z;
-      return returnArray;
-    } else {
-      return [x, y, z];
-    }
+    // if (returnArray != null) {
+    //   returnArray[0] = x;
+    //   returnArray[1] = y;
+    //   returnArray[2] = z;
+    //   return returnArray;
+    // } else {
+    return [x, y, z];
+    // }
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is Cam16 &&
+            hue == other.hue &&
+            chroma == other.chroma &&
+            j == other.j &&
+            q == other.q &&
+            m == other.m &&
+            s == other.s &&
+            jstar == other.jstar &&
+            astar == other.astar &&
+            bstar == other.bstar;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, hue, chroma, j, q, m, s, jstar, astar, bstar);
 
   static const List<List<double>> _xyzToCam16Rgb = [
     [0.401288, 0.650173, -0.051461],
