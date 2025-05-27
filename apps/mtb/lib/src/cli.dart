@@ -267,7 +267,7 @@ class CreateCommand extends Command<int> {
             ),
             extendedColors: [],
             schemes: schemes.toFigmaSchemes(),
-            palettes: FigmaPalettes(),
+            palettes: const FigmaPalettes(),
           );
           final json = data.toJson();
           final encoder = JsonEncoder.withIndent(" " * 2);
