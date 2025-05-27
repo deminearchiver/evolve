@@ -17,10 +17,11 @@ final class TonalPalette {
   final Hct keyColor;
   final Map<int, int> _cache;
 
-  int tone(int tone) => _cache.putIfAbsent(
-    tone,
-    () => Hct.from(hue, chroma, tone.toDouble()).toInt(),
-  );
+  int tone(int tone) => _cache.putIfAbsent(tone, () {
+    return tone == 99 && Hct.isYellow(hue)
+        ? _averageArgb(this.tone(98), this.tone(100))
+        : Hct.from(hue, chroma, tone.toDouble()).toInt();
+  });
 
   Hct getHct(double tone) => Hct.from(hue, chroma, tone);
 
@@ -36,6 +37,23 @@ final class TonalPalette {
 
   @override
   int get hashCode => Object.hash(runtimeType, hue, chroma, keyColor);
+
+  static int _averageArgb(int argb1, int argb2) {
+    int red1 = (argb1 >>> 16) & 0xff;
+    int green1 = (argb1 >>> 8) & 0xff;
+    int blue1 = argb1 & 0xff;
+    int red2 = (argb2 >>> 16) & 0xff;
+    int green2 = (argb2 >>> 8) & 0xff;
+    int blue2 = argb2 & 0xff;
+    int red = ((red1 + red2) / 2.0).round();
+    int green = ((green1 + green2) / 2.0).round();
+    int blue = ((blue1 + blue2) / 2.0).round();
+    return (255 << 24 |
+            (red & 255) << 16 |
+            (green & 255) << 8 |
+            (blue & 255)) >>>
+        0;
+  }
 }
 
 final class KeyColor {
