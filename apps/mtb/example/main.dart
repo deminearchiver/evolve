@@ -113,14 +113,17 @@ void main() async {
             palettes: const FigmaPalettes(),
           );
           final json = data.toJson();
-          final contents = jsonEncode(json);
+          final encoder = JsonEncoder.withIndent(" " * 2);
+          final encoded = encoder.convert(json);
           final fileName =
               "${name}_${variant._name}_${specVersion._name}_${platform._name}.json";
 
-          final path = "./example/$fileName";
+          final path = "./example/generated/$fileName";
           final file = File(path);
           print("Writing: $path");
-          final future = file.writeAsString(contents);
+          final future = file
+              .create(recursive: true)
+              .then((file) => file.writeAsString(encoded));
           futures.add(future);
         }
       }
@@ -130,7 +133,17 @@ void main() async {
 }
 
 extension on Variant {
-  String get _name => name;
+  String get _name => switch (this) {
+    Variant.monochrome => "monochrome",
+    Variant.neutral => "neutral",
+    Variant.tonalSpot => "tonalspot",
+    Variant.vibrant => "vibrant",
+    Variant.expressive => "expressive",
+    Variant.fidelity => "fidelity",
+    Variant.content => "content",
+    Variant.rainbow => "rainbow",
+    Variant.fruitSalad => "fruitsalad",
+  };
 }
 
 extension on SpecVersion {
@@ -141,5 +154,8 @@ extension on SpecVersion {
 }
 
 extension on Platform {
-  String get _name => name;
+  String get _name => switch (this) {
+    Platform.phone => "phone",
+    Platform.watch => "watch",
+  };
 }
