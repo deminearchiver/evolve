@@ -12,7 +12,7 @@ abstract class SpringThemeData
     required Spring slowEffects,
   }) = _SpringThemeData;
 
-  const factory SpringThemeData.fallback() = _SpringThemeData.fallback;
+  const factory SpringThemeData.fallback() = _SpringThemeData.expressive;
   const factory SpringThemeData.standard() = _SpringThemeData.standard;
   const factory SpringThemeData.expressive() = _SpringThemeData.expressive;
 
@@ -179,8 +179,6 @@ class _SpringThemeData with Diagnosticable, SpringThemeDataMixin {
     required this.slowSpatial,
     required this.slowEffects,
   });
-
-  const _SpringThemeData.fallback() : this.standard();
 
   const _SpringThemeData.standard()
     : fastSpatial = const Spring(stiffness: 1400.0, damping: 0.9),

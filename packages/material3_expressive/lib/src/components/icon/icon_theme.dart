@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as material;
+import 'package:flutter/material.dart' as flutter;
 import 'package:material3_expressive/material3_expressive.dart';
 
 abstract class IconThemeDataPartial with Diagnosticable {
@@ -15,7 +15,7 @@ abstract class IconThemeDataPartial with Diagnosticable {
   }) = _IconThemeDataPartial;
 
   const factory IconThemeDataPartial.fromLegacy(
-    material.IconThemeData iconTheme,
+    flutter.IconThemeData iconTheme,
   ) = _IconThemeDataPartialFromLegacy;
 
   Color? get color;
@@ -44,7 +44,7 @@ abstract class IconThemeDataPartial with Diagnosticable {
 
   IconThemeDataPartial merge(IconThemeDataPartial? other);
 
-  material.IconThemeData toLegacy();
+  flutter.IconThemeData toLegacy();
 }
 
 mixin IconThemeDataPartialMixin on Diagnosticable
@@ -94,8 +94,8 @@ mixin IconThemeDataPartialMixin on Diagnosticable
   }
 
   @override
-  material.IconThemeData toLegacy() {
-    return material.IconThemeData(
+  flutter.IconThemeData toLegacy() {
+    return flutter.IconThemeData(
       color: color,
       size: size,
       weight: wght ?? weight?.value.toDouble(),
@@ -182,10 +182,10 @@ class _IconThemeDataPartial with Diagnosticable, IconThemeDataPartialMixin {
 
 class _IconThemeDataPartialFromLegacy
     with Diagnosticable, IconThemeDataPartialMixin {
-  const _IconThemeDataPartialFromLegacy(material.IconThemeData iconTheme)
+  const _IconThemeDataPartialFromLegacy(flutter.IconThemeData iconTheme)
     : _icon = iconTheme;
 
-  final material.IconThemeData _icon;
+  final flutter.IconThemeData _icon;
 
   @override
   Color? get color => _icon.color;
@@ -307,8 +307,8 @@ mixin IconThemeDataMixin on Diagnosticable implements IconThemeData {
   }
 
   @override
-  material.IconThemeData toLegacy() {
-    return material.IconThemeData(
+  flutter.IconThemeData toLegacy() {
+    return flutter.IconThemeData(
       color: color,
       size: size,
       weight: wght,
@@ -452,11 +452,33 @@ class IconTheme extends InheritedTheme {
     return IconThemeData.fallback(colorTheme: ColorTheme.of(context));
   }
 
-  static material.IconThemeData? maybeLegacyOf(BuildContext context) {
-    return maybeOf(context)?.toLegacy();
+  static Widget mergeLegacy({
+    Key? key,
+    required flutter.IconThemeData data,
+    required Widget child,
+  }) => flutter.IconTheme.merge(key: key, data: data, child: child);
+
+  static Widget replaceWithLegacy({Key? key, required Widget child}) => Builder(
+    builder: (context) {
+      final iconTheme = of(context);
+      final legacyTheme = maybeLegacyOf(context);
+      final fromLegacy = legacyTheme != null
+          ? IconThemeDataPartial.fromLegacy(legacyTheme)
+          : null;
+      final data = iconTheme.merge(fromLegacy);
+      return IconTheme(key: key, data: data, child: child);
+    },
+  );
+
+  static flutter.IconThemeData? maybeLegacyOf(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<flutter.IconTheme>()
+        ?.data;
   }
 
-  static material.IconThemeData legacyOf(BuildContext context) {
+  static flutter.IconThemeData legacyOf(BuildContext context) {
+    final result = maybeLegacyOf(context);
+    if (result != null) return result;
     return of(context).toLegacy();
   }
 }

@@ -6,18 +6,15 @@ part 'state_theme_data.dart';
 part 'state_theme.dart';
 
 class StateLayerColor implements WidgetStateProperty<Color?> {
-  const StateLayerColor({
-    this.color = const WidgetStatePropertyAll(null),
-    this.opacity = const WidgetStatePropertyAll(null),
-  });
+  const StateLayerColor({this.color, this.opacity});
 
-  final WidgetStateProperty<Color?> color;
-  final WidgetStateProperty<double?> opacity;
+  final WidgetStateProperty<Color?>? color;
+  final WidgetStateProperty<double?>? opacity;
 
   @override
   Color? resolve(Set<WidgetState> states) {
-    final resolvedColor = color.resolve(states);
-    final resolvedOpacity = opacity.resolve(states) ?? 0.0;
+    final resolvedColor = color?.resolve(states);
+    final resolvedOpacity = opacity?.resolve(states) ?? 0.0;
     if (resolvedColor == null) {
       return null;
     }

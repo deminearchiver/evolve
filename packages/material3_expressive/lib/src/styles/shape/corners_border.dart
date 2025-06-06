@@ -436,6 +436,33 @@ class CornersBorder extends OutlinedBorder {
         corners: CornersGeometry.lerp(a.corners, corners, t)!,
       );
     }
+    if (a is RoundedRectangleBorder) {
+      const aDelegate = RoundedCornersBorderDelegate();
+      final aCorners = CornersGeometry.fromBorderRadius(a.borderRadius);
+      return CornersBorder(
+        side: BorderSide.lerp(a.side, side, t),
+        delegate: CornersBorderDelegate.lerp(aDelegate, delegate, t)!,
+        corners: CornersGeometry.lerp(aCorners, corners, t)!,
+      );
+    }
+    if (a is BeveledRectangleBorder) {
+      const aDelegate = CutCornersBorderDelegate();
+      final aCorners = CornersGeometry.fromBorderRadius(a.borderRadius);
+      return CornersBorder(
+        side: BorderSide.lerp(a.side, side, t),
+        delegate: CornersBorderDelegate.lerp(aDelegate, delegate, t)!,
+        corners: CornersGeometry.lerp(aCorners, corners, t)!,
+      );
+    }
+    if (a is RoundedSuperellipseBorder) {
+      const aDelegate = SuperellipseCornersBorderDelegate();
+      final aCorners = CornersGeometry.fromBorderRadius(a.borderRadius);
+      return CornersBorder(
+        side: BorderSide.lerp(a.side, side, t),
+        delegate: CornersBorderDelegate.lerp(aDelegate, delegate, t)!,
+        corners: CornersGeometry.lerp(aCorners, corners, t)!,
+      );
+    }
     return super.lerpFrom(a, t);
   }
 
@@ -447,6 +474,33 @@ class CornersBorder extends OutlinedBorder {
         delegate: CornersBorderDelegate.lerp(delegate, b.delegate, t)!,
         // TODO: implement CornersGeometry.lerp
         corners: CornersGeometry.lerp(corners, b.corners, t)!,
+      );
+    }
+    if (b is RoundedRectangleBorder) {
+      const bDelegate = RoundedCornersBorderDelegate();
+      final bCorners = CornersGeometry.fromBorderRadius(b.borderRadius);
+      return CornersBorder(
+        side: BorderSide.lerp(side, b.side, t),
+        delegate: CornersBorderDelegate.lerp(delegate, bDelegate, t)!,
+        corners: CornersGeometry.lerp(corners, bCorners, t)!,
+      );
+    }
+    if (b is BeveledRectangleBorder) {
+      const bDelegate = CutCornersBorderDelegate();
+      final bCorners = CornersGeometry.fromBorderRadius(b.borderRadius);
+      return CornersBorder(
+        side: BorderSide.lerp(side, b.side, t),
+        delegate: CornersBorderDelegate.lerp(delegate, bDelegate, t)!,
+        corners: CornersGeometry.lerp(corners, bCorners, t)!,
+      );
+    }
+    if (b is RoundedSuperellipseBorder) {
+      const bDelegate = SuperellipseCornersBorderDelegate();
+      final bCorners = CornersGeometry.fromBorderRadius(b.borderRadius);
+      return CornersBorder(
+        side: BorderSide.lerp(side, b.side, t),
+        delegate: CornersBorderDelegate.lerp(delegate, bDelegate, t)!,
+        corners: CornersGeometry.lerp(corners, bCorners, t)!,
       );
     }
     return super.lerpTo(b, t);

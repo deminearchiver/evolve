@@ -169,7 +169,7 @@ abstract class ColorThemeData
     required DynamicSchemeVariant variant,
     required Color sourceColor,
     required Brightness brightness,
-    double contrastLevel = _contrastLevelNormal,
+    double contrastLevel = ContrastLevel.normal,
     DynamicSchemeVersion? version,
     DynamicSchemePlatform? platform,
   }) {

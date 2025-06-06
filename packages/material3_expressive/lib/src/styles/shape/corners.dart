@@ -146,6 +146,10 @@ class Corner {
 abstract class CornersGeometry {
   const CornersGeometry();
 
+  const factory CornersGeometry.fromBorderRadius(
+    BorderRadiusGeometry borderRadius,
+  ) = _CornersGeometryFromBorderRadiusGeometry;
+
   Corner get _topLeft;
   Corner get _topRight;
   Corner get _bottomLeft;
@@ -446,6 +450,12 @@ class Corners extends CornersGeometry {
     this.bottomRight = Corner.none,
   });
 
+  Corners.fromBorderRadius(BorderRadius borderRadius)
+    : topLeft = Corner.fromRadius(borderRadius.topLeft),
+      topRight = Corner.fromRadius(borderRadius.topRight),
+      bottomLeft = Corner.fromRadius(borderRadius.bottomLeft),
+      bottomRight = Corner.fromRadius(borderRadius.bottomRight);
+
   /// Returns a copy of this object with the given fields replaced with
   /// the new values.
   Corners copyWith({
@@ -724,6 +734,99 @@ class Corners extends CornersGeometry {
 }
 
 @immutable
+class _CornersGeometryFromBorderRadiusGeometry extends CornersGeometry {
+  const _CornersGeometryFromBorderRadiusGeometry(this._borderRadius);
+
+  final BorderRadiusGeometry _borderRadius;
+
+  @override
+  Corner get _topLeft => Corner.none;
+
+  @override
+  Corner get _topRight => Corner.none;
+
+  @override
+  Corner get _bottomLeft => Corner.none;
+
+  @override
+  Corner get _bottomRight => Corner.none;
+
+  @override
+  Corner get _topStart => Corner.none;
+
+  @override
+  Corner get _topEnd => Corner.none;
+
+  @override
+  Corner get _bottomStart => Corner.none;
+
+  @override
+  Corner get _bottomEnd => Corner.none;
+
+  @override
+  Corners resolve(TextDirection? textDirection) {
+    final resolvedBorderRadius = _borderRadius.resolve(textDirection);
+    return Corners.fromBorderRadius(resolvedBorderRadius);
+  }
+
+  @override
+  CornersGeometry add(CornersGeometry other) {
+    if (other is _CornersGeometryFromBorderRadiusGeometry) {
+      return _CornersGeometryFromBorderRadiusGeometry(
+        _borderRadius.add(other._borderRadius),
+      );
+    }
+    return super.add(other);
+  }
+
+  @override
+  CornersGeometry subtract(CornersGeometry other) {
+    if (other is _CornersGeometryFromBorderRadiusGeometry) {
+      return _CornersGeometryFromBorderRadiusGeometry(
+        _borderRadius.subtract(other._borderRadius),
+      );
+    }
+    return super.subtract(other);
+  }
+
+  @override
+  CornersGeometry operator -() {
+    return _CornersGeometryFromBorderRadiusGeometry(-_borderRadius);
+  }
+
+  @override
+  CornersGeometry operator *(double other) {
+    return _CornersGeometryFromBorderRadiusGeometry(_borderRadius * other);
+  }
+
+  @override
+  CornersGeometry operator /(double other) {
+    return _CornersGeometryFromBorderRadiusGeometry(_borderRadius / other);
+  }
+
+  @override
+  CornersGeometry operator ~/(double other) {
+    return _CornersGeometryFromBorderRadiusGeometry(_borderRadius ~/ other);
+  }
+
+  @override
+  CornersGeometry operator %(double other) {
+    return _CornersGeometryFromBorderRadiusGeometry(_borderRadius % other);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is _CornersGeometryFromBorderRadiusGeometry &&
+            _borderRadius == other._borderRadius;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, _borderRadius);
+}
+
+@immutable
 class _CornersLerp extends Corners {
   const _CornersLerp(this.a, this.b, this.t) : super.only();
 
@@ -790,6 +893,12 @@ class CornersDirectional extends CornersGeometry {
     this.bottomStart = Corner.none,
     this.bottomEnd = Corner.none,
   });
+
+  CornersDirectional.fromBorderRadius(BorderRadiusDirectional borderRadius)
+    : topStart = Corner.fromRadius(borderRadius.topStart),
+      topEnd = Corner.fromRadius(borderRadius.topEnd),
+      bottomStart = Corner.fromRadius(borderRadius.bottomStart),
+      bottomEnd = Corner.fromRadius(borderRadius.bottomEnd);
 
   final Corner topStart;
   final Corner topEnd;
