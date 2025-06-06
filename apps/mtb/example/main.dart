@@ -6,6 +6,7 @@ import 'package:change_case/change_case.dart';
 import 'package:mtb/src/cli.dart' show DynamicSchemes;
 import 'package:mtb/src/color.dart';
 import 'package:mtb/src/json.dart';
+import 'package:change_case/change_case.dart';
 
 const List<Variant> variants = Variant.values;
 const List<SpecVersion> specVersions = SpecVersion.values;
@@ -74,6 +75,11 @@ const Map<String, SeedColors> seedColorsToThemeNameMap = {
 
 final Set<DynamicSchemes> seen = <DynamicSchemes>{};
 
+final allDynamicColors = [
+  ...const MaterialDynamicColors().allDynamicColors,
+  ...const AndroidDynamicColors().allDynamicColors,
+];
+
 void main() async {
   final List<Future<File>> futures = [];
   for (final entry in seedColorsToThemeNameMap.entries) {
@@ -125,12 +131,49 @@ void main() async {
               .create(recursive: true)
               .then((file) => file.writeAsString(encoded));
           futures.add(future);
+
+          final css = StringBuffer();
+
+          // Light
+
+          void write(String selector, DynamicScheme scheme) {
+            css.writeln("$selector {");
+            for (final dynamicColor in allDynamicColors) {
+              final variableName =
+                  "md-sys-color-${dynamicColor.name.toKebabCase()}";
+              final variableProperty = "--$variableName";
+              final variableValue =
+                  "#${Color.argb(dynamicColor.getArgb(scheme)).hex}";
+              css.writeln("  $variableProperty: $variableValue;");
+            }
+            css.writeln("}");
+          }
+
+          write(".light", schemes.light);
+          write(".dark", schemes.dark);
+
+          final cssContents = css.toString();
+          final cssFileName =
+              "${name}_${variant._name}_${specVersion._name}_${platform._name}.css";
+          final cssPath = "./example/css/$cssFileName";
+          final cssFile = File(cssPath);
+          print("Writing: $cssPath");
+          final cssFuture = cssFile
+              .create(recursive: true)
+              .then((file) => file.writeAsString(cssContents));
+          futures.add(cssFuture);
         }
       }
     }
   }
   await Future.wait(futures);
 }
+
+// String buildJson({
+//   required Variant variant,
+//   required SpecVersion specVersion,
+//   required Platform platform,
+// }) {}
 
 extension on Variant {
   String get _name => switch (this) {
