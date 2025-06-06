@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:bloc/bloc.dart';
+import 'package:material3_expressive/material3_expressive.dart';
 import 'package:replay_bloc/replay_bloc.dart';
 
 sealed class ThemeEvent implements ReplayEvent {
@@ -33,22 +33,87 @@ final class ThemeSourceColorChanged extends ThemeEvent {
   int get hashCode => Object.hash(runtimeType, sourceColor);
 }
 
+final class ThemeVariantChanged extends ThemeEvent {
+  const ThemeVariantChanged(this.variant);
+
+  final DynamicSchemeVariant variant;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is ThemeVariantChanged &&
+            variant == other.variant;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, variant);
+}
+
+final class ThemeVersionChanged extends ThemeEvent {
+  const ThemeVersionChanged(this.version);
+
+  final DynamicSchemeVersion version;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is ThemeVersionChanged &&
+            version == other.version;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, version);
+}
+
+final class ThemePlatformChanged extends ThemeEvent {
+  const ThemePlatformChanged(this.platform);
+
+  final DynamicSchemePlatform platform;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        runtimeType == other.runtimeType &&
+            other is ThemePlatformChanged &&
+            platform == other.platform;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, platform);
+}
+
 final class ThemeState {
   const ThemeState({
     this.sourceColor = const Color(0xFF6750A4),
-    this.contrastLevel = 0.0,
+    this.variant = DynamicSchemeVariant.tonalSpot,
+    this.version = DynamicSchemeVersion.spec2021,
+    this.platform = DynamicSchemePlatform.phone,
   });
 
   final Color sourceColor;
-  final double contrastLevel;
+  final DynamicSchemeVariant variant;
+  final DynamicSchemeVersion version;
+  final DynamicSchemePlatform platform;
 
-  ThemeState copyWith({Color? sourceColor, double? contrastLevel}) {
-    if (sourceColor == null && contrastLevel == null) {
+  ThemeState copyWith({
+    Color? sourceColor,
+    DynamicSchemeVariant? variant,
+    DynamicSchemeVersion? version,
+    DynamicSchemePlatform? platform,
+  }) {
+    if (sourceColor == null &&
+        variant == null &&
+        version == null &&
+        platform == null) {
       return this;
     }
     return ThemeState(
       sourceColor: sourceColor ?? this.sourceColor,
-      contrastLevel: contrastLevel ?? this.contrastLevel,
+      variant: variant ?? this.variant,
+      version: version ?? this.version,
+      platform: platform ?? this.platform,
     );
   }
 
@@ -57,17 +122,24 @@ final class ThemeState {
     return identical(this, other) ||
         runtimeType == other.runtimeType &&
             other is ThemeState &&
-            sourceColor == other.sourceColor;
+            sourceColor == other.sourceColor &&
+            variant == other.variant &&
+            version == other.version &&
+            platform == other.platform;
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, sourceColor);
+  int get hashCode =>
+      Object.hash(runtimeType, sourceColor, variant, version, platform);
 }
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState>
     with ReplayBlocMixin<ThemeEvent, ThemeState> {
-  ThemeBloc() : super(const ThemeState()) {
+  ThemeBloc([super.state = const ThemeState()]) {
     on<ThemeSourceColorChanged>(_onSourceColorChanged);
+    on<ThemeVariantChanged>(_onVariantChanged);
+    on<ThemeVersionChanged>(_onVersionChanged);
+    on<ThemePlatformChanged>(_onPlatformChanged);
   }
 
   void _onSourceColorChanged(
@@ -75,5 +147,20 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState>
     Emitter<ThemeState> emit,
   ) {
     emit(state.copyWith(sourceColor: event.sourceColor));
+  }
+
+  void _onVariantChanged(ThemeVariantChanged event, Emitter<ThemeState> emit) {
+    emit(state.copyWith(variant: event.variant));
+  }
+
+  void _onVersionChanged(ThemeVersionChanged event, Emitter<ThemeState> emit) {
+    emit(state.copyWith(version: event.version));
+  }
+
+  void _onPlatformChanged(
+    ThemePlatformChanged event,
+    Emitter<ThemeState> emit,
+  ) {
+    emit(state.copyWith(platform: event.platform));
   }
 }

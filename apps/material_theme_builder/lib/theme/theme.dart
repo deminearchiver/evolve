@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide DynamicSchemeVariant;
 import 'package:material3_expressive/material3_expressive.dart';
 
@@ -103,7 +104,7 @@ class LegacyThemeFactory {
     TextTheme? textTheme,
   }) {
     return ThemeData(
-      // platform: TargetPlatform.android,
+      platform: kDebugMode ? TargetPlatform.android : null,
       colorScheme: colorScheme,
       textTheme: textTheme,
       splashFactory: InkSparkle.splashFactory,
