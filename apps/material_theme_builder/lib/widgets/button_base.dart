@@ -14,35 +14,33 @@ class _ButtonState extends State<Button> {
   }
 }
 
-class _ButtonContainer extends StatefulWidget {
+class _ButtonContainer extends StatelessWidget {
   const _ButtonContainer({
     super.key,
     this.shape,
     this.color,
     this.elevation,
     this.shadowColor,
+    this.child,
   });
 
   final ShapeBorder? shape;
   final Color? color;
   final Color? shadowColor;
   final double? elevation;
+  final Widget? child;
 
-  @override
-  State<_ButtonContainer> createState() => _ButtonContainerState();
-}
-
-class _ButtonContainerState extends State<_ButtonContainer> {
   @override
   Widget build(BuildContext context) {
     return Material(
       animationDuration: Duration.zero,
       type: MaterialType.card,
       clipBehavior: Clip.antiAlias,
-      color: widget.color,
-      shape: widget.shape ?? const RoundedRectangleBorder(),
-      shadowColor: widget.shadowColor ?? Colors.transparent,
-      elevation: widget.elevation ?? 0.0,
+      color: color,
+      shape: shape ?? const RoundedRectangleBorder(),
+      shadowColor: shadowColor ?? Colors.transparent,
+      elevation: elevation ?? 0.0,
+      child: child,
     );
   }
 }

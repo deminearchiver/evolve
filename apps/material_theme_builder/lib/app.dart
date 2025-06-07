@@ -290,11 +290,10 @@ class _Test1State extends State<Test1> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    FilledButton.icon(
-                      onPressed: null,
-                      icon: IconTheme.replaceWithLegacy(
-                        child: Icon(Symbols.file_export),
-                      ),
+                    Button(
+                      onTap: null,
+                      icon: Icon(Symbols.file_export),
+
                       label: Text("Export"),
                     ),
                     const SizedBox(width: 12),
@@ -389,10 +388,15 @@ class _ColorDialogState extends State<ColorDialog> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     spacing: 12,
                     children: [
-                      OutlinedButton(onPressed: () {}, child: Text("Cancel")),
-                      FilledButton.tonal(
-                        onPressed: () {},
-                        child: Text("Apply"),
+                      Button(
+                        color: ButtonColor.outlined,
+                        onTap: () {},
+                        label: Text("Cancel"),
+                      ),
+                      Button(
+                        color: ButtonColor.tonal,
+                        onTap: () {},
+                        label: Text("Apply"),
                       ),
                     ],
                   ),

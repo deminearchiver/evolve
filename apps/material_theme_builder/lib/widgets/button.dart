@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide Icon, IconTheme, IconThemeData;
 import 'package:flutter/physics.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:material3_expressive/material3_expressive.dart';
 import 'package:material_theme_builder/hit_testing.dart';
 import 'package:material_theme_builder/implicit_animation.dart';
@@ -74,10 +75,10 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
     super.initState();
     _springController = AnimationController.unbounded(vsync: this);
     _shapeAnimation = _shapeTween.animate(_springAnimation);
+    final enabled = widget.onTap != null;
     _statesController = WidgetStatesController()
-      ..addListener(() {
-        setState(() {});
-      });
+      ..update(WidgetState.disabled, !enabled)
+      ..addListener(_statesListener);
   }
 
   @override
@@ -117,6 +118,18 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
     // _shapeAnimation?.dispose();
     _springController.dispose();
     super.dispose();
+  }
+
+  void _statesListener() {
+    // if (WidgetsBinding.instance.schedulerPhase ==
+    //     SchedulerPhase.persistentCallbacks) {
+    // debugPrint("${WidgetsBinding.instance.schedulerPhase}");
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    setState(() {});
+    // });
+    // } else {
+    //   setState(() {});
+    // }
   }
 
   WidgetStateProperty<Color> get _backgroundColor =>
