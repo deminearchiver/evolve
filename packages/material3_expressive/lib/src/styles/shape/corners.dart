@@ -4,7 +4,7 @@ part of 'shape.dart';
 //   double? get finiteOrNull => isFinite || isNegative ? this : null;
 // }
 
-double? _clampCorner(double? x, double? min, double? max) {
+double? _clampCornerComponent(double? value, double? min, double? max) {
   // x = x?.finiteOrNull;
   // min = min?.finiteOrNull;
   // max = max?.finiteOrNull;
@@ -13,14 +13,14 @@ double? _clampCorner(double? x, double? min, double? max) {
     (min == null || max == null) || (min <= max && !max.isNaN && !min.isNaN),
   );
 
-  if (x == null) {
+  if (value == null) {
     return max;
   }
   if (min == null) return null;
   if (max == null) {
-    return x < min ? min : x;
+    return value < min ? min : value;
   }
-  return x > max ? max : x;
+  return value > max ? max : value;
 }
 
 extension RadiusExtension on Radius {
@@ -40,22 +40,23 @@ class Corner {
 
   Corner clamp({Corner minimum = Corner.none, Corner maximum = Corner.full}) {
     return Corner.elliptical(
-      _clampCorner(x, minimum.x, maximum.x),
-      _clampCorner(y, minimum.y, maximum.y),
+      _clampCornerComponent(x, minimum.x, maximum.x),
+      _clampCornerComponent(y, minimum.y, maximum.y),
     );
   }
 
   Corner clampValues({
-    double? minimumX = -double.infinity,
-    double? minimumY = -double.infinity,
+    // TODO: investigate if change of -infinity to 0 affects any behaviors
+    double? minimumX = 0.0,
+    double? minimumY = 0.0,
     // ignore: avoid_init_to_null
     double? maximumX = null,
     // ignore: avoid_init_to_null
     double? maximumY = null,
   }) {
     return Corner.elliptical(
-      _clampCorner(x, minimumX, maximumX),
-      _clampCorner(y, minimumY, maximumY),
+      _clampCornerComponent(x, minimumX, maximumX),
+      _clampCornerComponent(y, minimumY, maximumY),
     );
   }
 
@@ -158,6 +159,8 @@ abstract class CornersGeometry {
   Corner get _topEnd;
   Corner get _bottomStart;
   Corner get _bottomEnd;
+
+  BorderRadiusGeometry toBorderRadius(Rect rect);
 
   Corners resolve(TextDirection? textDirection);
 
@@ -365,6 +368,15 @@ class _CornersGeometryLerp extends CornersGeometry {
   Corner get _bottomEnd => Corner.none;
 
   @override
+  BorderRadiusGeometry toBorderRadius(Rect rect) {
+    return BorderRadiusGeometry.lerp(
+      a.toBorderRadius(rect),
+      b.toBorderRadius(rect),
+      t,
+    )!;
+  }
+
+  @override
   Corners resolve(TextDirection? textDirection) {
     return _CornersLerp(a.resolve(textDirection), b.resolve(textDirection), t);
   }
@@ -501,6 +513,7 @@ class Corners extends CornersGeometry {
   @override
   Corner get _bottomEnd => Corner.none;
 
+  @override
   BorderRadius toBorderRadius(Rect rect) {
     final topLeft = this.topLeft.clamp();
     final topRight = this.topRight.clamp();
@@ -764,6 +777,11 @@ class _CornersGeometryFromBorderRadiusGeometry extends CornersGeometry {
   Corner get _bottomEnd => Corner.none;
 
   @override
+  BorderRadiusGeometry toBorderRadius(Rect rect) {
+    return _borderRadius;
+  }
+
+  @override
   Corners resolve(TextDirection? textDirection) {
     final resolvedBorderRadius = _borderRadius.resolve(textDirection);
     return Corners.fromBorderRadius(resolvedBorderRadius);
@@ -928,6 +946,112 @@ class CornersDirectional extends CornersGeometry {
 
   @override
   Corner get _bottomEnd => bottomEnd;
+
+  @override
+  BorderRadiusDirectional toBorderRadius(Rect rect) {
+    final topStart = this.topStart.clamp();
+    final topEnd = this.topEnd.clamp();
+    final bottomStart = this.bottomStart.clamp();
+    final bottomEnd = this.bottomEnd.clamp();
+
+    final width = rect.width;
+    final height = rect.height;
+    final shortestSide = rect.shortestSide;
+
+    double topStartX;
+    double topStartY;
+    double topEndX;
+    double topEndY;
+    double bottomStartX;
+    double bottomStartY;
+    double bottomEndX;
+    double bottomEndY;
+
+    if (topStart.x == null) {
+      if (topEnd.x == null) {
+        topStartX = shortestSide / 2;
+        topEndX = shortestSide / 2;
+      } else {
+        topEndX = topEnd.x!;
+        topStartX = ui.clampDouble(width - topEndX, 0.0, shortestSide);
+      }
+    } else {
+      topStartX = topStart.x!;
+      topEndX =
+          topEnd.x ?? ui.clampDouble(width - topStartX, 0.0, shortestSide);
+    }
+
+    if (topEnd.y == null) {
+      if (bottomEnd.y == null) {
+        topEndY = shortestSide / 2;
+        bottomEndY = shortestSide / 2;
+      } else {
+        bottomEndY = bottomEnd.y!;
+        topEndY = ui.clampDouble(height - bottomEndY, 0.0, shortestSide);
+      }
+    } else {
+      topEndY = topEnd.y!;
+      bottomEndY =
+          bottomEnd.y ?? ui.clampDouble(height - topEndY, 0.0, shortestSide);
+    }
+
+    if (bottomEnd.x == null) {
+      if (bottomStart.x == null) {
+        bottomEndX = shortestSide / 2;
+        bottomStartX = shortestSide / 2;
+      } else {
+        bottomStartX = bottomStart.x!;
+        bottomEndX = ui.clampDouble(width - bottomStartX, 0.0, shortestSide);
+      }
+    } else {
+      bottomEndX = bottomEnd.x!;
+      bottomStartX =
+          bottomStart.x ??
+          ui.clampDouble(width - bottomEndX, 0.0, shortestSide);
+    }
+
+    if (bottomStart.y == null) {
+      if (topStart.y == null) {
+        bottomStartY = shortestSide / 2;
+        topStartY = shortestSide / 2;
+      } else {
+        topStartY = topStart.y!;
+        bottomStartY = ui.clampDouble(height - topStartY, 0.0, shortestSide);
+      }
+    } else {
+      bottomStartY = bottomStart.y!;
+      topStartY =
+          topStart.y ??
+          ui.clampDouble(height - bottomStartY, 0.0, shortestSide);
+    }
+    if (topStart.x == null && topStart.y == null) {
+      final min = math.min(topStartX, topStartY);
+      topStartX = min;
+      topStartY = min;
+    }
+    if (topEnd.x == null && topEnd.y == null) {
+      final min = math.min(topEndX, topEndY);
+      topEndX = min;
+      topEndY = min;
+    }
+    if (bottomStart.x == null && bottomStart.y == null) {
+      final min = math.min(bottomStartX, bottomStartY);
+      bottomStartX = min;
+      bottomStartY = min;
+    }
+    if (bottomEnd.x == null && bottomEnd.y == null) {
+      final min = math.min(bottomEndX, bottomEndY);
+      bottomEndX = min;
+      bottomEndY = min;
+    }
+
+    return BorderRadiusDirectional.only(
+      topStart: Radius.elliptical(topStartX, topStartY),
+      topEnd: Radius.elliptical(topEndX, topEndY),
+      bottomStart: Radius.elliptical(bottomStartX, bottomStartY),
+      bottomEnd: Radius.elliptical(bottomEndX, bottomEndY),
+    );
+  }
 
   @override
   Corners resolve(TextDirection? textDirection) {
@@ -1133,6 +1257,27 @@ class _CornersMixed extends CornersGeometry {
   final Corner _bottomEnd;
 
   @override
+  BorderRadiusGeometry toBorderRadius(Rect rect) {
+    final cornersNonDirectional = Corners.only(
+      topLeft: _topLeft,
+      topRight: _topRight,
+      bottomLeft: _bottomLeft,
+      bottomRight: _bottomRight,
+    );
+    final cornersDirectional = CornersDirectional.only(
+      topStart: _topStart,
+      topEnd: _topEnd,
+      bottomStart: _bottomStart,
+      bottomEnd: _bottomEnd,
+    );
+    final borderRadiusNonDirectional = cornersNonDirectional.toBorderRadius(
+      rect,
+    );
+    final borderRadiusDirectional = cornersDirectional.toBorderRadius(rect);
+    return borderRadiusNonDirectional.add(borderRadiusDirectional);
+  }
+
+  @override
   Corners resolve(TextDirection? textDirection) {
     assert(textDirection != null);
     return switch (textDirection!) {
@@ -1186,6 +1331,7 @@ class _CornersMixed extends CornersGeometry {
     _bottomStart / other,
     _bottomEnd / other,
   );
+
   @override
   _CornersMixed operator ~/(double other) => _CornersMixed(
     _topLeft ~/ other,
@@ -1197,6 +1343,7 @@ class _CornersMixed extends CornersGeometry {
     _bottomStart ~/ other,
     _bottomEnd ~/ other,
   );
+
   @override
   _CornersMixed operator %(double other) => _CornersMixed(
     _topLeft % other,
