@@ -479,7 +479,7 @@ abstract class ColorThemeData
   @override
   ColorThemeData merge(ColorThemeDataPartial? other);
 
-  ColorScheme toColorScheme();
+  flutter_material.ColorScheme toColorScheme();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -795,7 +795,8 @@ mixin ColorThemeDataMixin on Diagnosticable implements ColorThemeData {
   }
 
   @override
-  ColorScheme toColorScheme() => _ColorSchemeFromColorThemeData(this);
+  flutter_material.ColorScheme toColorScheme() =>
+      _ColorSchemeFromColorThemeData(this);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -1190,7 +1191,7 @@ class _ColorThemeData with Diagnosticable, ColorThemeDataMixin {
 @immutable
 class _ColorSchemeFromColorThemeData
     with Diagnosticable
-    implements ColorScheme {
+    implements flutter_material.ColorScheme {
   const _ColorSchemeFromColorThemeData(
     ColorThemeData colorTheme, {
     Brightness? brightness,
@@ -1510,7 +1511,7 @@ class _ColorSchemeFromColorThemeData
   Color get surfaceVariant => _surfaceVariant ?? _color.surfaceVariant;
 
   @override
-  ColorScheme copyWith({
+  flutter_material.ColorScheme copyWith({
     Brightness? brightness,
     Color? primary,
     Color? onPrimary,
@@ -1664,7 +1665,7 @@ class _ColorSchemeFromColorThemeData
         background != null &&
         onBackground != null &&
         surfaceVariant != null) {
-      return ColorScheme(
+      return flutter_material.ColorScheme(
         brightness: brightness,
         primary: primary,
         onPrimary: onPrimary,
@@ -1781,7 +1782,7 @@ class _ColorSchemeFromColorThemeData
   bool operator ==(Object other) {
     return identical(this, other) ||
         runtimeType == other.runtimeType &&
-            other is ColorScheme &&
+            other is flutter_material.ColorScheme &&
             primary == other.primary &&
             onPrimary == other.onPrimary &&
             primaryContainer == other.primaryContainer &&

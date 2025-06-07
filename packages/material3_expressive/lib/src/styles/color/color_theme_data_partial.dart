@@ -73,8 +73,9 @@ abstract class ColorThemeDataPartial with Diagnosticable {
     Color? textHintInverse,
   }) = _ColorThemeDataPartial;
 
-  const factory ColorThemeDataPartial.fromColorScheme(ColorScheme colorScheme) =
-      _ColorThemeDataPartialFromColorScheme;
+  const factory ColorThemeDataPartial.fromColorScheme(
+    flutter_material.ColorScheme colorScheme,
+  ) = _ColorThemeDataPartialFromColorScheme;
 
   // TODO: decide if fromDynamicScheme should be exposed on ColorThemeDataPartial,
   //  since ColorThemeData is assignable to ColorThemeDataPartial
@@ -1368,7 +1369,7 @@ class _ColorThemeDataPartial with Diagnosticable, ColorThemeDataPartialMixin {
 class _ColorThemeDataPartialFromColorScheme
     with Diagnosticable, ColorThemeDataPartialMixin {
   const _ColorThemeDataPartialFromColorScheme(
-    ColorScheme colorScheme, {
+    flutter_material.ColorScheme colorScheme, {
     Brightness? brightness,
     Color? primaryPaletteKeyColor,
     Color? secondaryPaletteKeyColor,
@@ -1508,7 +1509,7 @@ class _ColorThemeDataPartialFromColorScheme
            textSecondaryAndTertiaryInverseDisabled,
        _textHintInverse = textHintInverse;
 
-  final ColorScheme _colorScheme;
+  final flutter_material.ColorScheme _colorScheme;
 
   final Brightness? _brightness;
   final Color? _primaryPaletteKeyColor;

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as flutter_material;
 import 'package:mcu/mcu.dart' as mcu;
 
 part 'color_theme.dart';
