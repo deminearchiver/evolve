@@ -258,7 +258,6 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
     if (_targetValue == value) {
       return;
     }
-    debugPrint("${value}");
     _targetValue = value;
     startAnimation();
   }
@@ -290,7 +289,7 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   }
 
   Simulation _createSimulation() {
-    return SpringSimulation(_spring, 0.0, 1.0, 1.0, snapToEnd: true);
+    return SpringSimulation(_spring, 0.0, 1.0, 0.0, snapToEnd: true);
     // return ScrollSpringSimulation(_spring, 0.0, 1.0, 1.0);
   }
 }

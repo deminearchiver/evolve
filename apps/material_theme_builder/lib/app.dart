@@ -60,7 +60,7 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          ThemeBloc(const ThemeState(version: DynamicSchemeVersion.spec2025)),
+          ThemeBloc(const ThemeState(version: DynamicSchemeVersion.spec2021)),
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
           final colorThemes = ColorThemeFactory(
@@ -148,16 +148,16 @@ class _Test1State extends State<Test1> {
                     //   label: Text("Play arrow"),
                     // ),
                     Button(
-                      size: ButtonSize.extraLarge,
-                      shape: ButtonShape.square,
+                      // size: ButtonSize.extraLarge,
+                      // shape: ButtonShape.square,
                       color: ButtonColor.filled,
                       onTap: () {},
                       icon: const Icon(Symbols.play_arrow, fill: 1),
                       label: Text("Play"),
                     ),
                     Button(
-                      size: ButtonSize.extraLarge,
-                      shape: ButtonShape.square,
+                      // size: ButtonSize.extraLarge,
+                      // shape: ButtonShape.square,
                       color: ButtonColor.filled,
                       onTap: () {},
                       icon: const Icon(Symbols.play_arrow, fill: 1),
@@ -165,15 +165,55 @@ class _Test1State extends State<Test1> {
                     ),
                   ],
                 ),
-                FilledButton.tonal(
-                  onPressed: () => themeBloc
-                    ..add(ThemeVariantChanged(DynamicSchemeVariant.vibrant)),
-                  child: const Text("Variant"),
+
+                Wrap(
+                  spacing: 12.0,
+                  runSpacing: 0.0,
+                  children: [
+                    for (final variant in DynamicSchemeVariant.values)
+                      Button(
+                        size: ButtonSize.small,
+                        color: ButtonColor.outlined,
+                        onTap: () =>
+                            themeBloc..add(ThemeVariantChanged(variant)),
+                        label: Text("${variant.name}"),
+                      ),
+                  ],
                 ),
-                FilledButton.tonal(
-                  onPressed: () => themeBloc
+                Wrap(
+                  spacing: 12.0,
+                  runSpacing: 0.0,
+                  children: [
+                    for (final version in DynamicSchemeVersion.values)
+                      Button(
+                        size: ButtonSize.small,
+                        color: ButtonColor.outlined,
+                        onTap: () =>
+                            themeBloc..add(ThemeVersionChanged(version)),
+                        label: Text("${version.name}"),
+                      ),
+                  ],
+                ),
+                Row(
+                  spacing: 12.0,
+                  children: [
+                    for (final platform in DynamicSchemePlatform.values)
+                      Expanded(
+                        child: Button(
+                          size: ButtonSize.small,
+                          color: ButtonColor.outlined,
+                          onTap: () =>
+                              themeBloc..add(ThemePlatformChanged(platform)),
+                          label: Text("${platform.name}"),
+                        ),
+                      ),
+                  ],
+                ),
+                Button(
+                  color: ButtonColor.tonal,
+                  onTap: () => themeBloc
                     ..add(ThemeVersionChanged(DynamicSchemeVersion.spec2025)),
-                  child: const Text("Version"),
+                  label: const Text("Version"),
                 ),
                 Material(
                   clipBehavior: Clip.antiAlias,

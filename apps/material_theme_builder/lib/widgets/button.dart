@@ -11,7 +11,7 @@ enum ButtonShape { round, square }
 
 enum ButtonColor { elevated, filled, tonal, outlined, text }
 
-// enum ToggleButtonVariant { elevated, filled, tonal, outlined }
+enum ToggleButtonColor { elevated, filled, tonal, outlined }
 
 ButtonStyleButton? _buttonStyleButton;
 
@@ -50,31 +50,36 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
   late SpringThemeData _springTheme;
 
   late WidgetStatesController _statesController;
-  // SpringImplicitAnimation<ShapeBorder?>? _shapeAnimation;
+  bool _isClicked = false;
+  SpringImplicitAnimation<ShapeBorder?>? _shapeAnimation;
 
-  late SpringDescription _spring;
-  late AnimationController _springController;
-  Animation<double> get _springAnimation => _springController.view;
-  final Tween<ShapeBorder?> _shapeTween = ShapeBorderTween();
-  late Animation<ShapeBorder?> _shapeAnimation;
+  // late SpringDescription _spring;
+  // late AnimationController _springController;
+  // Animation<double> get _springAnimation => _springController.view;
+  // final Tween<ShapeBorder?> _shapeTween = ShapeBorderTween();
+  // late Animation<ShapeBorder?> _shapeAnimation;
 
-  SpringSimulation _createSimulation() {
-    return SpringSimulation(_spring, 0.0, 1.0, 1.0);
-  }
+  // bool _initialUpdate = true;
 
-  void _updateShape(ShapeBorder newShape) {
-    final currentShape = _shapeAnimation.value;
-    if (currentShape == newShape) return;
-    _shapeTween.begin = currentShape;
-    _shapeTween.end = newShape;
-    _springController.animateWith(SpringSimulation(_spring, 0.0, 1.0, 1.0));
-  }
+  // void _updateShape(ShapeBorder newShape) {
+  //   if (_initialUpdate) {
+  //     _shapeTween.begin = newShape;
+  //     _shapeTween.end = newShape;
+  //     _initialUpdate = false;
+  //   } else {
+  //     final currentShape = _shapeAnimation.value;
+  //     if (currentShape == newShape) return;
+  //     _shapeTween.begin = currentShape;
+  //     _shapeTween.end = newShape;
+  //     _springController.animateWith(SpringSimulation(_spring, 0.0, 1.0, 0.0));
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-    _springController = AnimationController.unbounded(vsync: this);
-    _shapeAnimation = _shapeTween.animate(_springAnimation);
+    // _springController = AnimationController.unbounded(vsync: this);
+    // _shapeAnimation = _shapeTween.animate(_springAnimation);
     final enabled = widget.onTap != null;
     _statesController = WidgetStatesController()
       ..update(WidgetState.disabled, !enabled)
@@ -97,39 +102,31 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
     // _springTheme = SpringTheme.of(context);
     _springTheme = const SpringThemeData.expressive();
 
-    _spring = _springTheme.fastSpatial.toSpringDescription();
+    // _spring = _springTheme.fastSpatial.toSpringDescription();
 
-    // final spring = _springTheme.fastSpatial;
-    // if (_shapeAnimation case final shape?) {
-    //   shape.spring = spring.toSpringDescription();
-    // } else {
-    //   _shapeAnimation = SpringImplicitAnimation(
-    //     vsync: this,
-    //     spring: spring.toSpringDescription(),
-    //     initialValue: null,
-    //     builder: (value) => ShapeBorderTween(begin: value),
-    //   );
-    // }
+    final spring = _springTheme.fastSpatial;
+    if (_shapeAnimation case final shape?) {
+      shape.spring = spring.toSpringDescription();
+    } else {
+      _shapeAnimation = SpringImplicitAnimation(
+        vsync: this,
+        spring: spring.toSpringDescription(),
+        initialValue: null,
+        builder: (value) => ShapeBorderTween(begin: value),
+      );
+    }
   }
 
   @override
   void dispose() {
     _statesController.dispose();
-    // _shapeAnimation?.dispose();
-    _springController.dispose();
+    _shapeAnimation?.dispose();
+    // _springController.dispose();
     super.dispose();
   }
 
   void _statesListener() {
-    // if (WidgetsBinding.instance.schedulerPhase ==
-    //     SchedulerPhase.persistentCallbacks) {
-    // debugPrint("${WidgetsBinding.instance.schedulerPhase}");
-    // SchedulerBinding.instance.addPostFrameCallback((_) {
     setState(() {});
-    // });
-    // } else {
-    //   setState(() {});
-    // }
   }
 
   WidgetStateProperty<Color> get _backgroundColor =>
@@ -319,19 +316,30 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final states = _statesController.value;
+    final states = Set.of(_statesController.value);
+    if (_isClicked) {
+      states.add(WidgetState.pressed);
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        setState(() {
+          _isClicked = false;
+        });
+      });
+    }
+
     final tapTargetConstraints = _tapTargetConstraints.resolve(states);
     final containerConstraints = _containerConstraints.resolve(states);
     final backgroundColor = _backgroundColor.resolve(states);
     final shape = _shape.resolve(states);
     assert(_shapeAnimation != null);
     final shapeAnimation = _shapeAnimation!;
-    _updateShape(shape);
-    // shapeAnimation.targetValue = shape;
+    // _updateShape(shape);
+    shapeAnimation.targetValue = shape;
 
     final Widget child = Padding(
       padding: _padding.resolve(states),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         spacing: _spacing.resolve(states),
@@ -353,7 +361,12 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
         animation: shapeAnimation,
         child: InkWell(
           statesController: _statesController,
-          onTap: widget.onTap,
+          onTap: widget.onTap != null
+              ? () {
+                  setState(() => _isClicked = true);
+                  widget.onTap!();
+                }
+              : null,
           overlayColor: _overlayColor,
           child: child,
         ),
@@ -361,7 +374,7 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
           animationDuration: Duration.zero,
           type: MaterialType.card,
           clipBehavior: Clip.antiAlias,
-          shape: shapeAnimation.value,
+          shape: shapeAnimation.value ?? shape,
           color: backgroundColor,
           shadowColor: _shadowColor.resolve(states),
           elevation: _elevation.resolve(states),
@@ -369,17 +382,24 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
         ),
       ),
     );
-    final Widget tapTarget = ConstrainedBox(
+    // final Widget tapTarget = ConstrainedBox(
+    //   constraints: tapTargetConstraints,
+    //   child: ForwardHitTests(
+    //     descendantKey: _containerKey,
+
+    //     child: container,
+    //     // child: Align(
+    //     //   alignment: Alignment.center,
+    //     //   widthFactor: 1.0,
+    //     //   heightFactor: 1.0,
+    //     //   child: container,
+    //     // ),
+    //   ),
+    // );
+    final Widget tapTarget = ForwardHitTests(
+      descendantKey: _containerKey,
       constraints: tapTargetConstraints,
-      child: ForwardHitTests(
-        descendantKey: _containerKey,
-        child: Align(
-          alignment: Alignment.center,
-          widthFactor: 1.0,
-          heightFactor: 1.0,
-          child: container,
-        ),
-      ),
+      child: container,
     );
     return Semantics(
       container: true,
