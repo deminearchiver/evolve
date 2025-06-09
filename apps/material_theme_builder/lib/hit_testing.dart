@@ -1,8 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class ForwardHitTests extends SingleChildRenderObjectWidget {
-  const ForwardHitTests({
+class TapTarget extends SingleChildRenderObjectWidget {
+  const TapTarget({
     super.key,
     required this.descendantKey,
     required this.constraints,
@@ -12,7 +14,7 @@ class ForwardHitTests extends SingleChildRenderObjectWidget {
 
   final GlobalKey descendantKey;
   final BoxConstraints constraints;
-  final Alignment alignment;
+  final AlignmentGeometry alignment;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -20,6 +22,7 @@ class ForwardHitTests extends SingleChildRenderObjectWidget {
       descendantKey: descendantKey,
       additionalConstraints: constraints,
       alignment: alignment,
+      textDirection: Directionality.maybeOf(context),
     );
   }
 
@@ -28,9 +31,11 @@ class ForwardHitTests extends SingleChildRenderObjectWidget {
     BuildContext context,
     covariant RenderForwardHitTests renderObject,
   ) {
-    renderObject.descendantKey = descendantKey;
-    renderObject.additionalConstraints = constraints;
-    renderObject.alignment = alignment;
+    renderObject
+      ..descendantKey = descendantKey
+      ..additionalConstraints = constraints
+      ..alignment = alignment
+      ..textDirection = Directionality.maybeOf(context);
   }
 }
 
@@ -38,11 +43,13 @@ class RenderForwardHitTests extends RenderShiftedBox {
   RenderForwardHitTests({
     required GlobalKey descendantKey,
     required BoxConstraints additionalConstraints,
-    required Alignment alignment,
+    required AlignmentGeometry alignment,
+    TextDirection? textDirection,
     RenderBox? child,
   }) : _descendantKey = descendantKey,
        _additionalConstraints = additionalConstraints,
        _alignment = alignment,
+       _textDirection = textDirection,
        super(child);
 
   GlobalKey _descendantKey;
@@ -62,13 +69,32 @@ class RenderForwardHitTests extends RenderShiftedBox {
     markNeedsLayout();
   }
 
-  Alignment _alignment;
-  Alignment get alignment => _alignment;
-  set alignment(Alignment value) {
+  AlignmentGeometry _alignment;
+  AlignmentGeometry get alignment => _alignment;
+  set alignment(AlignmentGeometry value) {
     if (_alignment == value) {
       return;
     }
     _alignment = value;
+    _markNeedsResolution();
+  }
+
+  Alignment? _resolvedAlignment;
+  Alignment get resolvedAlignment =>
+      _resolvedAlignment ??= alignment.resolve(textDirection);
+
+  TextDirection? _textDirection;
+  TextDirection? get textDirection => _textDirection;
+  set textDirection(TextDirection? value) {
+    if (_textDirection == value) {
+      return;
+    }
+    _textDirection = value;
+    _markNeedsResolution();
+  }
+
+  void _markNeedsResolution() {
+    _resolvedAlignment = null;
     markNeedsLayout();
   }
 
@@ -91,10 +117,22 @@ class RenderForwardHitTests extends RenderShiftedBox {
     return descendant;
   }
 
+  void _alignChild() {
+    assert(child != null);
+    assert(!child!.debugNeedsLayout);
+    assert(child!.hasSize);
+    assert(hasSize);
+    final BoxParentData childParentData = child!.parentData! as BoxParentData;
+    childParentData.offset = resolvedAlignment.alongOffset(
+      size - child!.size as Offset,
+    );
+  }
+
   @override
   double computeMinIntrinsicWidth(double height) {
     if (child case final child?) {
-      return additionalConstraints.constrainWidth(
+      return math.max(
+        additionalConstraints.minWidth,
         child.getMinIntrinsicWidth(height),
       );
     }
@@ -104,7 +142,8 @@ class RenderForwardHitTests extends RenderShiftedBox {
   @override
   double computeMinIntrinsicHeight(double width) {
     if (child case final child?) {
-      return additionalConstraints.constrainHeight(
+      return math.max(
+        additionalConstraints.minHeight,
         child.getMinIntrinsicHeight(width),
       );
     }
@@ -114,7 +153,8 @@ class RenderForwardHitTests extends RenderShiftedBox {
   @override
   double computeMaxIntrinsicWidth(double height) {
     if (child case final child?) {
-      return additionalConstraints.constrainWidth(
+      return math.max(
+        additionalConstraints.maxWidth,
         child.getMaxIntrinsicWidth(height),
       );
     }
@@ -124,7 +164,8 @@ class RenderForwardHitTests extends RenderShiftedBox {
   @override
   double computeMaxIntrinsicHeight(double width) {
     if (child case final child?) {
-      return additionalConstraints.constrainHeight(
+      return math.max(
+        additionalConstraints.maxHeight,
         child.getMaxIntrinsicHeight(width),
       );
     }
@@ -137,8 +178,9 @@ class RenderForwardHitTests extends RenderShiftedBox {
   }) {
     if (child case final child?) {
       final size = layoutChild(child, constraints);
-      final constrainedSize = additionalConstraints.constrain(size);
-      return constraints.constrain(constrainedSize);
+      final width = math.max(additionalConstraints.minWidth, size.width);
+      final height = math.max(additionalConstraints.minHeight, size.height);
+      return constraints.constrain(Size(width, height));
     }
     return Size.zero;
   }
@@ -161,7 +203,7 @@ class RenderForwardHitTests extends RenderShiftedBox {
       if (result == null) return null;
       final childSize = child.getDryLayout(constraints);
       return result +
-          alignment
+          resolvedAlignment
               .alongOffset(getDryLayout(constraints) - childSize as Offset)
               .dy;
     }
@@ -176,7 +218,7 @@ class RenderForwardHitTests extends RenderShiftedBox {
     );
     if (child case final child?) {
       final childParentData = child.parentData! as BoxParentData;
-      childParentData.offset = Alignment.center.alongOffset(
+      childParentData.offset = resolvedAlignment.alongOffset(
         size - child.size as Offset,
       );
     }

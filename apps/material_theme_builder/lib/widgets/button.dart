@@ -1,3 +1,7 @@
+import 'dart:collection';
+import 'dart:math' as math;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Icon, IconTheme, IconThemeData;
 import 'package:flutter/physics.dart';
 import 'package:flutter/scheduler.dart';
@@ -39,7 +43,7 @@ class Button extends StatefulWidget {
   State<Button> createState() => _ButtonState();
 }
 
-class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
+class _ButtonState extends State<Button> with TickerProviderStateMixin {
   final GlobalKey _containerKey = GlobalKey();
 
   late ColorThemeData _colorTheme;
@@ -47,39 +51,20 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
   late StateThemeData _stateTheme;
   late ElevationThemeData _elevationTheme;
   late TypescaleThemeData _typescaleTheme;
+  late EasingThemeData _easingTheme;
   late SpringThemeData _springTheme;
 
   late WidgetStatesController _statesController;
   bool _isClicked = false;
+  Set<WidgetState> get _states => UnmodifiableSetView(_statesController.value);
+  Set<WidgetState> _statesWithClicked = {};
+
+  CurveImplicitAnimation<double?>? _elevationAnimation;
   SpringImplicitAnimation<ShapeBorder?>? _shapeAnimation;
-
-  // late SpringDescription _spring;
-  // late AnimationController _springController;
-  // Animation<double> get _springAnimation => _springController.view;
-  // final Tween<ShapeBorder?> _shapeTween = ShapeBorderTween();
-  // late Animation<ShapeBorder?> _shapeAnimation;
-
-  // bool _initialUpdate = true;
-
-  // void _updateShape(ShapeBorder newShape) {
-  //   if (_initialUpdate) {
-  //     _shapeTween.begin = newShape;
-  //     _shapeTween.end = newShape;
-  //     _initialUpdate = false;
-  //   } else {
-  //     final currentShape = _shapeAnimation.value;
-  //     if (currentShape == newShape) return;
-  //     _shapeTween.begin = currentShape;
-  //     _shapeTween.end = newShape;
-  //     _springController.animateWith(SpringSimulation(_spring, 0.0, 1.0, 0.0));
-  //   }
-  // }
 
   @override
   void initState() {
     super.initState();
-    // _springController = AnimationController.unbounded(vsync: this);
-    // _shapeAnimation = _shapeTween.animate(_springAnimation);
     final enabled = widget.onTap != null;
     _statesController = WidgetStatesController()
       ..update(WidgetState.disabled, !enabled)
@@ -99,10 +84,19 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
     _stateTheme = StateTheme.of(context);
     _elevationTheme = ElevationTheme.of(context);
     _typescaleTheme = TypescaleTheme.of(context);
-    // _springTheme = SpringTheme.of(context);
-    _springTheme = const SpringThemeData.expressive();
+    _easingTheme = EasingTheme.of(context);
+    _springTheme = SpringTheme.of(context);
 
-    // _spring = _springTheme.fastSpatial.toSpringDescription();
+    if (_elevationAnimation case final elevationAnimation?) {
+    } else {
+      _elevationAnimation = CurveImplicitAnimation(
+        vsync: this,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.fastOutSlowIn,
+        initialValue: null,
+        builder: (value) => Tween<double>(begin: value),
+      );
+    }
 
     final spring = _springTheme.fastSpatial;
     if (_shapeAnimation case final shape?) {
@@ -121,7 +115,6 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
   void dispose() {
     _statesController.dispose();
     _shapeAnimation?.dispose();
-    // _springController.dispose();
     super.dispose();
   }
 
@@ -165,9 +158,13 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
 
   WidgetStateProperty<Color> get _shadowColor =>
       WidgetStatePropertyAll(_colorTheme.shadow);
+
   WidgetStateProperty<double> get _elevation =>
       WidgetStateProperty.resolveWith((states) {
         if (widget.color != ButtonColor.elevated) {
+          return _elevationTheme.level0;
+        }
+        if (states.contains(WidgetState.disabled)) {
           return _elevationTheme.level0;
         }
         if (states.contains(WidgetState.pressed)) {
@@ -232,12 +229,12 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
         } else {
           corner = defaultCorner;
         }
-        return CornersBorder(
-          delegate: const RoundedCornersBorderDelegate(),
+        return CornersBorder.rounded(
           corners: Corners.all(corner),
           side: _side.resolve(states),
         );
       });
+
   WidgetStateProperty<IconThemeDataPartial> get _iconTheme =>
       WidgetStateProperty.resolveWith((states) {
         final color = _foregroundColor.resolve(states);
@@ -250,6 +247,7 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
         };
         return IconThemeDataPartial(color: color, size: size, opsz: size);
       });
+
   WidgetStateProperty<TextStyle> get _labelTextStyle =>
       WidgetStateProperty.resolveWith((states) {
         final color = _foregroundColor.resolve(states);
@@ -268,7 +266,7 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
 
   WidgetStateProperty<BoxConstraints> get _containerConstraints =>
       WidgetStateProperty.resolveWith((states) {
-        const double minWidth = 48.0; // TODO: use tap target consraints
+        final tapTargetConstraints = _tapTargetConstraints.resolve(states);
         final minHeight = switch (widget.size) {
           ButtonSize.extraSmall => 32.0,
           ButtonSize.small => 40.0,
@@ -276,7 +274,10 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
           ButtonSize.large => 96.0,
           ButtonSize.extraLarge => 136.0,
         };
-        return BoxConstraints(minWidth: minWidth, minHeight: minHeight);
+        return BoxConstraints(
+          minWidth: tapTargetConstraints.minWidth,
+          minHeight: minHeight,
+        );
       });
   WidgetStateProperty<double> get _spacing =>
       WidgetStateProperty.resolveWith((states) {
@@ -314,51 +315,69 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
         };
       });
 
-  @override
-  Widget build(BuildContext context) {
+  ShapeBorder? _resolveShape() {
     final states = Set.of(_statesController.value);
     if (_isClicked) {
       states.add(WidgetState.pressed);
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        setState(() {
-          _isClicked = false;
-        });
+        if (mounted) setState(() => _isClicked = false);
       });
     }
+    return _shape.resolve(states);
+  }
 
-    final tapTargetConstraints = _tapTargetConstraints.resolve(states);
-    final containerConstraints = _containerConstraints.resolve(states);
-    final backgroundColor = _backgroundColor.resolve(states);
-    final shape = _shape.resolve(states);
+  void _updateStatesWithClicked() {
+    final statesWithClicked = Set.of(_states);
+    if (_isClicked) {
+      statesWithClicked.add(WidgetState.pressed);
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() => _isClicked = false);
+      });
+    }
+    _statesWithClicked = UnmodifiableSetView(statesWithClicked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _updateStatesWithClicked();
+
+    final tapTargetConstraints = _tapTargetConstraints.resolve(_states);
+    final containerConstraints = _containerConstraints.resolve(_states);
+    final backgroundColor = _backgroundColor.resolve(_states);
+    final shape = _shape.resolve(_statesWithClicked);
+    final elevation = _elevation.resolve(_states);
+    assert(_elevationAnimation != null);
+    final elevationAnimation = _elevationAnimation!;
+    elevationAnimation.targetValue = elevation;
     assert(_shapeAnimation != null);
     final shapeAnimation = _shapeAnimation!;
-    // _updateShape(shape);
     shapeAnimation.targetValue = shape;
 
     final Widget child = Padding(
-      padding: _padding.resolve(states),
+      padding: _padding.resolve(_states),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: _spacing.resolve(states),
+        spacing: _spacing.resolve(_states),
         children: [
           if (widget.icon case final icon?)
-            IconTheme.merge(data: _iconTheme.resolve(states), child: icon),
+            IconTheme.merge(data: _iconTheme.resolve(_states), child: icon),
           DefaultTextStyle(
-            style: _labelTextStyle.resolve(states),
+            style: _labelTextStyle.resolve(_states),
             child: widget.label,
           ),
         ],
       ),
     );
-
     final Widget container = ConstrainedBox(
       key: _containerKey,
       constraints: containerConstraints,
       child: AnimatedBuilder(
-        animation: shapeAnimation,
+        animation: AnimationMean(
+          left: shapeAnimation.animation,
+          right: elevationAnimation.animation,
+        ),
         child: InkWell(
           statesController: _statesController,
           onTap: widget.onTap != null
@@ -376,8 +395,8 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
           clipBehavior: Clip.antiAlias,
           shape: shapeAnimation.value ?? shape,
           color: backgroundColor,
-          shadowColor: _shadowColor.resolve(states),
-          elevation: _elevation.resolve(states),
+          shadowColor: _shadowColor.resolve(_states),
+          elevation: elevationAnimation.value ?? elevation,
           child: child!,
         ),
       ),
@@ -396,8 +415,9 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
     //     // ),
     //   ),
     // );
-    final Widget tapTarget = ForwardHitTests(
+    final Widget tapTarget = TapTarget(
       descendantKey: _containerKey,
+      alignment: Alignment.center,
       constraints: tapTargetConstraints,
       child: container,
     );
@@ -411,3 +431,51 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
 }
 
 class MaterialButtonStyle {}
+
+abstract class MultiAnimatedWidget extends StatefulWidget {
+  const MultiAnimatedWidget({super.key, this.listenables = const []});
+
+  final List<Listenable> listenables;
+
+  @protected
+  Widget build(BuildContext context);
+
+  @override
+  State<MultiAnimatedWidget> createState() => _MultiAnimatedWidgetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+      DiagnosticsProperty<List<Listenable>>("listenables", listenables),
+    );
+  }
+}
+
+class _MultiAnimatedWidgetState extends State<MultiAnimatedWidget> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant MultiAnimatedWidget oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  void _listener() {
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.build(context);
+}

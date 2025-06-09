@@ -24,7 +24,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  ThemeMode get _themeMode => ThemeMode.system;
+  ThemeMode get _themeMode => ThemeMode.light;
 
   Widget _buildWrapper(BuildContext context, Widget? child) {
     if (child == null) return const SizedBox.shrink();
@@ -180,40 +180,35 @@ class _Test1State extends State<Test1> {
                       ),
                   ],
                 ),
-                Wrap(
-                  spacing: 12.0,
-                  runSpacing: 0.0,
+                Row(
+                  spacing: 2.0,
                   children: [
                     for (final version in DynamicSchemeVersion.values)
-                      Button(
-                        size: ButtonSize.small,
-                        color: ButtonColor.outlined,
-                        onTap: () =>
-                            themeBloc..add(ThemeVersionChanged(version)),
-                        label: Text("${version.name}"),
+                      Expanded(
+                        child: Button(
+                          size: ButtonSize.small,
+                          color: ButtonColor.elevated,
+                          onTap: () =>
+                              themeBloc..add(ThemeVersionChanged(version)),
+                          label: Text("${version.name}"),
+                        ),
                       ),
                   ],
                 ),
                 Row(
-                  spacing: 12.0,
+                  spacing: 2.0,
                   children: [
                     for (final platform in DynamicSchemePlatform.values)
                       Expanded(
                         child: Button(
                           size: ButtonSize.small,
-                          color: ButtonColor.outlined,
+                          color: ButtonColor.tonal,
                           onTap: () =>
                               themeBloc..add(ThemePlatformChanged(platform)),
                           label: Text("${platform.name}"),
                         ),
                       ),
                   ],
-                ),
-                Button(
-                  color: ButtonColor.tonal,
-                  onTap: () => themeBloc
-                    ..add(ThemeVersionChanged(DynamicSchemeVersion.spec2025)),
-                  label: const Text("Version"),
                 ),
                 Material(
                   clipBehavior: Clip.antiAlias,
@@ -425,6 +420,7 @@ class _ColorDialogState extends State<ColorDialog> {
                     vertical: 24 - 4 - 4,
                   ),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.end,
                     spacing: 12,
                     children: [

@@ -12,9 +12,6 @@ const List<Variant> variants = Variant.values;
 const List<SpecVersion> specVersions = SpecVersion.values;
 const List<Platform> platforms = Platform.values;
 
-const String baseline = "baseline";
-const String nowInAndroid = "now_in_android";
-
 class SeedColors {
   const SeedColors({
     required this.sourceColor,
@@ -62,6 +59,11 @@ class SeedColors {
   );
 }
 
+const String baseline = "baseline";
+const String nowInAndroid = "now_in_android";
+const String figmaDesign = "figmadesign";
+const String figmaDevMode = "figmadevmode";
+
 const Map<String, SeedColors> seedColorsToThemeNameMap = {
   baseline: SeedColors(sourceColor: Color.argb(0xFF6750A4)),
   nowInAndroid: SeedColors(
@@ -71,6 +73,8 @@ const Map<String, SeedColors> seedColorsToThemeNameMap = {
     tertiaryPaletteKeyColor: Color.argb(0xFFB3E9FF),
     neutralPaletteKeyColor: Color.argb(0xFF201A1B),
   ),
+  // figmaDesign: SeedColors(sourceColor: Color.argb(0xFF0d99ff)),
+  // figmaDevMode: SeedColors(sourceColor: Color.argb(0xFF14ae5c)),
 };
 
 final Set<DynamicSchemes> seen = <DynamicSchemes>{};
