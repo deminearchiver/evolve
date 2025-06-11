@@ -1,5 +1,6 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/master",
+  "dart.flutterSdkPath": ".fvm/versions/stable",
   "svg.preview.background": "transparent",
-  "java.configuration.updateBuildConfiguration": "disabled"
+  "java.configuration.updateBuildConfiguration": "disabled",
+  "java.autobuild.enabled": false
 }

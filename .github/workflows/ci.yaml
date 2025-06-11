@@ -1,0 +1,27 @@
+name: CI
+on:
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: master
+          flutter-version: 619c02f2a02f1834939df67728bfa1eb0dd939ff
+      - run: flutter pub get
+      - run: dart pub get
+        working-directory: apps/mtb
+      - run: dart compile exe bin/mtb.dart
+        working-directory: apps/mtb
+      - uses: actions/upload-artifact@v4
+        with:
+          path: apps/mtb/bin
+
+
