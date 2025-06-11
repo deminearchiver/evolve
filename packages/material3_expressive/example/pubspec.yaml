@@ -20,6 +20,8 @@ dependencies:
   device_info_plus: ^11.4.0
   collection: ^1.19.1
   skeletonizer: ^2.0.1
+  morphable_shape: ^2.0.0
+  path_parsing: ^1.1.0
 
 dev_dependencies:
   flutter_test:
