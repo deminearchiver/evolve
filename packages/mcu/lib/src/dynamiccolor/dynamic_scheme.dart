@@ -226,12 +226,16 @@ class DynamicScheme {
   static const SpecVersion defaultSpecVersion = SpecVersion.spec2021;
   static const Platform defaultPlatform = Platform.phone;
 
-  static DynamicScheme from(DynamicScheme other, bool isDark) {
+  static DynamicScheme from(
+    DynamicScheme other,
+    bool isDark, [
+    double? contrastLevel,
+  ]) {
     return DynamicScheme(
       sourceColorHct: other.sourceColorHct,
       variant: other.variant,
       isDark: isDark,
-      contrastLevel: other.contrastLevel,
+      contrastLevel: contrastLevel ?? other.contrastLevel,
       platform: other.platform,
       specVersion: other.specVersion,
       primaryPalette: other.primaryPalette,

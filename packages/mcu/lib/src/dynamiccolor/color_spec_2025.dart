@@ -1281,10 +1281,21 @@ class ColorSpec2025 extends ColorSpec2021 {
       name: "primary_fixed",
       palette: (s) => s.primaryPalette,
       tone: (s) {
-        final tempS = DynamicScheme.from(s, false);
+        final tempS = DynamicScheme.from(s, false, 0.0);
         return primaryContainer().getTone(tempS);
       },
       isBackground: true,
+      background: (s) {
+        if (s.platform == Platform.phone) {
+          return s.isDark ? surfaceBright() : surfaceDim();
+        } else {
+          return null;
+        }
+      },
+      contrastCurve: (s) =>
+          s.platform == Platform.phone && s.contrastLevel > 0.0
+          ? _getContrastCurve(1.5)
+          : null,
     );
     return super.primaryFixed().extendSpecVersion(
       SpecVersion.spec2025,
@@ -1347,10 +1358,21 @@ class ColorSpec2025 extends ColorSpec2021 {
       name: "secondary_fixed",
       palette: (s) => s.secondaryPalette,
       tone: (s) {
-        final tempS = DynamicScheme.from(s, false);
+        final tempS = DynamicScheme.from(s, false, 0.0);
         return secondaryContainer().getTone(tempS);
       },
       isBackground: true,
+      background: (s) {
+        if (s.platform == Platform.phone) {
+          return s.isDark ? surfaceBright() : surfaceDim();
+        } else {
+          return null;
+        }
+      },
+      contrastCurve: (s) =>
+          s.platform == Platform.phone && s.contrastLevel > 0.0
+          ? _getContrastCurve(1.5)
+          : null,
     );
     return super.secondaryFixed().extendSpecVersion(
       SpecVersion.spec2025,
@@ -1413,10 +1435,21 @@ class ColorSpec2025 extends ColorSpec2021 {
       name: "tertiary_fixed",
       palette: (s) => s.tertiaryPalette,
       tone: (s) {
-        final tempS = DynamicScheme.from(s, false);
+        final tempS = DynamicScheme.from(s, false, 0.0);
         return tertiaryContainer().getTone(tempS);
       },
       isBackground: true,
+      background: (s) {
+        if (s.platform == Platform.phone) {
+          return s.isDark ? surfaceBright() : surfaceDim();
+        } else {
+          return null;
+        }
+      },
+      contrastCurve: (s) =>
+          s.platform == Platform.phone && s.contrastLevel > 0.0
+          ? _getContrastCurve(1.5)
+          : null,
     );
     return super.tertiaryFixed().extendSpecVersion(
       SpecVersion.spec2025,
