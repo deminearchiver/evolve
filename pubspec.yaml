@@ -6,7 +6,6 @@ environment:
   flutter: ">=3.32.0"
 
 workspace:
-
   # Packages
   - packages/widgets
   - packages/material
@@ -25,5 +24,4 @@ workspace:
 
 dependency_overrides:
   # Override pinned SDK dependency
-  # material_color_utilities v0.12.0 introduced new expressive on-colors spec
-  material_color_utilities: ^0.12.0
+  material_color_utilities: ^0.13.0

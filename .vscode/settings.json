@@ -1,6 +1,8 @@
 {
   "dart.flutterSdkPath": ".fvm/versions/stable",
-  "svg.preview.background": "transparent",
-  "java.configuration.updateBuildConfiguration": "disabled",
-  "java.autobuild.enabled": false
+  "prettier.useEditorConfig": true,
+  "[json][jsonc][json5][yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  }
 }

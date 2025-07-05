@@ -1,7 +1,10 @@
 {
-    "recommendations": [
-        "aaron-bond.better-comments",
-        "dart-code.dart-code",
-        "dart-code.flutter"
-    ]
+  "recommendations": [
+    "dart-code.dart-code",
+    "dart-code.flutter",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "redhat.vscode-yaml",
+    "fill-labs.dependi"
+  ]
 }
